@@ -1,16 +1,33 @@
 <!-- App.vue -->
 <template>
   <div id="app">
-    <!-- Example navigation -->
-    <nav class="p-4 bg-gray-800 text-white flex gap-4">
-      <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/login">Login</RouterLink>
-    </nav>
-
-    <!-- This is where your Home.vue (or any route) will render -->
     <router-view />
   </div>
 </template>
 
 <script setup>
+import { watch } from 'vue';
+import { useStore } from 'vuex';
+import '../css/main.css'
+import router from './router';
+const store = useStore();
+watch(
+  () => store.getters['theme/currentTheme'],
+  (newTheme) => {
+    if (newTheme === 'dark') {
+      document.body.classList.add('dark');
+    } else {
+      document.body.classList.remove('dark');
+    }
+  },
+  { immediate: true } // Apply on initial load
+);
+
+// if (localStorage.getItem('token')) {
+//   store.dispatch('auth/fetchUser').then(() => {
+//     const role = store.getters['auth/userRole'];
+//     if (role === 'admin') router.push({ name: 'Dashboard' });
+//     else router.push({ name: 'Home' });
+//   });
+// }
 </script>

@@ -1,0 +1,188 @@
+/* --- Global Design System Variables --- */
+:root {
+  --primary-color: #63C1A2;
+  --primary-hover-color: #52a88a;
+  --background-color: #F8F9FA;
+  --section-bg-color: #FFFFFF;
+  --text-color: #333;
+  --light-text-color: #6c757d;
+  --secondary-text-color: #6c757d;
+  --border-color: #E5E7EB;
+  --border-radius-lg: 20px;
+  --border-radius-md: 12px;
+}
+
+/* --- Dark Mode Variables --- */
+body.dark {
+  --primary-color: #63C1A2; /* can adjust if needed */
+  --primary-hover-color: #52a88a;
+  --background-color: #121212;
+  --section-bg-color: #1c1c1c;
+  --text-color: #f0f0f0;
+  --light-text-color: #aaa;
+  --secondary-text-color: #ccc;
+  --border-color: #333;
+}
+
+/* --- Base Body Styles --- */
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+main {
+  flex: 1;
+}
+
+/* --- Navbar --- */
+.navbar {
+  padding: 1rem 0;
+  background-color: var(--section-bg-color);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: background-color 0.3s, color 0.3s;
+}
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--text-color);
+}
+.navbar-brand i {
+  color: var(--primary-color);
+}
+.nav-link {
+  font-weight: 500;
+  color: var(--light-text-color);
+}
+.nav-link:hover {
+  color: var(--primary-color);
+}
+
+/* --- Buttons --- */
+.btn {
+  border-radius: var(--border-radius-md);
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.2s ease-in-out;
+}
+.btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: white;
+}
+.btn-primary:hover {
+  background-color: var(--primary-hover-color);
+  border-color: var(--primary-hover-color);
+  transform: translateY(-2px);
+  color: white;
+}
+.btn-outline-primary {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+.btn-outline-primary:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+/* --- Forms --- */
+.form-control {
+  border: 1px solid var(--border-color);
+  padding: 0.85rem 1rem;
+  border-radius: var(--border-radius-md);
+  background-color: var(--section-bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.25rem rgba(99, 193, 162, 0.25);
+}
+
+/* --- Sections --- */
+.section {
+  padding: 4rem 0;
+}
+.section-title {
+  font-weight: 700;
+  margin-bottom: 2rem;
+}
+
+/* --- General Card --- */
+.custom-card {
+  background-color: var(--section-bg-color);
+  border-radius: var(--border-radius-lg);
+  padding: 2.5rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+/* --- Bike Card --- */
+.bike-card {
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.3s;
+  height: 100%;
+}
+.bike-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+.bike-card-img-top {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+.bike-card-body {
+  padding: 0.75rem;
+}
+.bike-card-title {
+  font-weight: 600;
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.bike-card-rating {
+  color: #ffc107;
+}
+.bike-card-price {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--primary-color);
+}
+
+/* --- Footer --- */
+.footer {
+  background-color: var(--section-bg-color);
+  padding: 3rem 0;
+  border-top: 1px solid var(--border-color);
+  color: var(--light-text-color);
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  margin-top: auto;
+}
+.footer h5 {
+  font-weight: 600;
+  color: var(--text-color);
+}
+.footer a {
+  color: var(--light-text-color);
+}
+.footer a:hover {
+  color: var(--primary-color);
+}
+.footer .social-icons a {
+  font-size: 1.5rem;
+  margin-right: 1rem;
+}

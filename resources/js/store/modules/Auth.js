@@ -1,72 +1,65 @@
-import axios from 'axios';
+import axios from '../../service/axios';
 
- const state = {
-    user: null,
-    token: localStorage.getItem('token') || null,
+const state = {
+  user: null,
+  token: localStorage.getItem('token') || null,
 };
 
- const getters = {
-    isAuthenticated: state => !!state.token,
-    user: state => state.user,
+const getters = {
+  isAuthenticated: state => !!state.token,
+  user: state => state.user,
+  userRole: state => (state.user ? state.user.role : null),
 };
 
- const mutations = {
-    SET_USER(state, user) {
-        state.user = user;
-    },
-    SET_TOKEN(state, token) {
-        state.token = token;
-        localStorage.setItem('token', token); // Persist token
-    },
-    LOGOUT(state) {
-        state.user = null;
-        state.token = null;
-        localStorage.removeItem('token');
-    },
+const mutations = {
+  SET_USER(state, user) {
+    state.user = user;
+  },
+  SET_TOKEN(state, token) {
+    state.token = token;
+    localStorage.setItem('token', token);
+  },
+  LOGOUT(state) {
+    state.user = null;
+    state.token = null;
+    localStorage.removeItem('token');
+  },
 };
 
- const actions = {
-    async register({ commit }, credentials) {
-        // We add 'await' here to make the component wait for completion
-        const response = await axios.post('/api/register', credentials);
-        commit('SET_USER', response.data.user);
-        commit('SET_TOKEN', response.data.token);
-    },
-     async login({ commit, dispatch }, credentials) {
-        const response = await axios.post('/api/login', credentials);
-        commit('SET_TOKEN', response.data.token);
-        console.log('credtials', credentials);
-        await dispatch('fetchUser');
-    },
-      async fetchUser({ commit }) {
-        try {
-            const config = {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-            };
-            const response = await axios.get('/api/user', config);
-            commit('SET_USER', response.data);
-        } catch (error) {
-            console.error("Failed to fetch user:", error);
-            // If the token is invalid, you could dispatch a logout action here
-        }
-    },
+const actions = {
+  async login({ commit, dispatch }, credentials) {
+    const response = await axios.post('/login', credentials);
+    commit('SET_TOKEN', response.data.token);
+    await dispatch('fetchUser');
 
-    async register({ commit, dispatch }, userData) {
-        const response = await axios.post('/api/register', userData);
-        commit('SET_TOKEN', response.data.token);
-        await dispatch('fetchUser');
-    },
+  },
 
-    logout({ commit }) {
-        commit('logout');
+  async fetchUser({ commit }) {
+    try {
+      const response = await axios.get('/user');
+      commit('SET_USER', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch user:', error);
+      commit('LOGOUT'); // Token invalid
     }
+  },
 
-    // Your existing login/logout actions...
+  async register({ commit, dispatch }, userData) {
+    const response = await axios.post('/register', userData);
+    commit('SET_TOKEN', response.data.token);
+    await dispatch('fetchUser');
+  },
+
+  logout({ commit }) {
+    commit('LOGOUT');
+  },
 };
+
 export default {
   namespaced: true,
   state,
   getters,
-  actions,
   mutations,
-}
+  actions,
+};

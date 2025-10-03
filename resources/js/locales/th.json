@@ -1,18 +1,40 @@
 {
+  "app_name": "BIKEDASH",
+  "login_title": "เข้าสู่ระบบ",
+  "email_placeholder": "Your email",
+  "password_placeholder": "รหัสผ่าน",
+  "remember_me": "จำฉันไว้",
+  "forgot_password": "ลืมรหัสผ่าน?",
+  "login_button": "เข้าสู่ระบบ",
+  "or_continue_with": "หรือเข้าสู่ระบบด้วย",
+  "no_account": "ยังไม่มีบัญชี?",
+  "create_account": "สร้างบัญชี",
+  "login_form": {
+    "invalid_credentials": "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
+    "unexpected_error": "เกิดข้อผิดพลาดบางอย่าง"
+  },
   "nav": {
-    "dashboard": "แผงควบคุม",
+    "dashboard": "แดชบอร์ด",
     "logout": "ออกจากระบบ",
     "login": "เข้าสู่ระบบ",
-    "register": "สมัครสมาชิก"
+    "register": "ลงทะเบียน"
   },
   "register_form": {
-    "title": "สมัครสมาชิก",
-    "name": "ชื่อ",
-    "email": "ที่อยู่อีเมล",
+    "title": "สร้างบัญชีผู้ใช้ของคุณ",
+    "subtitle": "เข้าร่วมชุมชนคนรักจักรยานและนักผจญภัยของเรา",
+    "traveler": "ฉันเป็นนักเดินทาง",
+    "owner": "ฉันเป็นเจ้าของ",
+    "name": "ชื่อเต็ม",
+    "name_placeholder": "กรอกชื่อเต็มของคุณ",
+    "email": "อีเมล",
+    "email_placeholder": "Your email",
     "password": "รหัสผ่าน",
+    "password_placeholder": "สร้างรหัสผ่านที่แข็งแรง",
     "confirm_password": "ยืนยันรหัสผ่าน",
-    "submit_button": "สมัครสมาชิก",
-    "loading_button": "กำลังสมัคร..."
+    "confirm_password_placeholder": "กรอกรหัสผ่านอีกครั้ง",
+    "submit_button": "สร้างบัญชี",
+    "loading_button": "กำลังสร้าง...",
+    "already_account": "มีบัญชีแล้ว?",
+    "login": "เข้าสู่ระบบ"
   }
 }
-

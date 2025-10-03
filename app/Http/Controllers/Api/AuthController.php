@@ -16,11 +16,13 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email'=> 'required|email|unique:users',
             'password'=> 'required|string|min:6|confirmed',
+            'role'=> 'required|string|in:renter,owner',
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email'=> $request->email,
+            'role'=> $request->role,
             'password'=> Hash::make($request->password),
         ]);
 
@@ -58,4 +60,8 @@ class AuthController extends Controller
     {
         return response()->json($request->user());
     }
+    public function dashboard(Request $request)
+    {
+        return view('dashboard');
+    }   
 }
