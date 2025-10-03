@@ -1,0 +1,18 @@
+{
+  "nav": {
+    "dashboard": "แผงควบคุม",
+    "logout": "ออกจากระบบ",
+    "login": "เข้าสู่ระบบ",
+    "register": "สมัครสมาชิก"
+  },
+  "register_form": {
+    "title": "สมัครสมาชิก",
+    "name": "ชื่อ",
+    "email": "ที่อยู่อีเมล",
+    "password": "รหัสผ่าน",
+    "confirm_password": "ยืนยันรหัสผ่าน",
+    "submit_button": "สมัครสมาชิก",
+    "loading_button": "กำลังสมัคร..."
+  }
+}
+
