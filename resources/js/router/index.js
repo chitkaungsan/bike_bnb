@@ -11,6 +11,7 @@ const routes = [
   { path: '/login', name: 'Login', component: Login },
   { path: '/register', name: 'Register', component: Register },
   { path: '/dashboard', name: 'Dashboard', component: Dashboard, meta: { adminOnly: true } },
+  
 ];
 
 const router = createRouter({

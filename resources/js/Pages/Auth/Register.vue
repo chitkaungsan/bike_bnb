@@ -98,7 +98,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
@@ -124,17 +124,23 @@ const handleRegister = async () => {
   try {
     await store.dispatch('auth/register', form.value);
      const user = store.state.auth.user;
-    // if (user.role === 'admin') {
-    //   router.push({ name: 'Dashboard' });
-    // } else {
+    if (user.role === 'owner') {
+      router.push({ name: 'Dashboard' });
+    } else {
       router.push({ name: 'Home' });
-    // }
+    }
   } catch (error) {
     console.error(error);
   } finally {
     loading.value = false;
   }
 };
+onMounted(() => {
+  let roleParam = new URLSearchParams(window.location.search).get('role');
+  if (roleParam === 'owner' || roleParam === 'renter') {
+    form.value.role = roleParam;
+  }
+});
 </script>
 
 <style scoped>

@@ -27,7 +27,7 @@
               <a class="nav-link" href="#">{{ t('nav.browse_bikes') }}</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">{{ t('nav.become_owner') }}</a>
+              <router-link to="/register?role=owner" class="nav-link" href="#">{{ t('nav.become_owner') }}</router-link>
             </li>
             <li class="nav-item ms-lg-3">
               <LanguageSwitcher />

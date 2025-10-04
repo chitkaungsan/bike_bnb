@@ -1,11 +1,11 @@
 {
   "app_name": "BIKEDASH",
-  "login_title": "Login",
+  "login_title": "Singin",
   "email_placeholder": "your email",
   "password_placeholder": "Password",
   "remember_me": "Remember me",
   "forgot_password": "Forgot Password?",
-  "login_button": "Login",
+  "login_button": "Singin",
   "or_continue_with": "or continue with",
   "no_account": "Don't have an account?",
   "create_account": "Create Account",
@@ -40,7 +40,7 @@
   "nav": {
     "dashboard": "Dashboard",
     "logout": "Singout",
-    "login": "Singup",
+    "login": "Singin",
     "register": "Register",
     "browse_bikes": "Browse Bikes",
     "become_owner": "Become an Owner"
@@ -62,7 +62,7 @@
     "connect": {
       "title": "Connect"
     },
-    "copyright": "© 2024 BikeDash. All Rights Reserved."
+    "copyright": "© 2025 BikeDash. All Rights Reserved."
   },
   "hero": {
     "title": "Your Next Ride, Just a Click Away",
