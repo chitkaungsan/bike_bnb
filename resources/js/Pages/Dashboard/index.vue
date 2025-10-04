@@ -1,5 +1,6 @@
 <template>
   <div class="container py-4">
+    {{ user }}
     <div v-if="user" class="card">
       <div class="card-header">
         <h2 class="card-title">{{ t('dashboard.title') }}</h2>
@@ -26,9 +27,9 @@ import { useI18n } from 'vue-i18n';
 
 const store = useStore();
 const { t } = useI18n();
+const user = computed(() => store.getters['auth/user']);
 
 // Get the user from the Vuex store
-const user = computed(() => store.getters['auth/user']);
 
 // When the component is mounted, dispatch an action to fetch the user data
 // This ensures the data is fresh, especially on a page refresh.

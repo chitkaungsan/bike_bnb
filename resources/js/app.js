@@ -3,7 +3,8 @@ import App from './App.vue'
 import '../css/main.css'
 import router from './router/index'
 import store from './store/index'
-import * as bootstrap from 'bootstrap' // keep bootstrap import
+import 'bootstrap/dist/css/bootstrap.min.css'
+import * as bootstrap from 'bootstrap'
 import i18n from './i18n'
 
 // Font Awesome
