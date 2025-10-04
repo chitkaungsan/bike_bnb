@@ -10,9 +10,10 @@ import i18n from './i18n'
 // Font Awesome
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faBicycle,faEye,faMapLocationDot,faStore, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
+import { faBicycle,faEye,faMapLocationDot,faStore, faEyeSlash,faMoon } from '@fortawesome/free-solid-svg-icons'
 import { faGoogle, faFacebookF } from '@fortawesome/free-brands-svg-icons'
-
+import 'bootstrap/dist/css/bootstrap.min.css' // if not already imported
+import 'bootstrap-icons/font/bootstrap-icons.css' // this imports the icons
 // Inter fonts
 import '@fontsource/inter/400.css'
 import '@fontsource/inter/500.css'

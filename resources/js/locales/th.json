@@ -1,7 +1,7 @@
 {
   "app_name": "BIKEDASH",
   "login_title": "เข้าสู่ระบบ",
-  "email_placeholder": "Your email",
+  "email_placeholder": "อีเมลของคุณ",
   "password_placeholder": "รหัสผ่าน",
   "remember_me": "จำฉันไว้",
   "forgot_password": "ลืมรหัสผ่าน?",
@@ -13,12 +13,6 @@
     "invalid_credentials": "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
     "unexpected_error": "เกิดข้อผิดพลาดบางอย่าง"
   },
-  "nav": {
-    "dashboard": "แดชบอร์ด",
-    "logout": "ออกจากระบบ",
-    "login": "เข้าสู่ระบบ",
-    "register": "ลงทะเบียน"
-  },
   "register_form": {
     "title": "สร้างบัญชีผู้ใช้ของคุณ",
     "subtitle": "เข้าร่วมชุมชนคนรักจักรยานและนักผจญภัยของเรา",
@@ -27,7 +21,7 @@
     "name": "ชื่อเต็ม",
     "name_placeholder": "กรอกชื่อเต็มของคุณ",
     "email": "อีเมล",
-    "email_placeholder": "Your email",
+    "email_placeholder": "อีเมลของคุณ",
     "password": "รหัสผ่าน",
     "password_placeholder": "สร้างรหัสผ่านที่แข็งแรง",
     "confirm_password": "ยืนยันรหัสผ่าน",
@@ -36,5 +30,54 @@
     "loading_button": "กำลังสร้าง...",
     "already_account": "มีบัญชีแล้ว?",
     "login": "เข้าสู่ระบบ"
+  },
+  "theme": {
+    "dark_mode": "โหมดมืด",
+    "light_mode": "โหมดสว่าง"
+  },
+  "profile": "โปรไฟล์",
+  "brand": "BIKEDASH",
+  "nav": {
+    "dashboard": "แดชบอร์ด",
+    "logout": "ออกจากระบบ",
+    "login": "เข้าสู่ระบบ",
+    "register": "ลงทะเบียน",
+    "browse_bikes": "เรียกดูจักรยาน",
+    "become_owner": "เป็นเจ้าของ"
+  },
+   "footer": {
+    "description": "การผจญภัยบนสองล้อของคุณเริ่มต้นที่นี่ เช่าจักรยานจากเจ้าของท้องถิ่น",
+    "explore": {
+      "title": "สำรวจ",
+      "home": "หน้าแรก",
+      "how_it_works": "วิธีใช้งาน",
+      "about_us": "เกี่ยวกับเรา"
+    },
+    "support": {
+      "title": "สนับสนุน",
+      "help_center": "ศูนย์ช่วยเหลือ",
+      "contact_us": "ติดต่อเรา",
+      "faqs": "คำถามที่พบบ่อย"
+    },
+    "connect": {
+      "title": "เชื่อมต่อ"
+    },
+    "copyright": "© 2024 BikeDash. สงวนลิขสิทธิ์"
+  },
+  "hero": {
+    "title": "การเดินทางครั้งต่อไปของคุณ เพียงคลิกเดียว",
+    "subtitle": "เช่าจักรยานจากเจ้าของท้องถิ่นหลากหลาย",
+    "search": {
+      "location_label": "สถานที่",
+      "location_placeholder": "เช่น กรุงเทพฯ",
+      "dates_label": "วันที่",
+      "dates_placeholder": "เลือกวันที่ของคุณ",
+      "category_label": "ประเภท",
+      "category_all": "ทุกประเภท",
+      "category_mountain": "ภูเขา",
+      "category_road": "ถนน",
+      "category_city": "เมือง",
+      "category_electric": "ไฟฟ้า"
+    }
   }
 }

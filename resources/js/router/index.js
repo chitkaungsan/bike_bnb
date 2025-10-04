@@ -29,7 +29,7 @@ router.beforeEach(async (to, from, next) => {
       await store.dispatch('auth/fetchUser'); // fetch user first
       next(); // proceed after fetching
     } catch {
-      next({ name: 'Login' }); // redirect if fetch fails
+      next({ name: '/' }); // redirect if fetch fails
     }
   } else {
     next();

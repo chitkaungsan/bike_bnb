@@ -13,12 +13,6 @@
     "invalid_credentials": "Invalid credentials",
     "unexpected_error": "Something went wrong"
   },
-  "nav": {
-    "dashboard": "Dashboard",
-    "logout": "Logout",
-    "login": "Login",
-    "register": "Register"
-  },
   "register_form": {
     "title": "Create Your Account",
     "subtitle": "Join our community of bike lovers and adventurers.",
@@ -36,5 +30,54 @@
     "loading_button": "Creating...",
     "already_account": "Already have an account?",
     "login": "Log In"
+  },
+  "theme": {
+    "dark_mode": "Dark Mode",
+    "light_mode": "Light Mode"
+  },
+  "profile": "Profile",
+  "brand": "BIKEDASH",
+  "nav": {
+    "dashboard": "Dashboard",
+    "logout": "Singout",
+    "login": "Singup",
+    "register": "Register",
+    "browse_bikes": "Browse Bikes",
+    "become_owner": "Become an Owner"
+  },
+   "footer": {
+    "description": "Your adventure on two wheels starts here. Rent bikes from local owners.",
+    "explore": {
+      "title": "Explore",
+      "home": "Home",
+      "how_it_works": "How it Works",
+      "about_us": "About Us"
+    },
+    "support": {
+      "title": "Support",
+      "help_center": "Help Center",
+      "contact_us": "Contact Us",
+      "faqs": "FAQs"
+    },
+    "connect": {
+      "title": "Connect"
+    },
+    "copyright": "© 2024 BikeDash. All Rights Reserved."
+  },
+  "hero": {
+    "title": "Your Next Ride, Just a Click Away",
+    "subtitle": "Rent from a diverse community of local bike owners.",
+    "search": {
+      "location_label": "Location",
+      "location_placeholder": "e.g., San Francisco",
+      "dates_label": "Dates",
+      "dates_placeholder": "Select your dates",
+      "category_label": "Category",
+      "category_all": "All Types",
+      "category_mountain": "Mountain",
+      "category_road": "Road",
+      "category_city": "City",
+      "category_electric": "Electric"
+    }
   }
 }

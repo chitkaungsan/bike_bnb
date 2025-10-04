@@ -1,6 +1,8 @@
 <template>
   <div class="container py-4">
     {{ user }}
+          <LogoutButton v-if="isAuthenticated"></LogoutButton>
+
     <div v-if="user" class="card">
       <div class="card-header">
         <h2 class="card-title">{{ t('dashboard.title') }}</h2>
@@ -10,6 +12,7 @@
         <p>{{ t('dashboard.info') }}</p>
         <p><strong>{{ t('dashboard.email_label') }}</strong> {{ user.email }}</p>
       </div>
+      
     </div>
     <div v-else class="text-center">
       <p>{{ t('dashboard.loading') }}</p>
@@ -24,11 +27,12 @@
 import { computed, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
+import LogoutButton from '../../components/LogoutButton.vue';
 
 const store = useStore();
 const { t } = useI18n();
 const user = computed(() => store.getters['auth/user']);
-
+const isAuthenticated = computed(() => store.getters['auth/isAuthenticated']);
 // Get the user from the Vuex store
 
 // When the component is mounted, dispatch an action to fetch the user data
