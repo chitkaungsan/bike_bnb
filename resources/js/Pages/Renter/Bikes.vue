@@ -1,5 +1,5 @@
 <template>
     <div>
-        <h1>Renter Overview</h1>
+        <h1>Renter Bike</h1>
     </div>
 </template>

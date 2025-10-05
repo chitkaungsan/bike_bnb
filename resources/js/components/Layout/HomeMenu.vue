@@ -1,21 +1,15 @@
 <template>
+
   <div class="position-relative d-inline-block">
     <!-- Toggle button -->
-    <button 
-      @click="toggleDropdown" 
-      class="btn btn-sm d-flex align-items-center justify-content-center rounded-circle shadow-sm theme-toggle-btn border-theme-btn"
-    >
+    <button @click="toggleDropdown"
+      class="btn btn-sm d-flex align-items-center justify-content-center rounded-circle shadow-sm theme-toggle-btn border-theme-btn">
       <!-- Not logged in -->
       <i v-if="!isAuthenticated" class="bi bi-list"></i>
 
       <!-- Logged in with avatar -->
-      <img 
-        v-else-if="user?.avatar" 
-        :src="`${user.avatar}`" 
-        alt="avatar" 
-        loading="lazy"
-        class="rounded-circle avatar-img"
-      />
+      <img v-else-if="user?.avatar" :src="`${user.avatar}`" alt="avatar" loading="lazy"
+        class="rounded-circle avatar-img" />
 
       <!-- Logged in without avatar -->
       <span v-else class="avatar-text">
@@ -24,11 +18,7 @@
     </button>
 
     <!-- Dropdown menu -->
-    <ul 
-      v-show="isOpen" 
-      class="dropdown-menu show position-absolute end-0 mt-2 shadow"
-      style="min-width: 200px;"
-    >
+    <ul v-show="isOpen" class="dropdown-menu show position-absolute end-0 mt-2 shadow" style="min-width: 200px;">
       <!-- Profile -->
       <li v-if="isAuthenticated">
         <a class="dropdown-item" href="#">{{ t('profile') }}</a>
@@ -36,40 +26,39 @@
 
       <!-- Theme Switcher -->
       <li>
-        <a 
-          class="dropdown-item d-flex justify-content-between align-items-center"
-          href="#"
-          @click.prevent="toggleTheme"
-        >
+        <a class="dropdown-item d-flex justify-content-between align-items-center" href="#"
+          @click.prevent="toggleTheme">
           {{ currentTheme === 'light' ? t('theme.dark_mode') : t('theme.light_mode') }}
-          <i 
-            class="bi"
-            :class="currentTheme === 'light' ? 'bi-moon-fill text-dark' : 'bi-sun-fill text-warning'"
-          ></i>
+          <i class="bi" :class="currentTheme === 'light' ? 'bi-moon-fill text-dark' : 'bi-sun-fill text-warning'"></i>
         </a>
       </li>
-       <li v-if="isAuthenticated"><router-link class="dropdown-item" :to="{ name: 'Dashboard' }" >
-        {{ t('nav.dashboard') }}
+      <li v-if="isAuthenticated && user && user.role === 'owner'"><router-link class="dropdown-item"
+          :to="{ name: 'owner.dashboard' }">
+          {{ t('nav.dashboard') }}
         </router-link>
-       </li>
-      <li><hr class="dropdown-divider"></li>
+      </li>
+      <li v-if="isAuthenticated && user && user.role === 'renter'">
+        <router-link class="dropdown-item" :to="{ name: 'renter.dashboard' }">
+          {{ t('nav.dashboard') }}
+        </router-link>
+      </li>
+
+      <!-- Admin Dashboard -->
+      <li v-if="isAuthenticated && user && user.role === 'admin'">
+        <router-link class="dropdown-item" :to="{ name: 'admin.dashboard' }">
+          {{ t('nav.dashboard') }}
+        </router-link>
+      </li>
+      <li>
+        <hr class="dropdown-divider">
+      </li>
 
       <!-- Logout / Login -->
       <li>
-        <a 
-          class="dropdown-item" 
-          v-if="isAuthenticated" 
-          @click.prevent="logout" 
-          href="#"
-        >
+        <a class="dropdown-item" v-if="isAuthenticated" @click.prevent="logout" href="#">
           {{ t('nav.logout') }}
         </a>
-        <a 
-          class="dropdown-item" 
-          v-else 
-          @click.prevent="router.push({ name: 'Login' })"
-          href="#"
-        >
+        <a class="dropdown-item" v-else @click.prevent="router.push({ name: 'Login' })" href="#">
           {{ t('nav.login') }}
         </a>
       </li>

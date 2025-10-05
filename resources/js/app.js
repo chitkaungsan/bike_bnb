@@ -6,7 +6,8 @@ import store from './store/index'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import * as bootstrap from 'bootstrap'
 import i18n from './i18n'
-
+import { QuillEditor } from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
 // Font Awesome
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -19,6 +20,7 @@ import '@fontsource/inter/400.css'
 import '@fontsource/inter/500.css'
 import '@fontsource/inter/600.css'
 import '@fontsource/inter/700.css'
+import "leaflet/dist/leaflet.css";
 
 // Add icons to the library
 library.add(faBicycle, faGoogle, faFacebookF,faEye, faEyeSlash,faMapLocationDot,faStore,)
@@ -31,7 +33,7 @@ const app = createApp(App)
 
 // Register font-awesome component
 app.component('font-awesome-icon', FontAwesomeIcon)
-
+app.component('QuillEditor', QuillEditor)
 // Use plugins
 app.use(router)
    .use(store)

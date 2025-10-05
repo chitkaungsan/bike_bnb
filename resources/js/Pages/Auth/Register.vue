@@ -125,7 +125,7 @@ const handleRegister = async () => {
     await store.dispatch('auth/register', form.value);
      const user = store.state.auth.user;
     if (user.role === 'owner') {
-      router.push({ name: 'Dashboard' });
+      router.push({ name: 'owner.dashboard' });
     } else {
       router.push({ name: 'Home' });
     }
