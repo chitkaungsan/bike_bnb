@@ -17,3 +17,4 @@ Route::middleware('auth:api')->group(function () {
     });
 });
 Route::post('upload-avatar', [App\Http\Controllers\Api\AuthController::class, 'uploadAvatar']);
+Route::post('store/add', [App\Http\Controllers\Api\StoreController::class, 'store']);

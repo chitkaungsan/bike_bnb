@@ -39,3 +39,5 @@ app.use(router)
    .use(store)
    .use(i18n)
    .mount('#app')
+
+   window.router = router

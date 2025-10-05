@@ -9,8 +9,8 @@ export default [
       { path: '', name: 'admin.dashboard', component: Dashboard },
       {
         path: 'bikes',
-        name: 'owner.bikes',
-        component: () => import('../pages/Admin/Bikes.vue'),
+        name: 'admin.bikes',
+        component: () => import('../Pages/Admin/Bikes.vue'),
         meta: { title: 'Bike Management' },
       },
       {

@@ -7,34 +7,38 @@
     </div>
 
     <nav class="sidebar-nav">
-      <router-link 
+      <router-link
         to="/owner/dashboard"
         class="nav-link"
-        :class="{ active: $route.name === 'owner.dashboard' }">
+        :class="{ active: $route.name === 'owner.dashboard' }"
+      >
         <font-awesome-icon :icon="faChartLine" />
         <span>Overview</span>
       </router-link>
 
-      <router-link 
+      <router-link
         to="/owner/bikes"
         class="nav-link"
-        :class="{ active: $route.name === 'owner.bikes' }">
+        :class="{ active: $route.path.startsWith('/owner/bikes') }"
+      >
         <font-awesome-icon :icon="faBicycle" />
         <span>Bikes</span>
       </router-link>
 
-      <router-link 
+      <router-link
         to="/owner/bookings"
         class="nav-link"
-        :class="{ active: $route.name === 'owner.bookings' }">
+        :class="{ active: $route.name === 'owner.bookings' }"
+      >
         <font-awesome-icon :icon="faCalendarCheck" />
         <span>Bookings</span>
       </router-link>
 
-      <router-link 
+      <router-link
         to="/owner/payouts"
         class="nav-link"
-        :class="{ active: $route.name === 'owner.payouts' }">
+        :class="{ active: $route.name === 'owner.payouts' }"
+      >
         <font-awesome-icon :icon="faWallet" />
         <span>Payouts</span>
       </router-link>
@@ -49,11 +53,15 @@
 </template>
 
 <script setup>
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { 
-  faChartLine, faBicycle, faCalendarCheck, faWallet, faSignOutAlt 
-} from '@fortawesome/free-solid-svg-icons';
-import LogoutButton from '../LogoutButton.vue';
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import {
+  faChartLine,
+  faBicycle,
+  faCalendarCheck,
+  faWallet,
+  faSignOutAlt,
+} from "@fortawesome/free-solid-svg-icons";
+import LogoutButton from "../LogoutButton.vue";
 </script>
 
 <style scoped>

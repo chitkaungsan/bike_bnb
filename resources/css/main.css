@@ -14,6 +14,10 @@
 }
 
 /* --- Dark Mode Variables --- */
+/* Prefer using [data-bs-theme="dark"] on the root/html element so Bootstrap 5's theme attribute
+   and the Vuex module (which sets document.documentElement.setAttribute('data-bs-theme', theme))
+   can control the CSS. Keep `body.dark` as a fallback for older code that toggles a class on body. */
+:root[data-bs-theme="dark"],
 body.dark {
   --primary-color: #63C1A2;
   --primary-hover-color: #52a88a;
@@ -190,3 +194,7 @@ main {
   margin-right: 1rem;
 }
 
+#nprogress .bar {
+  background: #63C1A2 !important;
+  height: 3px !important;
+}
