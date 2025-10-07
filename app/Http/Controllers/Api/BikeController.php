@@ -6,9 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-
+use App\Models\Brand;
 use App\Models\Bike;
 use App\Models\BikeImage;
+use App\Models\Category;
 class BikeController extends Controller
 {
   public function bikeStore(Request $request)
@@ -25,6 +26,8 @@ class BikeController extends Controller
             'year' => 'nullable|integer',
             'type' => 'nullable|string|max:255',
             'bike_no' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'store_id' => 'required|integer',
         ]);
 
         // --- Upload main photo ---
@@ -46,6 +49,7 @@ class BikeController extends Controller
         // --- Create bike record ---user
         $bike = Bike::create(array_merge($validated, [
             'user_id' => $request->user_id, // if using auth
+            'store_id' => $request->store_id,
         ]));
 
         // --- Upload multiple additional bike images ---
@@ -55,6 +59,8 @@ class BikeController extends Controller
                 Storage::disk('s3')->putFileAs('bike_images', $file, $fileName, 'public');
                 BikeImage::create([
                     'bike_id' => $bike->id,
+                    'user_id' => $request->user_id,
+                    'store_id' => $request->store_id,
                     'photo' => Storage::disk('s3')->url('bike_images/' . $fileName),
                 ]);
             }
@@ -63,5 +69,15 @@ class BikeController extends Controller
         return response()->json([
             'message' => 'Bike added successfully!',
         ]);
+    }
+     public function getBrands()
+    {
+        $brands = Brand::select('id', 'name', 'logo')->get();
+        return response()->json($brands);
+    }
+    public function getCategories()
+    {
+        $categories = Category::select('id', 'name')->get();
+        return response()->json($categories);
     }
 }

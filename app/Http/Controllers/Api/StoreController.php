@@ -110,4 +110,10 @@ class StoreController extends Controller
         ], 500);
     }
 }
+        public function getStores(Request $request)
+        {
+            $user_id = $request->input('user_id');
+            $stores = Store::select('name','id')->where('user_id',$user_id)->get();
+            return response()->json($stores);
+        }
 }

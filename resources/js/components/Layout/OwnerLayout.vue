@@ -5,6 +5,7 @@
     <main class="main-content">
       <OwnerHeader :title="$route.meta.title || 'Dashboard'" />
       <div class="content-area">
+        <Toast />
         <router-view />
       </div>
     </main>

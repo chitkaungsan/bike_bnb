@@ -21,3 +21,4 @@ Route::post('bike/logo/upload', [App\Http\Controllers\Api\StoreController::class
 
 require __DIR__.'/api_store.php';
 require __DIR__.'/api_bike.php';
+require __DIR__.'/api_home.php';
