@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 
 use App\Models\Store;
 use App\Models\StoreImage;
+
 class StoreController extends Controller
 {
     public function store(Request $request)
@@ -24,14 +25,18 @@ class StoreController extends Controller
             'side'        => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
             'outside'     => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
             'inside'      => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
+            'address'     => 'nullable|string',
+            'phone'       => 'nullable|string',
         ]);
 
-        // 1️⃣ Save store basic info
+        // 1 Save store basic info
         $store = new Store();
         $store->name = $request->name;
         $store->description = $request->description;
         $store->location = $request->location;
         $store->user_id = $request->user_id; // logged-in user
+        $store->address = $request->address;
+        $store->phone = $request->phone;
 
         // Upload logo & cover_photo to S3
         if ($request->hasFile('logo')) {
@@ -43,7 +48,7 @@ class StoreController extends Controller
 
         $store->save();
 
-        // 2️⃣ Save multiple store images
+        // 2Save multiple store images
         $images = ['front' => true, 'side' => false, 'outside' => false, 'inside' => false];
 
         foreach ($images as $field => $isMain) {
@@ -77,4 +82,32 @@ class StoreController extends Controller
 
         return Storage::disk('s3')->url($fileName);
     }
+    public function uploadBikeLogo(Request $request)
+{
+    // $request->validate([
+    //     'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    // ]);
+
+    try {
+        $image = $request->file('image');
+
+        // Generate random file name
+        $fileName = Str::random(10) . '.' . $image->getClientOriginalExtension();
+
+        // Upload to S3 inside bike_logo folder
+        Storage::disk('s3')->putFileAs('bike_logo', $image, $fileName, 'public');
+
+        $url = Storage::disk('s3')->url('bike_logo/' . $fileName);
+
+        return response()->json([
+            'success' => true,
+            'url' => $url,
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => 'Upload failed: ' . $e->getMessage()
+        ], 500);
+    }
+}
 }

@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->string('location');
+            $table->string('phone')->nullable();
+            $table->string('address')->nullable();
             $table->string('logo')->nullable();
             $table->string('cover_photo')->nullable(); // added cover_photo
             $table->timestamps(); // created_at & updated_at

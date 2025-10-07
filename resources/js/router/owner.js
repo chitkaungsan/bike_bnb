@@ -21,7 +21,17 @@ export default [
         path: 'bikes/add',
         name: 'owner.bikes.add',
         component: () => import('../components/Owner/components/Bike/Add.vue'),
+      },{
+        path: 'stores',
+        name: 'owner.stores',
+        component: () => import('../pages/Owner/Stores.vue'),
       },
+      {
+        path: 'stores/add',
+        name: 'owner.stores.add',
+        component: () => import('../components/Owner/components/Store/Add.vue'),
+      },
+   
     ],
   },
 ]

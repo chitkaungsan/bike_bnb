@@ -21,10 +21,9 @@ import '@fontsource/inter/500.css'
 import '@fontsource/inter/600.css'
 import '@fontsource/inter/700.css'
 import "leaflet/dist/leaflet.css";
-
 // Add icons to the library
 library.add(faBicycle, faGoogle, faFacebookF,faEye, faEyeSlash,faMapLocationDot,faStore,)
-
+import vueFilePond from 'vue-filepond/dist/vue-filepond.js';
 // Init theme in store
 store.dispatch('theme/initTheme')
 

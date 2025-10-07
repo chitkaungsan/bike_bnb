@@ -1,12 +1,15 @@
 <template>
-  <aside class="sidebar">
+  <aside :class="['sidebar', { 'sidebar-collapsed': collapsed }]">
     <div class="sidebar-header">
+      <div class="sidebar-toggle" @click="collapsed = !collapsed">
+        <span>&#9776;</span>
+      </div>
       <font-awesome-icon :icon="faBicycle" class="logo-icon" />
-      <h2 class="brand-name">BikeDash</h2>
-      <span>Owner Panel</span>
+      <h2 class="brand-name" v-if="!collapsed">BikeDash</h2>
+      <span v-if="!collapsed">Owner Panel</span>
     </div>
 
-    <nav class="sidebar-nav">
+    <nav class="sidebar-nav" v-if="!collapsed">
       <router-link
         to="/owner/dashboard"
         class="nav-link"
@@ -14,6 +17,15 @@
       >
         <font-awesome-icon :icon="faChartLine" />
         <span>Overview</span>
+      </router-link>
+
+      <router-link
+        to="/owner/stores"
+        class="nav-link"
+        :class="{ active: $route.path.startsWith('/owner/stores') }"
+      >
+        <font-awesome-icon :icon="faStore" />
+        <span>Stores</span>
       </router-link>
 
       <router-link
@@ -44,26 +56,25 @@
       </router-link>
     </nav>
 
-    <div class="sidebar-footer">
-      <a href="#">
-        <logout-button />
-      </a>
+    <div class="sidebar-footer" v-if="!collapsed">
+      <logout-button />
     </div>
   </aside>
 </template>
-
 <script setup>
+import { ref } from "vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import {
   faChartLine,
   faBicycle,
   faCalendarCheck,
   faWallet,
-  faSignOutAlt,
+  faStore,
 } from "@fortawesome/free-solid-svg-icons";
 import LogoutButton from "../LogoutButton.vue";
-</script>
 
+const collapsed = ref(false);
+</script>
 <style scoped>
 .sidebar {
   width: 260px;
@@ -72,26 +83,47 @@ import LogoutButton from "../LogoutButton.vue";
   display: flex;
   flex-direction: column;
   padding: 1.5rem;
-  transition: background-color 0.3s, border-color 0.3s;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+/* Collapsed state */
+.sidebar-collapsed {
+  width: 60px;
+  padding: 1rem 0.5rem;
 }
 
 .sidebar-header {
   text-align: center;
   margin-bottom: 2rem;
+  position: relative;
 }
-.sidebar-header .logo-icon {
-  font-size: 2.5rem;
-  color: var(--primary-color);
+
+.sidebar-toggle {
+  display: none;
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  font-size: 1.5rem;
+  cursor: pointer;
 }
-.sidebar-header .brand-name {
-  font-weight: 700;
-  margin: 0.5rem 0 0.2rem;
-}
-.sidebar-header span {
-  font-size: 0.8rem;
-  color: var(--light-text-color);
-  text-transform: uppercase;
-  letter-spacing: 1px;
+
+/* Show toggle on mobile */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    height: 100%;
+    z-index: 999;
+    transition: all 0.3s ease;
+  }
+  .sidebar.sidebar-collapsed {
+    left: 0;
+  }
+  .sidebar-toggle {
+    display: block;
+  }
 }
 
 .sidebar-nav .nav-link {

@@ -1,6 +1,6 @@
 <template>
   <header class="main-header">
-    <h1>{{ title }}</h1>
+    <h5>{{ title }}</h5>
     <div class="header-actions">
       <button class="btn btn-primary">
         <font-awesome-icon :icon="faPlus" /> Add New Bike
@@ -10,11 +10,11 @@
 </template>
 
 <script setup>
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 defineProps({
-  title: String
+  title: String,
 });
 </script>
 

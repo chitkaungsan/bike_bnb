@@ -17,4 +17,7 @@ Route::middleware('auth:api')->group(function () {
     });
 });
 Route::post('upload-avatar', [App\Http\Controllers\Api\AuthController::class, 'uploadAvatar']);
-Route::post('store/add', [App\Http\Controllers\Api\StoreController::class, 'store']);
+Route::post('bike/logo/upload', [App\Http\Controllers\Api\StoreController::class, 'uploadBikeLogo']);
+
+require __DIR__.'/api_store.php';
+require __DIR__.'/api_bike.php';

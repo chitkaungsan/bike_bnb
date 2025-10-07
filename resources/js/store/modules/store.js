@@ -13,6 +13,9 @@ import axios from '../../service/axios';
     side: null,
     outside: null,
     inside: null,
+    loading: false,
+    address: '',
+    phone: '',
   },
 });
 
@@ -20,6 +23,10 @@ const mutations = {
   SET_STORE_FIELD(state, { key, value }) {
     state.store[key] = value;
   },
+  SET_LOADING(state, loading) {
+    state.loading = loading;  
+  },
+
   RESET_STORE(state) {
     state.store = {
       name: '',
@@ -41,12 +48,15 @@ const actions = {
   },
 
   async submitStore({ state, commit }) {
+     commit("SET_LOADING", true);
     try {
       const formData = new FormData();
       formData.append('user_id', state.store.user_id);
       formData.append('name', state.store.name);
       formData.append('description', state.store.description);
       formData.append('location', state.store.location);
+      formData.append('address', state.store.address);
+      formData.append('phone', state.store.phone);
 
       ['logo', 'cover_photo', 'front', 'side', 'outside', 'inside'].forEach((key) => {
         if (state.store[key]) formData.append(key, state.store[key]);
@@ -62,12 +72,15 @@ const actions = {
     } catch (error) {
       console.error('Failed to submit store:', error);
       throw error;
+    }finally {
+      commit("SET_LOADING", false);
     }
   },
 };
 
 const getters = {
   store: state => state.store,
+  loading: state => state.loading
 };
 export default {
   namespaced: true,

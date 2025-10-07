@@ -16,6 +16,8 @@ class Store extends Model
         'location',
         'logo',
         'cover_photo',
+        'phone',
+        'address',
     ];
 
     /**

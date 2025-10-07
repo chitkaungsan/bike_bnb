@@ -12,8 +12,8 @@
 </template>
 
 <script setup>
-import OwnerSidebar from '../Owner/OwnerSidebar.vue';
-import OwnerHeader from '../Owner/OwnerHeader.vue';
+import OwnerSidebar from "../Owner/OwnerSidebar.vue";
+import OwnerHeader from "../Owner/OwnerHeader.vue";
 </script>
 
 <style scoped>
@@ -26,7 +26,7 @@ import OwnerHeader from '../Owner/OwnerHeader.vue';
 
 .main-content {
   flex: 1;
-  padding: 2rem;
+  padding: 1rem;
   overflow-y: auto;
 }
 
