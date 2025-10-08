@@ -10,7 +10,7 @@ export default [
       {
         path: 'bikes',
         name: 'renter.bikes',
-        component: () => import('../pages/Renter/Bikes.vue'),
+        component: () => import('../Pages/Renter/Bikes.vue'),
         meta: { title: 'Bike Management' },
       },
      

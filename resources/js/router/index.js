@@ -4,9 +4,9 @@ import store from "../store";
 import Home from "../Pages/Home.vue";
 import Login from "../Pages/Auth/Login.vue";
 import Register from "../Pages/Auth/Register.vue";
-import RenterDashboard from "../pages/Renter/Dashboard.vue";
-import OwnerDashboard from "../pages/Owner/Dashboard.vue";
-import AdminDashboard from "../pages/Admin/Dashboard.vue";
+import RenterDashboard from "../Pages/Renter/Dashboard.vue";
+import OwnerDashboard from "../Pages/Owner/Dashboard.vue";
+import AdminDashboard from "../Pages/Admin/Dashboard.vue";
 // import Dashboard from '../Pages/Dashboard/index.vue';
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'

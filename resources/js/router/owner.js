@@ -1,5 +1,5 @@
 import OwnerLayout from '../components/Layout/OwnerLayout.vue'
-import Dashboard from '../pages/Owner/Dashboard.vue'
+import Dashboard from '../Pages/Owner/Dashboard.vue'
 
 export default [
   {
@@ -15,7 +15,7 @@ export default [
       {
         path: 'bikes', // relative path!
         name: 'owner.bikes',
-        component: () => import('../pages/Owner/Bikes.vue'),
+        component: () => import('../Pages/Owner/Bikes.vue'),
       },
       {
         path: 'bikes/add',
@@ -24,7 +24,7 @@ export default [
       },{
         path: 'stores',
         name: 'owner.stores',
-        component: () => import('../pages/Owner/Stores.vue'),
+        component: () => import('../Pages/Owner/Stores.vue'),
       },
       {
         path: 'stores/add',
