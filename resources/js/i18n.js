@@ -1,8 +1,8 @@
 // resources/js/i18n.js
 
 import { createI18n } from 'vue-i18n';
-import en from './locales/en.json';
-import th from './locales/th.json';
+import en from './locales/en.js';
+import th from './locales/th.js';
 
 function getInitialLocale() {
     const savedLocale = localStorage.getItem('locale');
