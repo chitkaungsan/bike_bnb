@@ -9,6 +9,8 @@
   "or_continue_with": "หรือเข้าสู่ระบบด้วย",
   "no_account": "ยังไม่มีบัญชี?",
   "create_account": "สร้างบัญชี",
+  "book_now": "จองเดินทาง",
+  "bike": "จักรยาน",
   "login_form": {
     "invalid_credentials": "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
     "unexpected_error": "เกิดข้อผิดพลาดบางอย่าง"
@@ -79,5 +81,14 @@
       "category_city": "เมือง",
       "category_electric": "ไฟฟ้า"
     }
-  }
+  },
+   "categories": {
+    "mountain": "ภูเขา",
+    "road": "ถนน",
+    "city": "เมือง",
+    "electric": "ไฟฟ้า"
+  },
+  "browse_by_category" : "เรียกดูจักรยานตามประเภท",
+  "scooter" : "มอเตอร์ไซค์",
+  "adventure" : "การผจญภัย"
 }

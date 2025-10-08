@@ -1,45 +1,156 @@
 <template>
-  <div class="bike-carousel-wrapper">
-    <button class="carousel-btn btn-left" @click="scrollLeft">
-      <font-awesome-icon icon="chevron-left" />
-    </button>
+  <div class="container-fluid">
+    <div class="row py-4">
+      <div class="col-12 text-center">
+        <h3 class="text-center bike-title">{{ $t("bike") }}</h3>
+      </div>
+      <div class="col-12">
+        <div class="bike-carousel-wrapper">
+          <button class="carousel-btn btn-left" @click="scrollLeft">
+            <font-awesome-icon icon="chevron-left" />
+          </button>
 
-    <div class="bike-cards-container" ref="containerRef">
-      <!-- Show skeletons when loading -->
-      <template v-if="loading">
-        <div class="bike-card-wrapper" v-for="n in skeletonCount" :key="'skeleton-' + n">
-          <BikeCardSkeleton />
-        </div>
-      </template>
+          <div class="bike-cards-container" ref="containerRef">
+            <!-- Show skeletons when loading -->
+            <template v-if="loading">
+              <div
+                class="bike-card-wrapper"
+                v-for="n in skeletonCount"
+                :key="'skeleton-' + n"
+              >
+                <BikeCardSkeleton />
+              </div>
+            </template>
 
-      <!-- Show real bikes when loaded -->
-      <template v-else>
-        <div class="bike-card-wrapper" v-for="bike in bikes" :key="bike.id">
-          <BikeCard
-            :image="bike.photo"
-            :title="bike.title"
-            :model="bike.model + ', ' + bike.year"
-            :price="bike.price"
-            :store_id="bike.store_id"
-            :store_logo="bike.store_logo"
-            :store_name="bike.store_name"
-            :review="4.5"
-          />
+            <!-- Show real bikes when loaded -->
+            <template v-else>
+              <div class="bike-card-wrapper" v-for="bike in bikes" :key="bike.id">
+                <BikeCard
+                  :image="bike.photo"
+                  :title="bike.title"
+                  :model="bike.model + ', ' + bike.year"
+                  :price="bike.price"
+                  :store_id="bike.store_id"
+                  :store_logo="bike.store_logo"
+                  :store_name="bike.store_name"
+                  :review="4.5"
+                />
+              </div>
+            </template>
+          </div>
+
+          <button class="carousel-btn btn-right" @click="scrollRight">
+            <font-awesome-icon icon="chevron-right" />
+          </button>
         </div>
-      </template>
+      </div>
     </div>
+    <!-- scooter section -->
+    <div class="row py-4">
+      <div class="col-12 text-center">
+        <h3 class="text-center bike-title">{{ $t("scooter") }}</h3>
+      </div>
+      <div class="col-12">
+        <div class="bike-carousel-wrapper">
+          <button class="carousel-btn btn-left" @click="scrollLeft">
+            <font-awesome-icon icon="chevron-left" />
+          </button>
 
-    <button class="carousel-btn btn-right" @click="scrollRight">
-      <font-awesome-icon icon="chevron-right" />
-    </button>
+          <div class="bike-cards-container" ref="containerRef">
+            <!-- Show skeletons when loading -->
+            <template v-if="loading">
+              <div
+                class="bike-card-wrapper"
+                v-for="n in skeletonCount"
+                :key="'skeleton-' + n"
+              >
+                <BikeCardSkeleton />
+              </div>
+            </template>
+
+            <!-- Show real bikes when loaded -->
+            <template v-else>
+              <div
+                class="bike-card-wrapper"
+                v-for="bike in bikes.slice().reverse()"
+                :key="bike.id"
+              >
+                <BikeCard
+                  :image="bike.photo"
+                  :title="bike.title"
+                  :model="bike.model + ', ' + bike.year"
+                  :price="bike.price"
+                  :store_id="bike.store_id"
+                  :store_logo="bike.store_logo"
+                  :store_name="bike.store_name"
+                  :review="4.5"
+                />
+              </div>
+            </template>
+          </div>
+
+          <button class="carousel-btn btn-right" @click="scrollRight">
+            <font-awesome-icon icon="chevron-right" />
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- end scooter section -->
+    <!-- Adventure section -->
+    <div class="row py-4">
+      <div class="col-12 text-center">
+        <h3 class="text-center bike-title">{{ $t("adventure") }}</h3>
+      </div>
+      <div class="col-12">
+        <div class="bike-carousel-wrapper">
+          <button class="carousel-btn btn-left" @click="scrollLeft">
+            <font-awesome-icon icon="chevron-left" />
+          </button>
+
+          <div class="bike-cards-container" ref="containerRef">
+            <!-- Show skeletons when loading -->
+            <template v-if="loading">
+              <div
+                class="bike-card-wrapper"
+                v-for="n in skeletonCount"
+                :key="'skeleton-' + n"
+              >
+                <BikeCardSkeleton />
+              </div>
+            </template>
+
+            <!-- Show real bikes when loaded -->
+            <template v-else>
+              <div class="bike-card-wrapper" v-for="bike in bikes" :key="bike.id">
+                <BikeCard
+                  :image="bike.photo"
+                  :title="bike.title"
+                  :model="bike.model + ', ' + bike.year"
+                  :price="bike.price"
+                  :store_id="bike.store_id"
+                  :store_logo="bike.store_logo"
+                  :store_name="bike.store_name"
+                  :review="4.5"
+                />
+              </div>
+            </template>
+          </div>
+
+          <button class="carousel-btn btn-right" @click="scrollRight">
+            <font-awesome-icon icon="chevron-right" />
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
 import BikeCard from "./BikeCard.vue";
+import { useI18n } from "vue-i18n";
 import BikeCardSkeleton from "../loader/BikeCardSkeleton.vue";
 import axios from "../../service/axios";
-
+const t = useI18n();
 const bikes = ref([]);
 const loading = ref(true);
 const skeletonCount = 7; // number of skeleton cards to show
@@ -111,5 +222,34 @@ const scrollRight = () => {
 }
 .btn-right {
   right: 0.5rem;
+}
+.bike-title {
+  font-size: 3rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #63c1a2, #63c1a2); /* gradient text */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  position: relative;
+  display: inline-block;
+  margin-bottom: 2rem;
+}
+
+.bike-title::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 4px;
+  background: #63c1a2;
+  margin: 0.5rem auto 0;
+  border-radius: 2px;
+  transition: width 0.3s;
+}
+
+.bike-title:hover::after {
+  width: 100px; /* expand underline on hover */
+}
+
+.bike-title {
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 </style>

@@ -1,15 +1,17 @@
 <template>
   <section class="section">
     <div class="container">
-      <h2 class="section-title text-center">Browse by Category</h2>
-      <div class="row g-4">
+      <div class="col-12 text-center mb-2">
+        <h3 class="text-center bike-title">{{ $t("browse_by_category") }}</h3>
+      </div>
+      <div class="row g-4 mt-2">
         <CategoryCard
           v-for="cat in categories"
-          :key="cat.title"
+          :key="cat.key"
           :icon="cat.icon"
-          :title="cat.title"
-          :selected="selectedCategory === cat.title"
-          @click="selectCategory(cat.title)"
+          :title="t('categories.' + cat.key)"
+          :selected="selectedCategory === cat.key"
+          @click="selectCategory(cat.key)"
         />
       </div>
     </div>
@@ -19,20 +21,22 @@
 <script setup>
 import { ref } from "vue";
 import CategoryCard from "./CategoryCard.vue";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 // Define categories
 const categories = [
-  { title: "Mountain", icon: ["fas", "mountain-sun"] },
-  { title: "Road", icon: ["fas", "road"] },
-  { title: "City", icon: ["fas", "city"] },
-  { title: "Electric", icon: ["fas", "bolt"] },
+  { key: "mountain", icon: ["fas", "mountain-sun"] },
+  { key: "road", icon: ["fas", "road"] },
+  { key: "city", icon: ["fas", "city"] },
+  { key: "electric", icon: ["fas", "bolt"] },
 ];
 
 // State for selected category
 const selectedCategory = ref(null);
 
-function selectCategory(title) {
-  selectedCategory.value = title;
+function selectCategory(key) {
+  selectedCategory.value = key;
 }
 </script>
 
@@ -45,5 +49,34 @@ function selectCategory(title) {
   font-weight: 700;
   margin-bottom: 2rem;
   color: var(--text-color);
+}
+.bike-title {
+  font-size: 3rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #63c1a2, #63c1a2); /* gradient text */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  position: relative;
+  display: inline-block;
+  margin-bottom: 2rem;
+}
+
+.bike-title::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 4px;
+  background: #63c1a2;
+  margin: 0.5rem auto 0;
+  border-radius: 2px;
+  transition: width 0.3s;
+}
+
+.bike-title:hover::after {
+  width: 100px; /* expand underline on hover */
+}
+
+.bike-title {
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 </style>

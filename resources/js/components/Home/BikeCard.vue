@@ -47,7 +47,7 @@
         <div class="bike-card-footer">
           <!-- formatted price -->
           <span class="bike-card-price">{{ "$" + formattedPrice + "/day" }}</span>
-          <button class="btn btn-book">Book Now</button>
+          <button class="btn btn-book">{{ t("book_now") }}</button>
         </div>
       </div>
     </div>
@@ -57,8 +57,9 @@
 <script setup>
 import { ref, computed } from "vue";
 import Image from "primevue/image"; // note: lowercase path
-
+import { useI18n } from "vue-i18n";
 // assign defineProps to `props` and provide safe runtime defaults
+const { t } = useI18n();
 const props = defineProps({
   image: { type: String, default: "" },
   title: { type: String, default: "" },
