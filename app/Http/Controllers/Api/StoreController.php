@@ -19,7 +19,7 @@ class StoreController extends Controller
             'name'        => 'required|string|max:255',
             'description' => 'nullable|string',
             'location'    => 'required|string|max:255',
-            'logo'        => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'logo'        => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'cover_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
             'front'       => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
             'side'        => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4096',
@@ -68,6 +68,10 @@ class StoreController extends Controller
             'message' => 'Store created successfully!',
             // 'data'    => $store->load('images'), // load related images
         ]);
+    }
+    public function storeList(Request $request,$id){
+        $stores = Store::where('user_id',$id)->get();
+        return response()->json($stores);
     }
     protected function uploadToS3($file, $folder)
     {

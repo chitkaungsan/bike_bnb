@@ -1,11 +1,6 @@
 <template>
   <header class="main-header">
     <h5>{{ title }}</h5>
-    <div class="header-actions">
-      <button class="btn btn-primary">
-        <font-awesome-icon :icon="faPlus" /> Add New Bike
-      </button>
-    </div>
   </header>
 </template>
 

@@ -33,6 +33,8 @@ import Aura from '@primeuix/themes/aura';
 import Toast from 'primevue/toast';
 import ToastService from 'primevue/toastservice';
 import Tooltip from 'primevue/tooltip';
+import 'primeicons/primeicons.css';
+import Button from 'primevue/button';
 // Init theme in store
 store.dispatch('theme/initTheme')
 
@@ -43,6 +45,7 @@ const app = createApp(App)
 app.component('font-awesome-icon', FontAwesomeIcon)
 app.component('QuillEditor', QuillEditor)
 app.component('Toast', Toast)
+app.component('Button', Button);
 
 app.directive('tooltip', Tooltip);
 // Use plugins

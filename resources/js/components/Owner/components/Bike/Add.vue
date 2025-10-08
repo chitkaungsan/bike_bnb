@@ -571,8 +571,8 @@ const handleSubmit = async () => {
 
   currentStep.value = steps.length;
   isLoading.value = true;
-  const submissionData = new FormData();
 
+  const submissionData = new FormData();
   for (let key in formData) submissionData.append(key, formData[key] ?? "");
 
   // Append images
@@ -584,22 +584,24 @@ const handleSubmit = async () => {
 
   try {
     await store.dispatch("bikes/addBike", submissionData);
-  } catch (err) {
-    console.error("Failed to add bike:", err.response.data);
-    toast.add({
-      severity: "error",
-      summary: "Error",
-      detail: `${err.response.data.message}`,
-      life: 1000,
-    });
-  } finally {
-    isLoading.value = false;
+
+    // ✅ Only show success if no error occurs
     toast.add({
       severity: "success",
       summary: "Success",
-      detail: `Bike Add Successfully`,
-      life: 1000,
+      detail: `Bike added successfully.`,
+      life: 1500,
     });
+  } catch (err) {
+    console.error("Failed to add bike:", err.response?.data || err);
+    toast.add({
+      severity: "error",
+      summary: "Error",
+      detail: `${err.response?.data?.message || "Failed to add bike"}`,
+      life: 1500,
+    });
+  } finally {
+    isLoading.value = false;
   }
 };
 

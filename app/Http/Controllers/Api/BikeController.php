@@ -10,6 +10,8 @@ use App\Models\Brand;
 use App\Models\Bike;
 use App\Models\BikeImage;
 use App\Models\Category;
+use App\Models\Store;
+use Illuminate\Support\Facades\DB;
 class BikeController extends Controller
 {
   public function bikeStore(Request $request)
@@ -79,5 +81,20 @@ class BikeController extends Controller
     {
         $categories = Category::select('id', 'name')->get();
         return response()->json($categories);
+    }
+    public function getBikeList(Request $request, $user_id)
+    {
+        $bikes = DB::table('bikes')
+            ->join('stores', 'bikes.store_id', '=', 'stores.id')
+            ->select(
+                'bikes.*',
+                'stores.name as store_name',
+                'stores.address as store_address',
+                'stores.id as store_id',
+                'stores.logo as store_logo',
+            )
+            ->where('bikes.user_id', $user_id)
+            ->get();
+        return response()->json($bikes);
     }
 }

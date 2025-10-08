@@ -42,7 +42,7 @@ import axios from "../../service/axios";
 
 const bikes = ref([]);
 const loading = ref(true);
-const skeletonCount = 5; // number of skeleton cards to show
+const skeletonCount = 7; // number of skeleton cards to show
 const containerRef = ref(null);
 
 onMounted(async () => {

@@ -37,6 +37,19 @@ const actions = {
       commit("SET_LOADING", false);
     }
   },
+ async fetchBikeList({ commit }, id) {
+  commit("SET_LOADING", true);
+  try {
+    const response = await axios.get(`get/bikes/${id}`);
+    commit("SET_BIKE", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch bike list:", error);
+    throw error; // rethrow if you want to handle it elsewhere
+  } finally {
+    commit("SET_LOADING", false);
+  }
+}
 };
 const getters = {
   bike: (state) => state.bike,

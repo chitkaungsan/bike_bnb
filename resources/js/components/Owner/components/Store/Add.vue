@@ -150,7 +150,9 @@ import "quill/dist/quill.snow.css";
 import L from "leaflet";
 import { useStore } from "vuex";
 import Quill from "quill";
+import { useToast } from "primevue/usetoast";
 
+const toast = useToast();
 const store = useStore();
 
 const form = reactive({
@@ -167,7 +169,7 @@ const form = reactive({
   phone: "",
 });
 
-const errors = reactive({}); // 🟢 Laravel validation errors
+const errors = reactive({});
 
 const previewLogo = ref(null);
 const previewCover = ref(null);
@@ -258,18 +260,33 @@ async function submitForm() {
     store.dispatch("store/setField", { key: "phone", value: form.phone });
 
     const result = await store.dispatch("store/submitStore");
-    console.log("✅ Store saved!", result);
-    alert("Store saved successfully!");
+    toast.add({
+      severity: "success",
+      summary: "Success",
+      detail: "Store added successfully",
+      life: 1000,
+    });
   } catch (err) {
-    // 🟥 Handle Laravel 422 validation errors
     if (err.response && err.response.status === 422) {
       const laravelErrors = err.response.data.errors;
       for (const key in laravelErrors) {
         errors[key] = laravelErrors[key][0];
       }
+      console.error("❌ Error saving store:", err.response.data);
+      toast.add({
+        severity: "error",
+        summary: "Error",
+        detail: `${err.response.data.message}`,
+        life: 1000,
+      });
     } else {
       console.error("❌ Error saving store:", err);
-      alert("Unexpected error saving store.");
+      toast.add({
+        severity: "error",
+        summary: "Error",
+        detail: `${err.response.data.message}`,
+        life: 1000,
+      });
     }
   }
 }

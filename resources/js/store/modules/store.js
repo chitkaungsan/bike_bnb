@@ -76,6 +76,17 @@ const actions = {
       commit("SET_LOADING", false);
     }
   },
+  async fetchStoreList({ commit },id) {
+    console.log('uder id', id);
+    try {
+      const response = await axios.get(`/get/stores/${id}`);
+      console.log('response', response);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch store list:', error);
+      throw error;
+    }
+  }
 };
 
 const getters = {

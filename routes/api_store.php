@@ -2,5 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-Route::post('store/add', [App\Http\Controllers\Api\StoreController::class, 'store']);
-Route::get('get/stores', [App\Http\Controllers\Api\StoreController::class, 'getStores']);
+use App\Http\Controllers\Api\StoreController;
+Route::post('store/add', [StoreController::class, 'store']);
+Route::get('get/stores', [StoreController::class, 'getStores']);
+Route::get('get/stores/{id}', [StoreController::class, 'storeList']);
