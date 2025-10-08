@@ -1,8 +1,10 @@
 <?php 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Auth\SocialLoginController;
 use App\Http\Controllers\Api\AuthController;
+
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -18,6 +20,11 @@ Route::middleware('auth:api')->group(function () {
 });
 Route::post('upload-avatar', [App\Http\Controllers\Api\AuthController::class, 'uploadAvatar']);
 Route::post('bike/logo/upload', [App\Http\Controllers\Api\StoreController::class, 'uploadBikeLogo']);
+
+
+
+Route::get('/auth/{provider}/redirect', [SocialLoginController::class, 'redirect']);
+Route::get('/auth/{provider}/callback', [SocialLoginController::class, 'callback']);
 
 require __DIR__.'/api_store.php';
 require __DIR__.'/api_bike.php';

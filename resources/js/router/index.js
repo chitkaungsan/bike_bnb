@@ -8,6 +8,7 @@ import RenterDashboard from "../Pages/Renter/Dashboard.vue";
 import OwnerDashboard from "../Pages/Owner/Dashboard.vue";
 import AdminDashboard from "../Pages/Admin/Dashboard.vue";
 // import Dashboard from '../Pages/Dashboard/index.vue';
+import AuthCallback from "../components/AuthCallback.vue";
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import ownerRoutes from './owner.js'
@@ -17,6 +18,7 @@ const routes = [
     { path: "/", name: "Home", component: Home },
     { path: "/login", name: "Login", component: Login },
     { path: "/register", name: "Register", component: Register },
+      { path: '/auth/google/callback', component: AuthCallback },
     ...ownerRoutes,
     ...adminRoutes,
     ...renterRoutes,
