@@ -42,7 +42,7 @@ onMounted(async () => {
 
     if (code) {
       const response = await axios.get(
-        `http://localhost:8000/api/auth/google/callback?code=${code}`
+        `${import.meta.env.VITE_API_URL}/auth/google/callback?code=${code}`
       );
       const { token, user } = response.data;
 

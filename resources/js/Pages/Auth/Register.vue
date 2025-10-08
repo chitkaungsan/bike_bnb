@@ -174,7 +174,7 @@ const handleRegister = async () => {
   }
 };
 const handleGoogleLogin = async () => {
-  window.location.href = "http://localhost:8000/api/auth/google/redirect";
+  window.location.href = `${import.meta.env.VITE_API_URL}/auth/google/redirect`;
 };
 onMounted(() => {
   let roleParam = new URLSearchParams(window.location.search).get("role");

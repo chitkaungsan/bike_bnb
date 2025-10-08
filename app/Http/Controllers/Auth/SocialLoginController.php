@@ -17,6 +17,7 @@ class SocialLoginController extends Controller
 
     public function callback($provider)
    {
+        $frontendUrl = env('VITE_WEB_URL');
         $googleUser = Socialite::driver('google')->stateless()->user();
 
         $user = User::updateOrCreate(
@@ -34,6 +35,6 @@ class SocialLoginController extends Controller
         //     'token' => $token,
         //     'user' => $user
         // ]);
-         return redirect("http://localhost:8000/auth/google/callback?token={$token}");
+          return redirect("$frontendUrl/auth/google/callback?token=$token");
     }
 }

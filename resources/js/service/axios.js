@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: 'http://localhost:8000/api', // change to your backend URL
+  baseURL: `${import.meta.env.VITE_API_URL}`, // change to your backend URL
 });
 
 // Automatically attach token from localStorage
