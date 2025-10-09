@@ -1,68 +1,70 @@
 <template>
   <aside :class="['sidebar', { 'sidebar-collapsed': collapsed }]">
     <div class="sidebar-header">
-      <div class="sidebar-toggle" @click="collapsed = !collapsed">
-        <span>&#9776;</span>
-      </div>
-      <font-awesome-icon :icon="faBicycle" class="logo-icon" />
-      <h2 class="brand-name" v-if="!collapsed">BikeDash</h2>
-      <span v-if="!collapsed">Owner Panel</span>
+      <router-link to="/owner/dashboard" class="brand-logo">
+        <font-awesome-icon :icon="faBicycle" class="logo-icon" />
+        <h2 class="brand-name" v-if="!collapsed">BikeDash</h2>
+      </router-link>
     </div>
 
-    <nav class="sidebar-nav" v-if="!collapsed">
+    <nav class="sidebar-nav">
       <router-link
         to="/owner/dashboard"
         class="nav-link"
-        :class="{ active: $route.name === 'owner.dashboard' }"
+        v-tooltip.right="{ value: 'Overview', disabled: !collapsed }"
       >
         <font-awesome-icon :icon="faChartLine" />
-        <span>Overview</span>
+        <span v-if="!collapsed">Overview</span>
       </router-link>
 
       <router-link
         to="/owner/stores"
         class="nav-link"
-        :class="{ active: $route.path.startsWith('/owner/stores') }"
+        v-tooltip.right="{ value: 'Stores', disabled: !collapsed }"
       >
         <font-awesome-icon :icon="faStore" />
-        <span>Stores</span>
+        <span v-if="!collapsed">Stores</span>
       </router-link>
 
       <router-link
         to="/owner/bikes"
         class="nav-link"
-        :class="{ active: $route.path.startsWith('/owner/bikes') }"
+        v-tooltip.right="{ value: 'Bikes', disabled: !collapsed }"
       >
         <font-awesome-icon :icon="faBicycle" />
-        <span>Bikes</span>
+        <span v-if="!collapsed">Bikes</span>
       </router-link>
 
       <router-link
         to="/owner/bookings"
         class="nav-link"
-        :class="{ active: $route.name === 'owner.bookings' }"
+        v-tooltip.right="{ value: 'Bookings', disabled: !collapsed }"
       >
         <font-awesome-icon :icon="faCalendarCheck" />
-        <span>Bookings</span>
+        <span v-if="!collapsed">Bookings</span>
       </router-link>
 
       <router-link
         to="/owner/payouts"
         class="nav-link"
-        :class="{ active: $route.name === 'owner.payouts' }"
+        v-tooltip.right="{ value: 'Payouts', disabled: !collapsed }"
       >
         <font-awesome-icon :icon="faWallet" />
-        <span>Payouts</span>
+        <span v-if="!collapsed">Payouts</span>
       </router-link>
     </nav>
 
-    <div class="sidebar-footer" v-if="!collapsed">
-      <logout-button />
+    <div class="sidebar-footer">
+      <div class="nav-link collapse-toggle" @click="emit('toggle')">
+        <font-awesome-icon :icon="collapsed ? faChevronRight : faChevronLeft" />
+        <span v-if="!collapsed">Collapse</span>
+      </div>
+      <logout-button :collapsed="collapsed" />
     </div>
   </aside>
 </template>
+
 <script setup>
-import { ref } from "vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import {
   faChartLine,
@@ -70,11 +72,17 @@ import {
   faCalendarCheck,
   faWallet,
   faStore,
+  faChevronLeft,
+  faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import LogoutButton from "../LogoutButton.vue";
 
-const collapsed = ref(false);
+defineProps({
+  collapsed: Boolean,
+});
+const emit = defineEmits(["toggle"]);
 </script>
+
 <style scoped>
 .sidebar {
   width: 260px;
@@ -82,80 +90,98 @@ const collapsed = ref(false);
   border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
-  padding: 1.5rem;
-  transition: all 0.3s ease;
-  position: relative;
+  padding: 1.5rem 1rem;
+  transition: transform 0.3s ease; /* CHANGED: Now transitioning transform */
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  z-index: 1000;
 }
 
-/* Collapsed state */
+/* --- MODIFICATION START --- */
+/* Instead of shrinking, the sidebar now slides completely off-screen */
 .sidebar-collapsed {
-  width: 60px;
-  padding: 1rem 0.5rem;
+  transform: translateX(-100%);
 }
+/* --- MODIFICATION END --- */
 
 .sidebar-header {
-  text-align: center;
   margin-bottom: 2rem;
-  position: relative;
+  padding: 0 0.5rem;
 }
-
-.sidebar-toggle {
-  display: none;
-  position: absolute;
-  top: 0.5rem;
-  left: 0.5rem;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-/* Show toggle on mobile */
-@media (max-width: 768px) {
-  .sidebar {
-    position: fixed;
-    top: 0;
-    left: -100%;
-    height: 100%;
-    z-index: 999;
-    transition: all 0.3s ease;
-  }
-  .sidebar.sidebar-collapsed {
-    left: 0;
-  }
-  .sidebar-toggle {
-    display: block;
-  }
-}
-
-.sidebar-nav .nav-link {
+.brand-logo {
   display: flex;
   align-items: center;
-  padding: 0.9rem 1rem;
+  justify-content: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: var(--text-color);
+}
+.logo-icon {
+  font-size: 1.8rem;
+  color: var(--primary-color);
+}
+.brand-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  white-space: nowrap;
+}
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  /* MODIFIED: Align items to the start for better look when sliding */
+  align-items: flex-start;
+}
+.nav-link {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.9rem 1.5rem;
   border-radius: var(--border-radius-md);
   color: var(--light-text-color);
   font-weight: 500;
   margin-bottom: 0.5rem;
   text-decoration: none;
   transition: background-color 0.2s, color 0.2s;
+  cursor: pointer;
+  white-space: nowrap;
 }
 
-.sidebar-nav .nav-link:hover {
+.nav-link:hover {
   background-color: var(--background-color);
   color: var(--text-color);
 }
-
-.sidebar-nav .nav-link.active {
+.router-link-active.nav-link {
   background-color: var(--primary-color);
   color: white;
   box-shadow: 0 4px 10px rgba(99, 193, 162, 0.3);
 }
-
-.sidebar-nav .nav-link svg {
+.nav-link svg {
+  min-width: 24px;
+  font-size: 1.1rem;
   margin-right: 1rem;
-  width: 20px;
-  text-align: center;
 }
 
 .sidebar-footer {
   margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* MODIFIED */
+}
+
+@media (max-width: 767px) {
+  /* This rule is now covered by the main .sidebar-collapsed rule */
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  .sidebar:not(.sidebar-collapsed) {
+    transform: translateX(0);
+    width: 260px;
+  }
+  .collapse-toggle {
+    display: none;
+  }
 }
 </style>

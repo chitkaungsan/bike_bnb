@@ -365,6 +365,7 @@
 import { reactive, ref, onMounted, computed, watch } from "vue";
 import Quill from "quill";
 import { useStore } from "vuex";
+import { useRoute, useRouter } from "vue-router";
 import vueFilePond from "vue-filepond";
 import "quill/dist/quill.snow.css";
 import axios from "../../../../service/axios"; // Adjust path if needed
@@ -377,9 +378,10 @@ import "vue-multiselect/dist/vue-multiselect.css";
 
 const FilePond = vueFilePond(FilePondPluginImagePreview, FilePondPluginFileValidateType);
 import { useToast } from "primevue/usetoast";
+import { routerKey } from "vue-router";
 
 const toast = useToast();
-
+const router = useRouter();
 // --- STATE MANAGEMENT ---
 const store = useStore();
 const isLoading = ref(false);
@@ -592,6 +594,8 @@ const handleSubmit = async () => {
       detail: `Bike added successfully.`,
       life: 1500,
     });
+
+    router.push({ name: "owner.bikes" });
   } catch (err) {
     console.error("Failed to add bike:", err.response?.data || err);
     toast.add({

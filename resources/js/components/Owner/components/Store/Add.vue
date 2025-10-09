@@ -149,12 +149,13 @@ import { QuillEditor } from "@vueup/vue-quill";
 import "quill/dist/quill.snow.css";
 import L from "leaflet";
 import { useStore } from "vuex";
+import { useRoute, useRouter } from "vue-router";
 import Quill from "quill";
 import { useToast } from "primevue/usetoast";
 
 const toast = useToast();
 const store = useStore();
-
+const router = useRouter();
 const form = reactive({
   name: "",
   description: "",
@@ -266,6 +267,7 @@ async function submitForm() {
       detail: "Store added successfully",
       life: 1000,
     });
+    router.push({ name: "owner.stores" });
   } catch (err) {
     if (err.response && err.response.status === 422) {
       const laravelErrors = err.response.data.errors;

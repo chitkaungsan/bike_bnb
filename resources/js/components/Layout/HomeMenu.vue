@@ -26,7 +26,7 @@
     <!-- Dropdown menu -->
     <ul
       v-show="isOpen"
-      class="dropdown-menu show position-absolute end-0 mt-2 shadow"
+      class="dropdown-menu show position-absolute start-0 mt-2 shadow"
       style="min-width: 200px"
     >
       <!-- Profile -->

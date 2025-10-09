@@ -1,9 +1,21 @@
 <template>
-  <div class="owner-dashboard">
-    <OwnerSidebar />
+  <div class="owner-dashboard" :class="{ 'sidebar-collapsed': isSidebarCollapsed }">
+    <div
+      class="sidebar-overlay"
+      @click="isSidebarCollapsed = true"
+      v-if="!isSidebarCollapsed"
+    ></div>
+
+    <OwnerSidebar
+      :collapsed="isSidebarCollapsed"
+      @toggle="isSidebarCollapsed = !isSidebarCollapsed"
+    />
 
     <main class="main-content">
-      <OwnerHeader :title="$route.meta.title || 'Dashboard'" />
+      <OwnerHeader
+        :title="$route.meta.title || 'Dashboard'"
+        @toggle-sidebar="isSidebarCollapsed = !isSidebarCollapsed"
+      />
       <div class="content-area">
         <Toast />
         <router-view />
@@ -13,8 +25,34 @@
 </template>
 
 <script setup>
-import OwnerSidebar from "../Owner/OwnerSidebar.vue";
-import OwnerHeader from "../Owner/OwnerHeader.vue";
+import { ref, watch, onMounted, onUnmounted } from "vue";
+import { useRoute } from "vue-router";
+import OwnerSidebar from "../../components/Owner/OwnerSidebar.vue";
+import OwnerHeader from "../../components/Owner/OwnerHeader.vue";
+
+const isSidebarCollapsed = ref(true);
+const route = useRoute();
+
+watch(route, () => {
+  if (window.innerWidth < 768) {
+    isSidebarCollapsed.value = true;
+  }
+});
+
+const handleResize = () => {
+  if (window.innerWidth < 768) {
+    isSidebarCollapsed.value = true;
+  }
+};
+
+onMounted(() => {
+  window.addEventListener("resize", handleResize);
+  handleResize();
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", handleResize);
+});
 </script>
 
 <style scoped>
@@ -23,38 +61,48 @@ import OwnerHeader from "../Owner/OwnerHeader.vue";
   min-height: 100vh;
   background-color: var(--background-color);
   color: var(--text-color);
+  transition: padding-left 0.3s ease;
 }
 
 .main-content {
   flex: 1;
-  padding: 1rem;
+  padding: 1rem 1.5rem;
   overflow-y: auto;
+  transition: margin-left 0.3s ease;
+  margin-left: 260px; /* Default sidebar width */
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .owner-dashboard {
-    flex-direction: column;
-  }
-  .sidebar {
-    width: 100%;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem;
-    height: auto;
-  }
-  .sidebar-nav {
-    display: flex;
-  }
-  .sidebar-nav a span {
-    display: none;
-  }
+/* --- MODIFICATION START --- */
+/* When sidebar is collapsed, content margin is now 0 to make it full screen */
+.owner-dashboard.sidebar-collapsed .main-content {
+  margin-left: 0; /* CHANGED from 80px */
+}
+/* --- MODIFICATION END --- */
+
+.sidebar-overlay {
+  display: none;
+}
+
+@media (max-width: 767px) {
   .main-content {
+    margin-left: 0;
     padding: 1rem;
+    width: 100%;
   }
-  .main-header h1 {
-    font-size: 1.5rem;
+
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+  }
+
+  .owner-dashboard.sidebar-collapsed .sidebar-overlay {
+    opacity: 0;
+    pointer-events: none;
   }
 }
 </style>
