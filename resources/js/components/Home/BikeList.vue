@@ -52,11 +52,11 @@
       </div>
       <div class="col-12">
         <div class="bike-carousel-wrapper">
-          <button class="carousel-btn btn-left" @click="scrollLeft">
+          <button class="carousel-btn btn-left" @click="scrollScoLeft">
             <font-awesome-icon icon="chevron-left" />
           </button>
 
-          <div class="bike-cards-container" ref="containerRef">
+          <div class="bike-cards-container" ref="containerScoRef">
             <!-- Show skeletons when loading -->
             <template v-if="loading">
               <div
@@ -89,7 +89,7 @@
             </template>
           </div>
 
-          <button class="carousel-btn btn-right" @click="scrollRight">
+          <button class="carousel-btn btn-right" @click="scrollScoRight">
             <font-awesome-icon icon="chevron-right" />
           </button>
         </div>
@@ -103,11 +103,11 @@
       </div>
       <div class="col-12">
         <div class="bike-carousel-wrapper">
-          <button class="carousel-btn btn-left" @click="scrollLeft">
+          <button class="carousel-btn btn-left" @click="scrollAdvLeft">
             <font-awesome-icon icon="chevron-left" />
           </button>
 
-          <div class="bike-cards-container" ref="containerRef">
+          <div class="bike-cards-container" ref="containerAdvRef">
             <!-- Show skeletons when loading -->
             <template v-if="loading">
               <div
@@ -136,7 +136,7 @@
             </template>
           </div>
 
-          <button class="carousel-btn btn-right" @click="scrollRight">
+          <button class="carousel-btn btn-right" @click="scrollAdvRight">
             <font-awesome-icon icon="chevron-right" />
           </button>
         </div>
@@ -155,6 +155,8 @@ const bikes = ref([]);
 const loading = ref(true);
 const skeletonCount = 7; // number of skeleton cards to show
 const containerRef = ref(null);
+const containerAdvRef = ref(null);
+const containerScoRef = ref(null);
 
 onMounted(async () => {
   try {
@@ -174,6 +176,20 @@ const scrollLeft = () => {
 };
 const scrollRight = () => {
   containerRef.value?.scrollBy({ left: scrollAmount, behavior: "smooth" });
+};
+
+const scrollAdvLeft = () => {
+  containerAdvRef.value?.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+};
+const scrollAdvRight = () => {
+  containerAdvRef.value?.scrollBy({ left: scrollAmount, behavior: "smooth" });
+};
+
+const scrollScoLeft = () => {
+  containerScoRef.value?.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+};
+const scrollScoRight = () => {
+  containerScoRef.value?.scrollBy({ left: scrollAmount, behavior: "smooth" });
 };
 </script>
 <style scoped>
