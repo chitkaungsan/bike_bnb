@@ -20,7 +20,7 @@ Route::middleware('auth:api')->group(function () {
 });
 Route::post('upload-avatar', [App\Http\Controllers\Api\AuthController::class, 'uploadAvatar']);
 Route::post('bike/logo/upload', [App\Http\Controllers\Api\StoreController::class, 'uploadBikeLogo']);
-
+Route::post('user/set/role', [App\Http\Controllers\Api\AuthController::class, 'setRole']);
 
 
 Route::get('/auth/{provider}/redirect', [SocialLoginController::class, 'redirect']);

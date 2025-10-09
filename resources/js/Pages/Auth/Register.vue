@@ -157,7 +157,6 @@ const loading = ref(false);
 const showPassword = ref(false);
 
 const handleRegister = async () => {
-  console.log("form", form.value);
   loading.value = true;
   try {
     await store.dispatch("auth/register", form.value);

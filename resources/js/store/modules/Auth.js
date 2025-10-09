@@ -50,7 +50,14 @@ const actions = {
     commit('SET_TOKEN', response.data.token);
     await dispatch('fetchUser');
   },
-
+  async setUserRole({ commit }, data) {
+    try {
+      const response = await axios.post('/user/set/role', data);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch user:', error);
+    }
+  },
   logout({ commit }) {
     commit('LOGOUT');
   },

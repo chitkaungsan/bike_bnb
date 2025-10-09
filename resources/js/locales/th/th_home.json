@@ -79,7 +79,9 @@
       "category_mountain": "ภูเขา",
       "category_road": "ถนน",
       "category_city": "เมือง",
-      "category_electric": "ไฟฟ้า"
+      "category_electric": "ไฟฟ้า",
+      "search_button": "ค้นหา",
+      "loading_button": "กําลังค้นหา..."
     }
   },
    "categories": {

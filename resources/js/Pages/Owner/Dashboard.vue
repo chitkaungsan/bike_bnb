@@ -2,13 +2,15 @@
   <div class="dashboard-page">
     <div class="card">
       <h2>Welcome to your Dashboard</h2>
-      <p>Here you can manage your bikes, view bookings, and track payouts.</p>
+      <p>
+        For the first step you need to add a store first and then add a bike. You can make
+        in Store tab and Bikes tab.
+      </p>
     </div>
   </div>
 </template>
 
-<script setup>
-</script>
+<script setup></script>
 
 <style scoped>
 .dashboard-page {

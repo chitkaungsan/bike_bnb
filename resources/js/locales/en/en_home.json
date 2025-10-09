@@ -79,7 +79,8 @@
       "category_mountain": "Mountain",
       "category_road": "Road",
       "category_city": "City",
-      "category_electric": "Electric"
+      "category_electric": "Electric",
+      "button": "Search"
     }
   },
   "categories": {

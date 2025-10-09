@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+
 class AuthController extends Controller
 {
     // Register
@@ -66,50 +67,68 @@ class AuthController extends Controller
         return view('dashboard');
     }
 
-   
-public function uploadAvatar(Request $request)
-{
-    $request->validate([
-        'image' => 'required|string', // now expecting base64 string
-    ]);
 
-    try {
-        // Get base64 string from request
-        $base64Image = $request->input('image');
+    public function uploadAvatar(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|string', // now expecting base64 string
+        ]);
 
-        // Check if string contains 'data:image/...;base64,' prefix
-        if (preg_match('/^data:image\/(\w+);base64,/', $base64Image, $type)) {
-            $base64Image = substr($base64Image, strpos($base64Image, ',') + 1);
-            $extension = strtolower($type[1]); // jpg, png, etc.
-        } else {
-            return response()->json(['error' => 'Invalid image format'], 422);
+        try {
+            // Get base64 string from request
+            $base64Image = $request->input('image');
+
+            // Check if string contains 'data:image/...;base64,' prefix
+            if (preg_match('/^data:image\/(\w+);base64,/', $base64Image, $type)) {
+                $base64Image = substr($base64Image, strpos($base64Image, ',') + 1);
+                $extension = strtolower($type[1]); // jpg, png, etc.
+            } else {
+                return response()->json(['error' => 'Invalid image format'], 422);
+            }
+
+            // Decode base64 to binary
+            $imageData = base64_decode($base64Image);
+
+            if ($imageData === false) {
+                return response()->json(['error' => 'Base64 decode failed'], 422);
+            }
+
+            // Generate random filename
+            $fileName = 'images/' . Str::random(10) . '.' . $extension;
+
+            // Save to S3
+            Storage::disk('s3')->put($fileName, $imageData, 'public');
+
+            // Check if file exists
+            if (Storage::disk('s3')->exists($fileName)) {
+                return response()->json([
+                    'success' => true,
+                    'url' => Storage::disk('s3')->url($fileName)
+                ]);
+            } else {
+                return response()->json(['error' => 'Upload failed, file not found on S3'], 500);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Upload exception: ' . $e->getMessage()], 500);
         }
-
-        // Decode base64 to binary
-        $imageData = base64_decode($base64Image);
-
-        if ($imageData === false) {
-            return response()->json(['error' => 'Base64 decode failed'], 422);
-        }
-
-        // Generate random filename
-        $fileName = 'images/' . Str::random(10) . '.' . $extension;
-
-        // Save to S3
-        Storage::disk('s3')->put($fileName, $imageData, 'public');
-
-        // Check if file exists
-        if (Storage::disk('s3')->exists($fileName)) {
-            return response()->json([
-                'success' => true,
-                'url' => Storage::disk('s3')->url($fileName)
-            ]);
-        } else {
-            return response()->json(['error' => 'Upload failed, file not found on S3'], 500);
-        }
-
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'Upload exception: ' . $e->getMessage()], 500);
     }
-}
+    public function setRole(Request $request)
+    {
+        $request->validate([
+            'role' => 'required|string|in:renter,owner',
+            'userId' => 'required|exists:users,id',
+        ]);
+
+        // Fetch the user model by ID
+        $user = \App\Models\User::findOrFail($request->userId);
+
+        // Update the role
+        $user->role = $request->role;
+        $user->save();
+
+        return response()->json([
+            'message' => 'Role updated successfully',
+            'user' => $user,
+        ]);
+    }
 }
