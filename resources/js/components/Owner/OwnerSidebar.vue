@@ -1,7 +1,7 @@
 <template>
   <aside :class="['sidebar', { 'sidebar-collapsed': collapsed }]">
     <div class="sidebar-header">
-      <router-link to="/owner/dashboard" class="brand-logo">
+      <router-link to="/" class="brand-logo">
         <font-awesome-icon :icon="faBicycle" class="logo-icon" />
         <h2 class="brand-name" v-if="!collapsed">BikeDash</h2>
       </router-link>
