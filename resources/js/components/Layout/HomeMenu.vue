@@ -26,7 +26,7 @@
     <!-- Dropdown menu -->
     <ul
       v-show="isOpen"
-      class="dropdown-menu show position-absolute start-0 mt-2 shadow"
+      class="dropdown-menu show position-absolute mt-2 shadow responsive-align"
       style="min-width: 200px"
     >
       <!-- Profile -->
@@ -328,5 +328,17 @@ onMounted(async () => {
 .role-icon {
   font-size: 1.1rem;
   margin-bottom: 0.25rem;
+}
+.responsive-align {
+  right: auto;
+  left: 0;
+}
+
+/* Large screens (left aligned) */
+@media (min-width: 992px) {
+  .responsive-align {
+    left: auto;
+    right: 0;
+  }
 }
 </style>
