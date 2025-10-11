@@ -60,7 +60,14 @@
             class="col-12 col-md-6 col-lg-4"
           >
             <div class="modal-image-wrapper">
-              <img :src="img" class="img-fluid" alt="Photo" />
+              <Image
+                :src="img"
+                class="img-fluid"
+                alt="Photo"
+                width="100%"
+                height="100%"
+                preview
+              />
             </div>
           </div>
         </div>
@@ -73,7 +80,7 @@
 import { ref, computed } from "vue";
 import Dialog from "primevue/dialog";
 import Carousel from "primevue/carousel";
-
+import Image from "primevue/image";
 const props = defineProps({
   images: { type: Array, default: () => [] },
   mainImage: { type: String, required: true },
