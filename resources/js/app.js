@@ -53,7 +53,7 @@ app.component('font-awesome-icon', FontAwesomeIcon);
 app.component('QuillEditor', QuillEditor);
 app.component('Toast', Toast);
 app.component('Button', Button);
-app.component('Dialog', Dialog); // ✅ Added
+app.component('Dialog', Dialog);
 
 // Directives
 app.directive('tooltip', Tooltip);

@@ -6,3 +6,6 @@ Route::post('bike/store', [BikeController::class, 'bikeStore']);
 Route::get('bike/brands', [BikeController::class, 'getBrands']);
 Route::get('bike/categories', [BikeController::class, 'getCategories']);
 Route::get('get/bikes/{user_id}', [BikeController::class, 'getBikeList']);
+Route::get('get/bike/all', [BikeController::class, 'getBikes']);
+Route::get('bikes/{id}', [BikeController::class, 'getBikeWithId']);
+

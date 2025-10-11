@@ -3,9 +3,11 @@
     <nav class="navbar navbar-expand-sm">
       <div class="container-fluid">
         <!-- Brand -->
-        <a class="navbar-brand" href="#">
-          <i class="fa-solid fa-bicycle"></i> {{ t('brand') }}
-        </a>
+        <span class="navbar-brand text-decoration-none text-dark" href="#">
+          <router-link to="/" class="text-decoration-none text-dark">{{
+            t("brand")
+          }}</router-link>
+        </span>
 
         <!-- Toggler for small screens -->
         <button
@@ -24,10 +26,14 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
             <li class="nav-item">
-              <a class="nav-link" href="#">{{ t('nav.browse_bikes') }}</a>
+              <router-link class="nav-link" to="/bikes">{{
+                t("nav.browse_bikes")
+              }}</router-link>
             </li>
             <li class="nav-item">
-              <router-link to="/register?role=owner" class="nav-link" href="#">{{ t('nav.become_owner') }}</router-link>
+              <router-link to="/register?role=owner" class="nav-link" href="#">{{
+                t("nav.become_owner")
+              }}</router-link>
             </li>
             <li class="nav-item ms-lg-3">
               <LanguageSwitcher />
@@ -43,14 +49,12 @@
 </template>
 
 <script setup>
-import { useI18n } from 'vue-i18n'
-import HomeMenu from './HomeMenu.vue'
-import LanguageSwitcher from '../LanguageSwitcher.vue'
-
-
+import { useI18n } from "vue-i18n";
+import HomeMenu from "./HomeMenu.vue";
+import LanguageSwitcher from "../LanguageSwitcher.vue";
 
 // Translation function
-const { t } = useI18n()
+const { t } = useI18n();
 </script>
 
 <style scoped>
