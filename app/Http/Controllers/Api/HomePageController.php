@@ -15,6 +15,7 @@ class HomePageController extends Controller
     ->join('stores as s', 'b.store_id', '=', 's.id')
     ->select(
         'b.*',
+        'b.id as bike_id',
         's.name as store_name',
         's.id as store_id',
         's.logo as store_logo',

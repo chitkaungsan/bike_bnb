@@ -1,26 +1,52 @@
 <template>
-  <div class="container my-5">
+  <div class="container my-5 bike-detail-page">
     <div class="row g-5">
+      <!-- LEFT: Bike Details -->
       <div class="col-lg-7">
-        <div class="main-content">
-          <h1>Entire rental unit in Bangkok, Thailand</h1>
-          <p class="lead">4 guests · 1 bedroom · 2 beds · 1 bath</p>
-          <hr />
-          <h3>Brandnew spacious 1bedroom</h3>
-          <p>
-            RIGHT on the BTS N7 station, Saphankhwai. 5 mins walk to Chatuchak Market...
-            (Your listing description goes here)
-          </p>
-          <p v-for="n in 30" :key="n" class="py-3">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-            nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-          </p>
+        <div class="section-card main-content">
+          <!-- Header Row -->
+          <div class="d-flex align-items-start justify-content-between">
+            <!-- Title and info -->
+            <div class="bike-info">
+              <h3 class="bike-title mb-1">{{ bike_detail.title }}</h3>
+              <p class="bike-subtitle">
+                {{ bike_detail.model }} · Manufactured in {{ bike_detail.year }}
+              </p>
+            </div>
+
+            <!-- Brand logo -->
+            <div
+              class="bike-logo ms-auto text-center"
+              v-tooltip.top="bike_detail.brand_name"
+            >
+              <img
+                v-if="bike_detail.brand_logo"
+                :src="bike_detail.brand_logo"
+                alt="logo"
+                class="brand-image"
+              />
+              <i v-else class="bi bi-shop fs-3 text-muted"></i>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-start justify-content-between">
+            <StoreReview
+              :store_logo="bike_detail.store_logo"
+              :store_name="bike_detail.store_name"
+              :address="bike_detail.store_address"
+            />
+          </div>
+
+          <hr class="divider" />
+
+          <!-- Description -->
+          <p class="bike-description" v-html="bike_detail.description"></p>
         </div>
       </div>
 
+      <!-- RIGHT: Booking Panel -->
       <div class="col-lg-5">
-        <div ref="rightColumnRef">
+        <div ref="rightColumnRef" class="sticky-booking">
           <BookingPanel :price-per-night="2671" :parent-container="rightColumnRef" />
         </div>
       </div>
@@ -29,16 +55,102 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import { useStore } from "vuex";
 import BookingPanel from "./BookingPanel.vue";
-
-// Create a ref for the parent container of the booking panel
+import StoreReview from "./StoreReview.vue";
+const store = useStore();
+const bike_detail = computed(() => store.getters["bikes/bike_details"]);
 const rightColumnRef = ref(null);
 </script>
 
 <style scoped>
+/* ------------------------------
+   Layout & Container
+------------------------------ */
+.bike-detail-page {
+  background-color: transparent;
+}
+
+/* ------------------------------
+   Main Content Section
+------------------------------ */
 .main-content {
-  /* This ensures the parent container on the right has a defined height to scroll against */
-  min-height: 200vh;
+  background-color: var(--section-bg-color);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 12px var(--shadow-color);
+  padding: 2rem;
+  transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+/* ------------------------------
+   Bike Info
+------------------------------ */
+.bike-title {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.bike-subtitle {
+  color: var(--secondary-text-color);
+  font-size: 1rem;
+}
+.bike-description {
+  color: var(--text-color);
+  line-height: 1.6;
+}
+/* ------------------------------
+   Brand Logo
+------------------------------ */
+.bike-logo {
+  width: 60px;
+  height: 60px;
+}
+
+.brand-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid var(--primary-color);
+  object-fit: cover;
+  box-shadow: 0 2px 6px var(--shadow-color);
+  transition: transform 0.3s ease;
+}
+.brand-image:hover {
+  transform: scale(1.05);
+}
+
+/* ------------------------------
+   Text Content
+------------------------------ */
+.divider {
+  margin: 1.5rem 0;
+  border-color: var(--border-color);
+}
+
+.bike-description {
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+.bike-detail-text {
+  color: var(--secondary-text-color);
+  line-height: 1.7;
+  border-bottom: 1px solid var(--border-color);
+}
+.bike-detail-text:last-child {
+  border-bottom: none;
+}
+
+/* ------------------------------
+   Booking Panel
+------------------------------ */
+.sticky-booking {
+  position: sticky;
+  top: 100px;
+}
+.bike-description * {
+  color: inherit !important; /* forces all inner elements to use dark/light text color */
 }
 </style>

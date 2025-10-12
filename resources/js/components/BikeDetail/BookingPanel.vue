@@ -162,10 +162,6 @@ onUnmounted(() => {
   /* Removed min-height, as it's not needed for the logic */
 }
 
-.booking-panel {
-  /* The width is now controlled by JS, not the class */
-}
-
 /* State 2: Sticking to the top of the screen */
 .is-sticky-top {
   position: fixed;

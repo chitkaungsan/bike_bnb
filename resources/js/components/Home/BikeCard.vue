@@ -34,10 +34,15 @@
       <!-- Card body -->
       <div class="bike-card-body">
         <div class="d-flex">
-          <div class="col">
-            <h6 class="bike-card-title">{{ props.title }}</h6>
-            <p class="bike-card-model">{{ props.model }}</p>
-          </div>
+          <router-link
+            class="bike-card-link text-decoration-none"
+            :to="{ name: 'bikes.detail', params: { id: props.id } }"
+          >
+            <div class="col">
+              <h6 class="bike-card-title">{{ props.title }}</h6>
+              <p class="bike-card-model">{{ props.model }}</p>
+            </div>
+          </router-link>
           <div class="bike-logo ms-auto" v-tooltip.top="store_name">
             <img v-if="store_logo" :src="store_logo" alt="logo" />
             <i class="bi bi-shop fs-3 text-muted" v-else></i>
@@ -61,6 +66,7 @@ import { useI18n } from "vue-i18n";
 // assign defineProps to `props` and provide safe runtime defaults
 const { t } = useI18n();
 const props = defineProps({
+  id: { type: Number, default: 0 },
   image: { type: String, default: "" },
   title: { type: String, default: "" },
   model: { type: String, default: "" },

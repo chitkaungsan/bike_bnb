@@ -26,6 +26,7 @@
             <template v-else>
               <div class="bike-card-wrapper" v-for="bike in bikes" :key="bike.id">
                 <BikeCard
+                  :id="bike.bike_id"
                   :image="bike.photo"
                   :title="bike.title"
                   :model="bike.model + ', ' + bike.year"
@@ -76,6 +77,7 @@
                 :key="bike.id"
               >
                 <BikeCard
+                  :id="bike.bike_id"
                   :image="bike.photo"
                   :title="bike.title"
                   :model="bike.model + ', ' + bike.year"
@@ -123,6 +125,7 @@
             <template v-else>
               <div class="bike-card-wrapper" v-for="bike in bikes" :key="bike.id">
                 <BikeCard
+                  :id="bike.bike_id"
                   :image="bike.photo"
                   :title="bike.title"
                   :model="bike.model + ', ' + bike.year"

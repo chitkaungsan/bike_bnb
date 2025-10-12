@@ -12,9 +12,10 @@ use App\Models\BikeImage;
 use App\Models\Category;
 use App\Models\Store;
 use Illuminate\Support\Facades\DB;
+
 class BikeController extends Controller
 {
-  public function bikeStore(Request $request)
+    public function bikeStore(Request $request)
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
@@ -72,7 +73,7 @@ class BikeController extends Controller
             'message' => 'Bike added successfully!',
         ]);
     }
-     public function getBrands()
+    public function getBrands()
     {
         $brands = Brand::select('id', 'name', 'logo')->get();
         return response()->json($brands);
@@ -99,7 +100,7 @@ class BikeController extends Controller
     }
     public function getBikes(Request $request)
     {
-        
+
         $bikes = DB::table('bikes')
             ->join('stores', 'bikes.store_id', '=', 'stores.id')
             ->select(
@@ -113,31 +114,39 @@ class BikeController extends Controller
         return response()->json($bikes);
     }
     public function getBikeWithId($id)
-{
-    $bike = DB::table('bikes')
-        ->join('stores', 'bikes.store_id', '=', 'stores.id')
-        ->where('bikes.id', $id)
-        ->select(
-            'bikes.*',
-            'stores.name as store_name',
-            'stores.address as store_address',
-            'stores.id as store_id',
-            'stores.logo as store_logo'
-        )
-        ->first(); // get single bike
+    {
+        $bike = DB::table('bikes')
+            ->join('stores', 'bikes.store_id', '=', 'stores.id')
+            ->join('brands', 'bikes.brand_id', '=', 'brands.id')
+            ->join('categories', 'bikes.cat_id', '=', 'categories.id')
+            ->join('users as u', 'bikes.user_id', '=', 'u.id')
+            ->where('bikes.id', $id)
+            ->select(
+                'bikes.*',
+                'stores.name as store_name',
+                'stores.address as store_address',
+                'stores.id as store_id',
+                'stores.logo as store_logo',
+                'brands.name as brand_name',
+                'brands.logo as brand_logo',
+                'categories.name as category_name',
+                'u.name as user_name',
+            )
+            ->first(); // get single bike
 
-    if (!$bike) {
-        return response()->json(['message' => 'Bike not found'], 404);
+        if (!$bike) {
+            return response()->json(['message' => 'Bike not found'], 404);
+        }
+
+        // get all images separately
+        $images = DB::table('bike_images')
+            ->where('bike_id', $id)
+            ->pluck('photo'); 
+
+        // attach images as array
+        $bike->images = $images;
+
+        return response()->json($bike);
     }
 
-    // get all images separately
-    $images = DB::table('bike_images')
-        ->where('bike_id', $id)
-        ->pluck('photo'); // or 'image_path' depending on your column
-
-    // attach images as array
-    $bike->images = $images;
-
-    return response()->json($bike);
-}
 }

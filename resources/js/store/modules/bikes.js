@@ -11,6 +11,7 @@ const state = {
     per_page: 5,
     total: 0,
   },
+  bike_details: [],
 }
 
 const mutations = {
@@ -26,6 +27,9 @@ const mutations = {
    SET_BIKES(state, payload) {
     state.bikes = payload;
   },
+  SET_BIKE_DETAILS(state, bike_details) {
+    state.bike_details = bike_details
+  }
 
 }
 
@@ -77,12 +81,13 @@ async fetchAllBikes({ commit },page) {
   }
 },
 
-    async fetchBikeById({ getters }, id) {
+    async fetchBikeById({ getters, commit }, id) {
     let bike = getters.getBikeById(id);
     if (bike) return bike;
 
     try {
       const res = await axios.get(`bikes/${id}`);
+      commit("SET_BIKE_DETAILS", res.data); 
       return res.data; // single bike object
     } catch (err) {
       console.error("Failed to fetch bike by id:", err);
@@ -101,6 +106,7 @@ const getters = {
     if (!state.bikes || !state.bikes.data) return null;
     return state.bikes.data.find((bike) => bike.id === id) || null;
   },
+  bike_details: (state) => state.bike_details
 }
 
 export default {
