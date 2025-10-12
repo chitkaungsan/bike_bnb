@@ -1,66 +1,78 @@
 <template>
   <div class="booking-panel-wrapper" ref="wrapperRef">
-    <div class="booking-panel" ref="panelRef" :class="stickyClass">
-      <div class="p-4 shadow rounded-4 border">
-        <div class="d-flex align-items-center mb-3">
-          <span class="price-amount fw-bold fs-4">{{ formattedPrice }}</span>
-          <span class="price-period ms-1 text-muted">night</span>
-        </div>
+    <div class="d-none d-lg-block">
+      <div class="booking-panel" ref="panelRef" :class="stickyClass">
+        <div class="p-4 shadow rounded-4 border">
+          <div class="d-flex align-items-center mb-3">
+            <span class="price-amount fw-bold fs-4">{{ formattedPrice }}</span>
+            <span class="price-period ms-1 text-muted">day</span>
+          </div>
 
-        <div class="border rounded-3 mb-3">
-          <div class="row g-0">
-            <div class="col-6">
-              <div class="p-2 border-end">
-                <label for="checkin" class="form-label text-uppercase small fw-bold"
-                  >Check-in</label
-                >
-                <Calendar
-                  v-model="dates"
-                  selectionMode="range"
-                  :manualInput="false"
-                  placeholder="Add dates"
-                  class="w-100"
-                  :minDate="new Date()"
-                />
+          <div class="border rounded-3 mb-3">
+            <div class="row g-0">
+              <div class="col-6">
+                <div class="p-2 border-end">
+                  <label for="checkin" class="form-label text-uppercase small fw-bold"
+                    >Check-in</label
+                  >
+                  <Calendar
+                    v-model="dates"
+                    selectionMode="range"
+                    :manualInput="false"
+                    placeholder="Add dates"
+                    class="w-100"
+                    :minDate="new Date()"
+                  />
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="p-2">
+                  <label for="checkout" class="form-label text-uppercase small fw-bold"
+                    >Checkout</label
+                  >
+                  <div class="date-placeholder p-2">
+                    {{ checkoutDateDisplay }}
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="col-6">
-              <div class="p-2">
-                <label for="checkout" class="form-label text-uppercase small fw-bold"
-                  >Checkout</label
-                >
-                <div class="date-placeholder p-2">
-                  {{ checkoutDateDisplay }}
+            <div class="row g-0 border-top">
+              <div class="col-12">
+                <div class="p-2">
+                  <label for="guests" class="form-label text-uppercase small fw-bold"
+                    >Guests</label
+                  >
+                  <Dropdown
+                    v-model="selectedGuests"
+                    :options="guestOptions"
+                    placeholder="Add guests"
+                    class="w-100"
+                  />
                 </div>
               </div>
             </div>
           </div>
-          <div class="row g-0 border-top">
-            <div class="col-12">
-              <div class="p-2">
-                <label for="guests" class="form-label text-uppercase small fw-bold"
-                  >Guests</label
-                >
-                <Dropdown
-                  v-model="selectedGuests"
-                  :options="guestOptions"
-                  placeholder="Add guests"
-                  class="w-100"
-                />
-              </div>
-            </div>
-          </div>
+
+          <Button class="w-100 p-3 reserve-btn" label="Book Now" />
+
+          <p class="text-center text-muted small mt-2 mb-0">You won't be charged yet</p>
         </div>
 
-        <Button class="w-100 p-3 reserve-btn" label="Reserve" />
-
-        <p class="text-center text-muted small mt-2 mb-0">You won't be charged yet</p>
+        <div class="text-center mt-3">
+          <a href="#" class="text-muted text-decoration-underline">
+            <i class="bi bi-flag me-2"></i>Report this listing
+          </a>
+        </div>
       </div>
+    </div>
 
-      <div class="text-center mt-3">
-        <a href="#" class="text-muted text-decoration-underline">
-          <i class="bi bi-flag me-2"></i>Report this listing
-        </a>
+    <div class="mobile-booking-footer d-lg-none">
+      <div class="footer-content">
+        <div class="price-info">
+          <span class="price-amount fw-bold">{{ formattedPrice }}</span>
+          <span class="price-period text-muted"> day</span>
+        </div>
+        <Button class="reserve-btn-mobile" label="Book Now" />
       </div>
     </div>
   </div>
@@ -112,35 +124,41 @@ const checkoutDateDisplay = computed(() => {
   return "Add dates";
 });
 
-// --- Logic for Sticky Behavior (FIXED) ---
+// --- Logic for Sticky Behavior (MODIFIED) ---
 const handleScroll = () => {
+  // *** ADDITION: Disable this logic on mobile screens ***
+  if (window.innerWidth < 992) {
+    // Reset styles if the screen is resized from desktop to mobile
+    if (panelRef.value) {
+      panelRef.value.style.width = null;
+      panelRef.value.style.top = null;
+    }
+    stickyClass.value = "";
+    return;
+  }
+
   if (!wrapperRef.value || !panelRef.value || !props.parentContainer) return;
 
   const panelEl = panelRef.value;
   const parentRect = props.parentContainer.getBoundingClientRect();
   const wrapperRect = wrapperRef.value.getBoundingClientRect();
   const panelHeight = panelEl.offsetHeight;
-  const topOffset = 20; // Margin from top
-  const bottomOffset = 20; // Margin from bottom
+  const topOffset = 20;
+  const bottomOffset = 20;
 
   if (wrapperRect.top <= topOffset) {
-    // **FIX**: Set the width dynamically before changing position
-    // This prevents the panel from resizing when it becomes 'fixed'.
     const wrapperWidth = wrapperRef.value.offsetWidth;
     panelEl.style.width = `${wrapperWidth}px`;
 
     if (parentRect.bottom < panelHeight + bottomOffset) {
       stickyClass.value = "is-sticky-bottom";
-      // When stuck to the bottom, the 'top' style is not needed.
       panelEl.style.top = null;
     } else {
       stickyClass.value = "is-sticky-top";
-      // Apply the top offset directly as an inline style.
       panelEl.style.top = `${topOffset}px`;
     }
   } else {
     stickyClass.value = "";
-    // **FIX**: Reset inline styles when not sticky to return to normal behavior.
     panelEl.style.width = null;
     panelEl.style.top = null;
   }
@@ -156,30 +174,22 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+/* --- STICKY PANEL STYLES (Desktop) --- */
 .booking-panel-wrapper {
   position: relative;
-  min-height: 1500px;
-  /* Removed min-height, as it's not needed for the logic */
 }
-
-/* State 2: Sticking to the top of the screen */
 .is-sticky-top {
   position: fixed;
-  /* The 'top' and 'width' properties are now set via inline styles */
 }
-
-/* State 3: Sticking to the bottom of the parent container */
 .is-sticky-bottom {
   position: absolute;
   bottom: 0;
 }
-
-/* Component Styling */
 .price-amount {
   color: #222;
 }
 .reserve-btn {
-  background: linear-gradient(to right, #e61e4d 0%, #e31c5f 50%, #d70466 100%);
+  background: #6c757d;
   border: none;
   font-weight: 600;
 }
@@ -191,7 +201,31 @@ onUnmounted(() => {
   color: #6c757d;
 }
 
-/* PrimeVue Overrides */
+/* --- NEW: MOBILE FOOTER STYLES --- */
+.mobile-booking-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--section-bg-color);
+  border-top: 1px solid var(--border-color);
+  padding: 0.75rem 1rem;
+  z-index: 1000;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.08);
+}
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.reserve-btn-mobile {
+  background: #6c757d;
+  border: none;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+}
+
+/* --- PrimeVue Overrides --- */
 :deep(.p-calendar .p-inputtext) {
   padding: 0.5rem;
   border: none !important;
@@ -200,5 +234,66 @@ onUnmounted(() => {
 :deep(.p-dropdown) {
   border: none !important;
   box-shadow: none !important;
+}
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes pulse-delay {
+  0%,
+  85% {
+    opacity: 1;
+  }
+  90%,
+  100% {
+    opacity: 1;
+  }
+}
+
+.reserve-btn,
+.reserve-btn-mobile {
+  position: relative;
+  background: #6c757d;
+  background-size: 200% auto;
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 0.5rem;
+  transition: transform 0.2s ease;
+  animation: pulse-delay 2 infinite;
+}
+
+.reserve-btn:hover,
+.reserve-btn-mobile:hover {
+  transform: scale(1.03);
+}
+
+/* shimmer overlay */
+.reserve-btn::after,
+.reserve-btn-mobile::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.5) 50%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  background-size: 200% 100%;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  animation: shimmer 2s linear infinite;
+  animation-delay: 2;
 }
 </style>

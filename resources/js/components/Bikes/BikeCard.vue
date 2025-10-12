@@ -32,29 +32,34 @@
       </div>
 
       <!-- Card body -->
-      <router-link
-        class="bike-card-link text-decoration-none"
-        :to="{ name: 'bikes.detail', params: { id: props.id } }"
-      >
-        <div class="bike-card-body">
-          <div class="d-flex">
-            <div class="col">
+
+      <div class="bike-card-body">
+        <div class="d-flex">
+          <div class="col">
+            <router-link
+              class="bike-card-link text-decoration-none"
+              :to="{ name: 'bikes.detail', params: { id: props.id } }"
+            >
               <h6 class="bike-card-title">{{ props.title }}</h6>
               <p class="bike-card-model">{{ props.model }}</p>
-            </div>
-            <div class="bike-logo ms-auto" v-tooltip.top="store_name">
+            </router-link>
+          </div>
+          <div class="bike-logo ms-auto" v-tooltip.top="store_name">
+            <router-link :to="{ name: 'store.detail', params: { id: props.store_id } }">
               <img v-if="store_logo" :src="store_logo" alt="logo" />
               <i class="bi bi-shop fs-3 text-muted" v-else></i>
-            </div>
-          </div>
-
-          <div class="bike-card-footer">
-            <!-- formatted price -->
-            <span class="bike-card-price">{{ "$" + formattedPrice + "/day" }}</span>
-            <button class="btn btn-book">{{ t("book_now") }}</button>
+            </router-link>
           </div>
         </div>
-      </router-link>
+
+        <div class="bike-card-footer">
+          <!-- formatted price -->
+          <span class="bike-card-price">{{ "$" + formattedPrice + "/day" }}</span>
+          <router-link :to="{ name: 'bikes.detail', params: { id: props.id } }">
+            <button class="btn btn-book">{{ t("book_now") }}</button>
+          </router-link>
+        </div>
+      </div>
     </div>
   </div>
 </template>

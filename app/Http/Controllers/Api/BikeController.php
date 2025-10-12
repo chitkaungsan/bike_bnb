@@ -148,5 +148,25 @@ class BikeController extends Controller
 
         return response()->json($bike);
     }
+    public function getAllBikesWithId($id)
+    {
+        $bikes = DB::table('bikes')
+            ->join('stores', 'bikes.store_id', '=', 'stores.id')
+            ->join('brands', 'bikes.brand_id', '=', 'brands.id')
+            ->join('categories', 'bikes.cat_id', '=', 'categories.id')
+            ->select(
+                'bikes.*',
+                'stores.name as store_name',
+                'stores.address as store_address',
+                'stores.id as store_id',
+                'stores.logo as store_logo',
+                'brands.name as brand_name',
+                'categories.name as category_name',
+                'type'
+            )
+            ->where('stores.id', $id)
+            ->paginate(10);
+        return response()->json($bikes);
+    }
 
 }

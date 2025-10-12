@@ -31,6 +31,7 @@
 
           <div class="d-flex align-items-start justify-content-between">
             <StoreReview
+              :store_id="bike_detail.store_id"
               :store_logo="bike_detail.store_logo"
               :store_name="bike_detail.store_name"
               :address="bike_detail.store_address"
@@ -152,5 +153,22 @@ const rightColumnRef = ref(null);
 }
 .bike-description * {
   color: inherit !important; /* forces all inner elements to use dark/light text color */
+}
+.sticky-booking {
+  position: sticky;
+  top: 100px;
+}
+.bike-description * {
+  color: inherit !important; /* forces all inner elements to use dark/light text color */
+}
+
+/* NEW: Add padding to the bottom on mobile screens 
+  to prevent the fixed footer from overlapping the last bit of content.
+  The breakpoint 991.98px is right below Bootstrap's 'lg' breakpoint.
+*/
+@media (max-width: 991.98px) {
+  .bike-detail-page {
+    padding-bottom: 100px; /* Adjust this value if your footer height changes */
+  }
 }
 </style>

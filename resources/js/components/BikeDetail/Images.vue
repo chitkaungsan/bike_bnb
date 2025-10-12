@@ -1,7 +1,8 @@
 <template>
   <div class="gallery-container">
+    <TopBarComponents :initial-favorited="initialFavorited" />
     <!-- ✅ Top Bar (Back / Share / Favorite) -->
-    <div class="d-flex align-items-center justify-content-between py-2 px-3 top-bar mb-2">
+    <!-- <div class="d-flex align-items-center justify-content-between py-2 px-3 top-bar mb-2">
       <div class="d-flex align-items-center">
         <i class="bi bi-chevron-left fs-2 back-icon" @click="goBack"></i>
       </div>
@@ -13,10 +14,10 @@
           <i class="bi" :class="isFavorited ? 'bi-heart-fill' : 'bi-heart'"></i>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <!-- ✅ Image Section -->
-    <div v-if="galleryImages.length > 0">
+    <div v-if="galleryImages.length > 0" class="mt-2">
       <!-- Desktop Grid -->
       <div class="photo-grid-desktop d-none d-lg-grid">
         <div class="grid-item" @click="openModal" title="Show all photos">
@@ -99,6 +100,7 @@ import Dialog from "primevue/dialog";
 import Carousel from "primevue/carousel";
 import Image from "primevue/image";
 import { useRouter } from "vue-router";
+import TopBarComponents from "../TopBarComponents.vue";
 
 const props = defineProps({
   images: { type: Array, default: () => [] },

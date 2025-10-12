@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid">
+  <div class="container">
     <!-- Bike Section -->
     <div class="row mb-5">
       <div class="row g-3">
@@ -18,6 +18,8 @@
             :store_id="bike.store_id"
             :store_logo="bike.store_logo"
             :store_name="bike.store_name"
+            :category_name="bike.category_name"
+            :type="bike.type"
             :review="4.5"
           />
         </div>
@@ -41,6 +43,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
+import { useRoute } from "vue-router";
 import axios from "../../service/axios";
 import BikeCard from "./BikeCard.vue";
 import { useStore } from "vuex";
@@ -48,19 +51,23 @@ import BikeCardSkeleton from "../loader/BikeCardSkeleton.vue";
 import { Bootstrap5Pagination } from "laravel-vue-pagination";
 const skeletonCount = 20; //
 
+const route = useRoute();
 const store = useStore();
 const { t } = useI18n();
 const bikes = ref([]);
 const loading = ref(true);
 const getResults = async (page = 1) => {
-  const res = await store.dispatch("bikes/fetchAllBikes", page);
+  let id = route.params.id;
+  const res = await store.dispatch("bikes/fetchAllBikesWithId", { page, id });
   bikes.value = res.data || [];
 };
 
 onMounted(async () => {
+  loading.value = true;
+  let id = route.params.id;
   try {
-    const res = await store.dispatch("bikes/fetchAllBikes");
-
+    const res = await store.dispatch("bikes/fetchAllBikesWithId", { page: 1, id });
+    console.log("ressss", res);
     bikes.value = res.data || [];
   } catch (err) {
     console.error(err);

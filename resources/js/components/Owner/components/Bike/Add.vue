@@ -639,7 +639,7 @@ onMounted(async () => {
   await store.dispatch("auth/fetchUser");
 
   setTimeout(async () => {
-    console.log("user", store.state.auth.user.id);
+
     try {
       const { data } = await axios.get(`/get/stores?user_id=${store.state.auth.user.id}`);
       stores.value = data;

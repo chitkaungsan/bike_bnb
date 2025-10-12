@@ -11,6 +11,7 @@
   --border-radius-lg: 20px;
   --border-radius-md: 12px;
   --navbar-bg: #ffffff;
+
 }
 
 /* --- Dark Mode Variables --- */
@@ -29,6 +30,7 @@ body.dark {
   --border-color: #333;
   --navbar-bg: #1e1e1e;
   --search-bg: #2b2b2b;
+  --border-color-muted: #22040400;
 }
 
 /* --- Base Body Styles --- */
@@ -45,6 +47,7 @@ body {
 main {
   flex: 1;
 }
+
 
 /* --- Navbar --- */
 .navbar {

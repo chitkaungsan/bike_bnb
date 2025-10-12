@@ -10,6 +10,7 @@ import AdminDashboard from "../Pages/Admin/Dashboard.vue";
 // import Dashboard from '../Pages/Dashboard/index.vue';
 import AuthCallback from "../components/AuthCallback.vue";
 import BikeDetail from "../Pages/BikeDetail.vue";
+import StoreDetail from "../Pages/StoreDetail.vue";
 import Bikes from "../Pages/Bikes.vue";
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
@@ -23,6 +24,7 @@ const routes = [
     { path: '/auth/google/callback', component: AuthCallback },
     { path : '/bikes', name: 'bikes', component: Bikes },
     { path : '/bike/:id', name: 'bikes.detail', component: BikeDetail },
+    { path : '/store/:id', name: 'store.detail', component: StoreDetail },
     ...ownerRoutes,
     ...adminRoutes,
     ...renterRoutes,

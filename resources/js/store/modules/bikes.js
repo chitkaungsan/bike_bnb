@@ -11,6 +11,7 @@ const state = {
     per_page: 5,
     total: 0,
   },
+  store_bikes: [],
   bike_details: [],
 }
 
@@ -29,7 +30,10 @@ const mutations = {
   },
   SET_BIKE_DETAILS(state, bike_details) {
     state.bike_details = bike_details
-  }
+  },
+  SET_STORE_BIKES(state, store_bikes) {
+    state.store_bikes = store_bikes
+  },  
 
 }
 
@@ -80,6 +84,20 @@ async fetchAllBikes({ commit },page) {
     commit("SET_LOADING", false);
   }
 },
+async fetchAllBikesWithId({ commit },payload) {
+  commit("SET_LOADING", true);
+  const {id,page} = payload
+  try {
+    const response = await axios.get(`get/bike/all/${id}?page=${page}`);
+    commit("SET_STORE_BIKES", response.data);
+    return response;
+  } catch (error) {
+    console.error("Failed to fetch bike list:", error);
+    throw error; 
+  } finally {
+    commit("SET_LOADING", false);
+  }
+},
 
     async fetchBikeById({ getters, commit }, id) {
     let bike = getters.getBikeById(id);
@@ -106,7 +124,8 @@ const getters = {
     if (!state.bikes || !state.bikes.data) return null;
     return state.bikes.data.find((bike) => bike.id === id) || null;
   },
-  bike_details: (state) => state.bike_details
+  bike_details: (state) => state.bike_details,
+  store_bikes: (state) => state.store_bikes
 }
 
 export default {

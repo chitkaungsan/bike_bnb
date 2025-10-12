@@ -6,3 +6,4 @@ use App\Http\Controllers\Api\StoreController;
 Route::post('store/add', [StoreController::class, 'store']);
 Route::get('get/stores', [StoreController::class, 'getStores']);
 Route::get('get/stores/{id}', [StoreController::class, 'storeList']);
+Route::get('get/store/{id}', [StoreController::class, 'getStoreWithId']);

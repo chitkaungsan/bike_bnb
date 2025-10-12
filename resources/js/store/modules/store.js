@@ -17,6 +17,7 @@ import axios from '../../service/axios';
     address: '',
     phone: '',
   },
+  store_detail: [],
 });
 
 const mutations = {
@@ -25,6 +26,9 @@ const mutations = {
   },
   SET_LOADING(state, loading) {
     state.loading = loading;  
+  },
+  SET_STORE_DETAIL(state, store) {
+    state.store_detail = store;
   },
 
   RESET_STORE(state) {
@@ -86,12 +90,25 @@ const actions = {
       console.error('Failed to fetch store list:', error);
       throw error;
     }
-  }
+  },
+  async getStoreWithId({ commit },id) {
+    console.log('uder id', id);
+    try {
+      const response = await axios.get(`/get/store/${id}`);
+      console.log('response', response);
+      commit('SET_STORE_DETAIL', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch store list:', error);
+      throw error;
+    }
+  },
 };
 
 const getters = {
   store: state => state.store,
-  loading: state => state.loading
+  loading: state => state.loading,
+  store_detail: state => state.store_detail
 };
 export default {
   namespaced: true,

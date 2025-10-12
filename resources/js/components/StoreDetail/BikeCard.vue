@@ -1,7 +1,6 @@
 <template>
   <div class="bike-card-wrapper">
     <div class="bike-card">
-      <!-- Image + Overlay -->
       <div class="bike-card-img-wrapper">
         <div class="bike-logo ms-auto">
           <Image
@@ -13,7 +12,6 @@
             loading="lazy"
           />
         </div>
-        <!-- Review stars top-left -->
         <div class="bike-review">
           <span class="stars">
             <font-awesome-icon
@@ -25,43 +23,35 @@
           </span>
           <span class="review-score">{{ reviewDisplay }}</span>
         </div>
-        <!-- Wishlist heart top-right -->
         <div class="bike-wishlist" @click.stop="toggleWishlist">
           <font-awesome-icon :icon="[wishlist ? 'fas' : 'far', 'heart']" />
         </div>
       </div>
 
-      <!-- Card body -->
       <div class="bike-card-body">
         <div class="d-flex">
-          <router-link
-            class="bike-card-link text-decoration-none"
-            :to="{ name: 'bikes.detail', params: { id: props.id } }"
-          >
-            <div class="col">
+          <div class="col">
+            <router-link
+              class="bike-card-link text-decoration-none"
+              :to="{ name: 'bikes.detail', params: { id: props.id } }"
+            >
               <h6 class="bike-card-title">{{ props.title }}</h6>
               <p class="bike-card-model">{{ props.model }}</p>
-            </div>
-          </router-link>
-          <div class="bike-logo ms-auto" v-tooltip.top="store_name">
-            <img
-              v-if="store_logo"
-              :src="store_logo"
-              alt="logo"
-              @click="storeDetail(props.store_id)"
-            />
-            <i class="bi bi-shop fs-3 text-muted" v-else></i>
+            </router-link>
+          </div>
+          <div class="bike-logo ms-auto">
+            <figure class="text-end">
+              <blockquote class="blockquote fs-6">Scooter</blockquote>
+              <figcaption class="blockquote-footer">Auto</figcaption>
+            </figure>
           </div>
         </div>
 
         <div class="bike-card-footer">
-          <!-- formatted price -->
           <span class="bike-card-price">{{ "$" + formattedPrice + "/day" }}</span>
-          <router-link
-            :to="{ name: 'bikes.detail', params: { id: props.id } }"
-            class="btn btn-book"
-            >{{ t("book_now") }}</router-link
-          >
+          <router-link :to="{ name: 'bikes.detail', params: { id: props.id } }">
+            <button class="btn btn-sm btn-book">{{ t("book_now") }}</button>
+          </router-link>
         </div>
       </div>
     </div>
@@ -70,11 +60,9 @@
 
 <script setup>
 import { ref, computed } from "vue";
-import Image from "primevue/image"; // note: lowercase path
+import Image from "primevue/image";
 import { useI18n } from "vue-i18n";
-import router from "../../router";
-import StoreDetail from "../../Pages/StoreDetail.vue";
-// assign defineProps to `props` and provide safe runtime defaults
+
 const { t } = useI18n();
 const props = defineProps({
   id: { type: Number, default: 0 },
@@ -86,6 +74,8 @@ const props = defineProps({
   store_id: { type: Number, default: 0 },
   store_name: { type: String, default: "" },
   store_logo: { type: String, default: "" },
+  category_name: { type: String, default: "" },
+  type: { type: String, default: "" },
 });
 
 const wishlist = ref(false);
@@ -93,12 +83,6 @@ function toggleWishlist() {
   wishlist.value = !wishlist.value;
 }
 
-/**
- * Safe number formatter:
- * - Accepts number or string (with or without commas/currency).
- * - Strips non-number chars (except dot and minus), converts to Number.
- * - Returns original value as string if it can't parse to a number.
- */
 function formatNumberRaw(value) {
   if (value === null || value === undefined || value === "") return "";
   const cleaned = String(value).replace(/[^0-9.-]/g, "");
@@ -106,7 +90,7 @@ function formatNumberRaw(value) {
   if (Number.isNaN(num)) return String(value);
   return new Intl.NumberFormat("en-US").format(num);
 }
-const storeDetail = (id) => router.push({ name: "store.detail", params: { id } });
+
 const formattedPrice = computed(() => formatNumberRaw(props.price));
 const reviewDisplay = computed(() => {
   const r = Number(props.review ?? 0);
@@ -122,6 +106,10 @@ const reviewDisplay = computed(() => {
 @media (min-width: 576px) {
   .bike-card-wrapper {
     flex: 0 0 48%;
+  }
+  /* ADDED: Restore height for larger screens */
+  .bike-card-img-wrapper {
+    height: 200px;
   }
 }
 @media (min-width: 768px) {
@@ -152,7 +140,7 @@ const reviewDisplay = computed(() => {
 .bike-card-img-wrapper {
   position: relative;
   width: 100%;
-  height: 200px; /* or any height you want */
+  height: 180px; /* MODIFIED: Reduced height for mobile */
   overflow: hidden; /* crop overflow */
 }
 .bike-card-img {
@@ -169,11 +157,11 @@ const reviewDisplay = computed(() => {
   left: 0.5rem;
   background-color: rgba(0, 0, 0, 0.6);
   color: white;
-  padding: 0.25rem 0.5rem;
+  padding: 0.2rem 0.4rem; /* MODIFIED: Slightly smaller padding */
   border-radius: 0.5rem;
   display: flex;
   align-items: center;
-  font-size: 0.8rem;
+  font-size: 0.75rem; /* MODIFIED: Reduced font size */
 }
 .bike-review .stars {
   margin-right: 0.25rem;
@@ -200,18 +188,18 @@ const reviewDisplay = computed(() => {
 
 /* Card body */
 .bike-card-body {
-  padding: 0.75rem;
+  padding: 0.6rem; /* MODIFIED: Reduced padding */
 }
 .bike-card-title {
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.85rem; /* MODIFIED: Reduced font size */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   color: var(--text-color);
 }
 .bike-card-model {
-  font-size: 0.7rem;
+  font-size: 0.65rem; /* MODIFIED: Reduced font size */
   color: var(--secondary-text-color);
   margin-bottom: 0.3rem;
 }
@@ -222,7 +210,7 @@ const reviewDisplay = computed(() => {
 }
 .bike-card-price {
   font-weight: 700;
-  font-size: 1.05rem;
+  font-size: 0.9rem; /* MODIFIED: Reduced font size */
   color: var(--primary-color);
 }
 .btn-book {
@@ -230,8 +218,8 @@ const reviewDisplay = computed(() => {
   color: white;
   border: none;
   border-radius: var(--border-radius-md);
-  padding: 0.35rem 0.75rem;
-  font-size: 0.85rem;
+  padding: 0.3rem 0.6rem; /* MODIFIED: Reduced padding */
+  font-size: 0.8rem; /* MODIFIED: Reduced font size */
 }
 .btn-book:hover {
   background-color: var(--primary-hover-color);

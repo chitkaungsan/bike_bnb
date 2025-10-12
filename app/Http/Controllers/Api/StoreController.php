@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 
 use App\Models\Store;
 use App\Models\StoreImage;
-
+use Illuminate\Support\Facades\DB;
 class StoreController extends Controller
 {
     public function store(Request $request)
@@ -119,5 +119,23 @@ class StoreController extends Controller
             $user_id = $request->input('user_id');
             $stores = Store::select('name','id')->where('user_id',$user_id)->get();
             return response()->json($stores);
+        }
+        public function getStoreWithId($id){
+            $store = DB::table('stores as s')
+            ->join('users as u', 's.user_id', '=', 'u.id')
+            ->join('bikes as b', 's.id', '=', 'b.store_id')
+            ->where('s.id', $id)
+            ->select(
+                's.*',
+                'u.name as user_name',
+                'u.email as user_email',
+            )
+            ->first();
+                
+            $bikes = DB::table('bikes')->where('store_id', $id)->get();
+            $store_images = DB::table('store_images')->where('store_id', $id)->pluck('image_path'); 
+            $store->bikes = $bikes;
+            $store->images = $store_images;
+            return response()->json($store);
         }
 }

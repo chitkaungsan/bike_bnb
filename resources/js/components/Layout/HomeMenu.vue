@@ -191,7 +191,6 @@ const selectRole = async () => {
     });
     const res = await getData();
     if (user.value.role === "owner") {
-      console.log("owner");
       router.push({ name: "owner.dashboard" });
     } else {
       router.push({ name: "Home" });

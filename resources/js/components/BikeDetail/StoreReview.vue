@@ -4,13 +4,15 @@
   >
     <!-- Left Section: Icon + Text -->
     <div class="d-flex align-items-center gap-2">
-      <img
-        :src="store_logo"
-        alt="Store Logo"
-        class="bike-logo rounded-circle"
-        width="40"
-        height="40"
-      />
+      <router-link :to="{ name: 'store.detail', params: { id: store_id } }">
+        <img
+          :src="store_logo"
+          alt="Store Logo"
+          class="bike-logo rounded-circle"
+          width="40"
+          height="40"
+        />
+      </router-link>
       <div class="d-flex flex-column">
         <span class="fw-semibold">{{ store_name }}</span>
         <span class="text-muted small">{{ address }}</span>
@@ -35,6 +37,10 @@
 </template>
 <script setup>
 const props = defineProps({
+  store_id: {
+    type: Number,
+    required: true,
+  },
   store_logo: {
     type: String,
     required: true,
@@ -62,5 +68,6 @@ const props = defineProps({
 .bike-logo {
   width: 50px;
   height: 50px;
+  border: 0.5px solid var(--border-color);
 }
 </style>
