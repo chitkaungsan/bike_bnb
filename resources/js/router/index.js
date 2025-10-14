@@ -33,7 +33,14 @@ const routes = [
 const router = createRouter({
     history: createWebHistory(),
     routes,
+     scrollBehavior(to, from, savedPosition) {
+        // If using browser back/forward, restore saved position
+        if (savedPosition) return savedPosition;
+        // Always scroll to top for new pages
+        return { top: 0 };
+    }
 });
+
 NProgress.configure({ showSpinner: false })
 
 router.beforeEach(async (to, from, next) => {
@@ -57,4 +64,5 @@ router.beforeEach(async (to, from, next) => {
 router.afterEach(() => {
   NProgress.done()
 });
+
 export default router;

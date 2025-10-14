@@ -201,3 +201,15 @@ main {
   background: #63C1A2 !important;
   height: 3px !important;
 }
+.p-datepicker .p-datepicker-calendar td > span[data-p-disabled="true"] {
+  text-decoration: none !important;
+  color: #dcdcdc !important;
+  cursor: default !important;
+  background: linear-gradient(
+    to top right,
+    transparent 49.5%,
+    #e0e0e0 49.5%,
+    #e0e0e0 50.5%,
+    transparent 50.5%
+  ) !important;
+}
