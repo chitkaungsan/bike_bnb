@@ -4,10 +4,29 @@
             <div class="booking-panel" ref="panelRef" :class="stickyClass">
                 <div class="p-4 shadow rounded-4 border">
                     <div class="d-flex align-items-center mb-3">
-                        <span class="price-amount fw-bold fs-4">{{
-                            formattedPrice
-                        }}</span>
-                        <span class="price-period ms-1 text-muted">day</span>
+                        <div class="col">
+                            <span class="price-amount text-muted"
+                                >{{ formattedPrice }}
+                            </span>
+                            <span class="price-period ms-1 text-muted"
+                                >day</span
+                            >
+                        </div>
+                        <div class="ms-auto" v-if="showTotal">
+                            <span class="price-amount text-muted"
+                                >{{ bookingValue.total_price ? new Intl.NumberFormat("th-TH", {
+                                    style: "currency",
+                                    currency: currency,
+                                    minimumFractionDigits: 0,
+                                }).format(bookingValue.total_price) : '' }}
+                            </span>
+                            <span class="price-period ms-1 text-muted"
+                                >for {{ bookingValue.days }} days</span
+                            >
+                        </div>
+                        <div>
+                           <span v-if="loading" >Loading...</span>
+                        </div>
                     </div>
 
                     <div class="date-guest-container rounded-3 border mb-3">
@@ -129,15 +148,21 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed,watch } from "vue";
+import { ref, onMounted, onUnmounted, computed, watch } from "vue";
 import Calendar from "primevue/calendar";
 import Dropdown from "primevue/dropdown";
 import Button from "primevue/button";
-
+import { useRouter } from "vue-router";
+import { useToast } from "primevue/usetoast";
+import { set } from "nprogress";
+import { useStore } from "vuex";
+import booking from "../../store/modules/booking";
+const store = useStore();
+const toast = useToast();
 
 // --- Props ---
 const props = defineProps({
-    pricePerNight: {
+    pricePerDay: {
         type: Number,
         required: true,
     },
@@ -151,6 +176,7 @@ const props = defineProps({
     },
 });
 
+const router = useRouter();
 // --- State ---
 const dates = ref();
 const selectedGuests = ref();
@@ -158,6 +184,9 @@ const guestOptions = ref([1, 2, 3, 4, "5+"]);
 const wrapperRef = ref(null);
 const panelRef = ref(null);
 const stickyClass = ref("");
+const bookingValue = ref([]);
+const loading = ref(false);
+const showTotal = ref(false);
 const bookedDates = ref([
     new Date(2025, 9, 20), // Oct 20, 2025
     new Date(2025, 9, 25), // Oct 25, 2025
@@ -171,7 +200,7 @@ const isBooked = (slotDate) => {
             d.getDate() === slotDate.day
     );
 };
-watch(dates, (newVal) => {
+watch(dates,async (newVal) => {
     if (!newVal || newVal.length < 2) return;
 
     const [start, end] = newVal;
@@ -180,8 +209,41 @@ watch(dates, (newVal) => {
     const invalid = bookedDates.value.some((d) => d >= start && d <= end);
 
     if (invalid) {
-        alert("⚠️ Your selected range includes a booked date. Please choose another range.");
+        toast.add({
+            severity: "warn",
+            summary: "Invalid Date Range",
+            detail: "Your selected range includes a booked date. Please choose another range.",
+            life: 5000,
+        });
         dates.value = null; // reset calendar selection
+    } else {
+        // Valid range selected, you can proceed with further logic here
+        try{
+            loading.value = true;
+             const response = await store.dispatch("booking/calculatePrice", {
+                bikeId: router.currentRoute.value.params.id,
+                startDate: start,
+                endDate: end,
+            });
+            bookingValue.value = response;
+            if(response) showTotal.value = true;
+        } catch (error) {
+            console.error("Error setting loading state:", error);
+        } finally {
+            loading.value = false;
+        }
+        if (bookingValue.value.total_price){
+            toast.add({
+                severity: "info",
+                summary: "Price Calculated",
+                detail: `Total Price: ${new Intl.NumberFormat("th-TH", {
+                    style: "currency",
+                    currency: props.currency,
+                    minimumFractionDigits: 0,
+                }).format(bookingValue.value.total_price)} for ${bookingValue.value.days} days`,
+                life: 5000,
+            });
+            }
     }
 });
 
@@ -191,7 +253,7 @@ const formattedPrice = computed(() => {
         style: "currency",
         currency: props.currency,
         minimumFractionDigits: 0,
-    }).format(props.pricePerNight);
+    }).format(props.pricePerDay);
 });
 
 const pickupDateDisplay = computed(() => {
@@ -208,9 +270,6 @@ const returnDateDisplay = computed(() => {
     return "Add date";
 });
 
-const testFunction = () => {
-    console.log("Test function called");
-}
 // --- Logic for Sticky Behavior ---
 const handleScroll = () => {
     if (window.innerWidth < 992) {
@@ -221,7 +280,6 @@ const handleScroll = () => {
         stickyClass.value = "";
         return;
     }
-    
 
     if (!wrapperRef.value || !panelRef.value || !props.parentContainer) return;
 

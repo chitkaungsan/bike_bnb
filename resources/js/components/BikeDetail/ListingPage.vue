@@ -48,7 +48,7 @@
       <!-- RIGHT: Booking Panel -->
       <div class="col-lg-5">
         <div ref="rightColumnRef" class="sticky-booking">
-          <BookingPanel :price-per-night="2671" :parent-container="rightColumnRef" />
+          <BookingPanel :price-per-day="bike_detail.price" :parent-container="rightColumnRef" />
         </div>
       </div>
     </div>

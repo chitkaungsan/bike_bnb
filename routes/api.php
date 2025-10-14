@@ -29,3 +29,4 @@ Route::get('/auth/{provider}/callback', [SocialLoginController::class, 'callback
 require __DIR__.'/api_store.php';
 require __DIR__.'/api_bike.php';
 require __DIR__.'/api_home.php';
+require __DIR__.'/api_booking.php';
