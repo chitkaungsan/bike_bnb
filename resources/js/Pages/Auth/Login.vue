@@ -104,6 +104,7 @@ import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import ThemeSwitcher from "../../components/ThemeSwitcher.vue";
+import { checkRedirect } from "../../service/checkRedirect";
 
 const store = useStore();
 const router = useRouter();
@@ -126,7 +127,16 @@ const handleLogin = async () => {
 
     // Redirect based on role
     const user = store.state.auth.user;
-    router.push({ name: "Home" });
+    const redirectPath = checkRedirect();
+    if (redirectPath) {
+      router.push(redirectPath);
+      return;
+    }
+    if (user.role === "owner" && redirectPath === null) {
+      router.push({ name: "owner.dashboard" });
+    } else if(user.role === "renter" && redirectPath === null) {
+      router.push({ name: "Home" });
+    }
   } catch (error) {
     if (
       error.response &&

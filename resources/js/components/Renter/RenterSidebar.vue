@@ -1,9 +1,11 @@
 <template>
   <aside class="sidebar">
     <div class="sidebar-header">
+      <a href="/" class="brand-logo text-decoration-none text-dark" >
       <font-awesome-icon :icon="faBicycle" class="logo-icon" />
       <h2 class="brand-name">BikeDash</h2>
       <span>Renter Panel</span>
+      </a>
     </div>
 
     <nav class="sidebar-nav">

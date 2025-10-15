@@ -85,6 +85,7 @@ async fetchAllBikes({ commit },page) {
   }
 },
 async fetchAllBikesWithId({ commit },payload) {
+  // fetch all bike with store id 
   commit("SET_LOADING", true);
   const {id,page} = payload
   try {

@@ -8,7 +8,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import axios from "../service/axios";
+import axios from "@/service/axios";
 import { useStore } from "vuex";
 
 const store = useStore();
@@ -16,49 +16,74 @@ const router = useRouter();
 const loading = ref(true);
 const error = ref("");
 
+// ✅ Helper for safe redirect
+function getRedirectPath() {
+  try {
+    const saved = localStorage.getItem("oauth_redirect");
+    if (!saved) return null;
+    const parsed = JSON.parse(saved);
+    localStorage.removeItem("oauth_redirect");
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
 onMounted(async () => {
   try {
-    // 1️⃣ Check if token is in URL (redirect from Laravel)
     const params = new URLSearchParams(window.location.search);
     const tokenFromURL = params.get("token");
     const code = params.get("code");
 
+    if (!tokenFromURL && !code) {
+      router.push({ name: "Login" });
+      return;
+    }
+
+    let token = tokenFromURL;
+    let user = null;
+
+    // 1️⃣ If Laravel returned a token directly
     if (tokenFromURL) {
-      localStorage.setItem("token", tokenFromURL);
-
-      // Update axios default header immediately
+      localStorage.setItem("auth_token", tokenFromURL);
       axios.defaults.headers.common["Authorization"] = `Bearer ${tokenFromURL}`;
-
-      // Fetch user and commit to store
-      const user = await store.dispatch("auth/fetchUser");
-      store.commit("auth/SET_USER", user);
-
-      localStorage.setItem("user", JSON.stringify(user));
-
-      if (user && user.role === "owner") router.push({ name: "owner.dashboard" });
-      else window.location.href = "/";
-      return;
+      user = await store.dispatch("auth/fetchUser");
     }
 
+    // 2️⃣ If only `code` returned (in dev flow)
     if (code) {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/auth/google/callback?code=${code}`
-      );
-      const { token, user } = response.data;
+      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/auth/google/callback?code=${code}`);
+      token = data.token;
+      user = data.user;
 
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user));
-      console.log(user);
-      if (user.role === "owner") router.push({ name: "owner.dashboard" });
-      else window.location.href = "/";
+      localStorage.setItem("auth_token", token);
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      store.commit("auth/SET_USER", user);
+    }
+
+    // 3️⃣ Save user locally
+    if (user) localStorage.setItem("user", JSON.stringify(user));
+
+    // 4️⃣ Handle redirect logic
+    const redirectPath = getRedirectPath();
+    if (redirectPath) {
+      router.push(redirectPath);
       return;
     }
 
-    // If neither token nor code, redirect to login
-    router.push("/login");
+    // 5️⃣ Default redirects by role
+    if (user && user.role === "owner") {
+      router.push({ name: "owner.dashboard" });
+    } else if (user && user.role === "renter") {
+      router.push({ name: "Home" });
+    } else {
+      router.push("/");
+    }
+
   } catch (err) {
     console.error(err);
     error.value = "Google login failed. Please try again.";
+  } finally {
     loading.value = false;
   }
 });

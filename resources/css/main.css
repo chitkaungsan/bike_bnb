@@ -213,3 +213,6 @@ main {
     transparent 50.5%
   ) !important;
 }
+.p-toast {
+    max-width: 90vw; /* make toast fit smaller screens */
+}

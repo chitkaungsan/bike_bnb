@@ -49,6 +49,7 @@
         "vue-leaflet": "^0.1.0",
         "vue-multiselect": "^3.4.0",
         "vue-router": "^4.5.1",
+        "vue-tel-input": "^9.5.0",
         "vuex": "^4.0.2"
     }
 }

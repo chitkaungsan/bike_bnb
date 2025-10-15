@@ -23,6 +23,8 @@ const logout = async () => {
   loading.value = true;
   try {
     await store.dispatch('auth/logout');
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
     router.push({ name: 'Home' }); // Redirect to login after logout
   } catch (error) {
     console.error('Logout failed:', error);

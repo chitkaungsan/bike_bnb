@@ -17,6 +17,7 @@ import 'nprogress/nprogress.css'
 import ownerRoutes from './owner.js'
 import adminRoutes from './admin_.js'
 import renterRoutes from './renter.js'
+import BookingRoutes from './booking.js'
 const routes = [
     { path: "/", name: "Home", component: Home },
     { path: "/login", name: "Login", component: Login },
@@ -25,9 +26,11 @@ const routes = [
     { path : '/bikes', name: 'bikes', component: Bikes },
     { path : '/bike/:id', name: 'bikes.detail', component: BikeDetail },
     { path : '/store/:id', name: 'store.detail', component: StoreDetail },
+
     ...ownerRoutes,
     ...adminRoutes,
     ...renterRoutes,
+    ...BookingRoutes,
 ];
 
 const router = createRouter({
@@ -41,10 +44,15 @@ const router = createRouter({
     }
 });
 
-NProgress.configure({ showSpinner: false })
+NProgress.configure({ showSpinner: true })
+
 
 router.beforeEach(async (to, from, next) => {
       NProgress.start()
+        if (to.path === "/auth/google/callback") {
+    next();
+    return; 
+  }
     // Pages that require authentication
     const requiresAuth = to.meta.requiresAuth;
 
@@ -54,7 +62,7 @@ router.beforeEach(async (to, from, next) => {
             await store.dispatch("auth/fetchUser"); // fetch user first
             next(); // proceed after fetching
         } catch {
-            next({ name: "/" }); // redirect if fetch fails
+            next({ name: "Home" }); // redirect if fetch fails
         }
     } else {
         next();

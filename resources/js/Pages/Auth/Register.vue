@@ -140,7 +140,7 @@ import { onMounted, ref } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
-
+import { checkRedirect } from "../../service/checkRedirect";
 const store = useStore();
 const router = useRouter();
 const { t } = useI18n();
@@ -161,9 +161,14 @@ const handleRegister = async () => {
   try {
     await store.dispatch("auth/register", form.value);
     const user = store.state.auth.user;
-    if (user.role === "owner") {
+    const redirectPath = checkRedirect();
+    if (redirectPath) {
+      router.push(redirectPath);
+      return;
+    }
+    if (user.role === "owner" && redirectPath === null) {
       router.push({ name: "owner.dashboard" });
-    } else {
+    } else if(user.role === "renter" && redirectPath === null) {
       router.push({ name: "Home" });
     }
   } catch (error) {
@@ -173,6 +178,8 @@ const handleRegister = async () => {
   }
 };
 const handleGoogleLogin = async () => {
+  const redirect = checkRedirect() || window.location.pathname;
+  localStorage.setItem('oauth_redirect', JSON.stringify(redirect));
   window.location.href = `${import.meta.env.VITE_API_URL}/auth/google/redirect`;
 };
 onMounted(() => {

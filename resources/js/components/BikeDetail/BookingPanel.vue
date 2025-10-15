@@ -3,32 +3,36 @@
         <div class="d-none d-lg-block">
             <div class="booking-panel" ref="panelRef" :class="stickyClass">
                 <div class="p-4 shadow rounded-4 border">
+                    <!-- PRICE HEADER -->
                     <div class="d-flex align-items-center mb-3">
                         <div class="col">
-                            <span class="price-amount text-muted"
-                                >{{ formattedPrice }}
-                            </span>
+                            <span class="price-amount text-muted">{{
+                                formattedPrice
+                            }}</span>
                             <span class="price-period ms-1 text-muted"
                                 >day</span
                             >
                         </div>
                         <div class="ms-auto" v-if="showTotal">
-                            <span class="price-amount text-muted"
-                                >{{ bookingValue.total_price ? new Intl.NumberFormat("th-TH", {
-                                    style: "currency",
-                                    currency: currency,
-                                    minimumFractionDigits: 0,
-                                }).format(bookingValue.total_price) : '' }}
+                            <span class="price-amount text-muted">
+                                {{
+                                    bookingValue.total_price
+                                        ? new Intl.NumberFormat("th-TH", {
+                                              style: "currency",
+                                              currency: currency,
+                                              minimumFractionDigits: 0,
+                                          }).format(bookingValue.total_price)
+                                        : ""
+                                }}
                             </span>
-                            <span class="price-period ms-1 text-muted"
-                                >for {{ bookingValue.days }} days</span
-                            >
+                            <span class="price-period ms-1 text-muted">
+                                for {{ bookingValue.days }} days
+                            </span>
                         </div>
-                        <div>
-                           <span v-if="loading" >Loading...</span>
-                        </div>
+                        <div><span v-if="loading">Loading...</span></div>
                     </div>
 
+                    <!-- DATE SELECTION -->
                     <div class="date-guest-container rounded-3 border mb-3">
                         <div class="position-relative">
                             <div class="row g-0">
@@ -82,44 +86,34 @@
                                 </template>
                             </Calendar>
                         </div>
-
-                        <div class="border-top">
-                            <Dropdown
-                                v-model="selectedGuests"
-                                :options="guestOptions"
-                                placeholder="Add guests"
-                                class="w-100 guest-dropdown"
-                            >
-                                <template #value="slotProps">
-                                    <div class="guest-input-display p-2">
-                                        <label
-                                            class="form-label text-uppercase small fw-bold"
-                                            >Guests</label
-                                        >
-                                        <span
-                                            v-if="slotProps.value"
-                                            class="guest-placeholder"
-                                            >{{
-                                                slotProps.value
-                                            }}
-                                            guest(s)</span
-                                        >
-                                        <span
-                                            v-else
-                                            class="guest-placeholder text-muted"
-                                            >{{ slotProps.placeholder }}</span
-                                        >
-                                    </div>
-                                </template>
-                                <template #option="slotProps">
-                                    <div>{{ slotProps.option }} guest(s)</div>
-                                </template>
-                            </Dropdown>
-                        </div>
                     </div>
 
-                    <Button class="w-100 p-3 reserve-btn" label="Book Now" />
+                    <!-- USER INFO -->
+                    <!-- <div class="border rounded-3 p-3 mb-3 bg-light"> -->
+                    <!-- <div class="mb-2">
+                            <label class="form-label small fw-bold text-uppercase">Name</label>
+                            <InputText
+                                v-model="name"
+                                placeholder="Your full name"
+                                class="w-100"
+                            />
+                        </div> -->
 
+                    <!-- <div>
+                            <label class="form-label small fw-bold text-uppercase">Phone</label>
+                            <div class="d-flex align-items-center gap-1">
+                                <vue-tel-input v-model="phone" class="w-100" :preferredCountries="['th']" mode="international"></vue-tel-input>
+                                
+                            </div>
+                        </div> -->
+                    <!-- </div> -->
+
+                    <!-- SUBMIT BUTTON -->
+                    <Button
+                        class="w-100 p-3 reserve-btn"
+                        label="Book Now"
+                        @click="startBook"
+                    />
                     <p class="text-center text-muted small mt-2 mb-0">
                         You won't be charged yet
                     </p>
@@ -133,6 +127,7 @@
             </div>
         </div>
 
+        <!-- MOBILE FOOTER -->
         <div class="mobile-booking-footer d-lg-none">
             <div class="footer-content">
                 <div class="price-info">
@@ -141,7 +136,11 @@
                     }}</span>
                     <span class="price-period text-muted"> day</span>
                 </div>
-                <Button class="reserve-btn-mobile" label="Book Now" />
+                <Button
+                    class="reserve-btn-mobile"
+                    label="Book Now"
+                    @click="startBook"
+                />
             </div>
         </div>
     </div>
@@ -150,13 +149,13 @@
 <script setup>
 import { ref, onMounted, onUnmounted, computed, watch } from "vue";
 import Calendar from "primevue/calendar";
-import Dropdown from "primevue/dropdown";
 import Button from "primevue/button";
 import { useRouter } from "vue-router";
 import { useToast } from "primevue/usetoast";
-import { set } from "nprogress";
 import { useStore } from "vuex";
-import booking from "../../store/modules/booking";
+
+import InputText from "primevue/inputtext";
+
 const store = useStore();
 const toast = useToast();
 
@@ -178,9 +177,13 @@ const props = defineProps({
 
 const router = useRouter();
 // --- State ---
-const dates = ref();
-const selectedGuests = ref();
-const guestOptions = ref([1, 2, 3, 4, "5+"]);
+
+const today = new Date();
+const dates = ref([
+    today, // start date → today
+    today,
+]);
+
 const wrapperRef = ref(null);
 const panelRef = ref(null);
 const stickyClass = ref("");
@@ -200,7 +203,7 @@ const isBooked = (slotDate) => {
             d.getDate() === slotDate.day
     );
 };
-watch(dates,async (newVal) => {
+watch(dates, async (newVal) => {
     if (!newVal || newVal.length < 2) return;
 
     const [start, end] = newVal;
@@ -218,21 +221,21 @@ watch(dates,async (newVal) => {
         dates.value = null; // reset calendar selection
     } else {
         // Valid range selected, you can proceed with further logic here
-        try{
+        try {
             loading.value = true;
-             const response = await store.dispatch("booking/calculatePrice", {
+            const response = await store.dispatch("booking/calculatePrice", {
                 bikeId: router.currentRoute.value.params.id,
                 startDate: start,
                 endDate: end,
             });
             bookingValue.value = response;
-            if(response) showTotal.value = true;
+            if (response) showTotal.value = true;
         } catch (error) {
             console.error("Error setting loading state:", error);
         } finally {
             loading.value = false;
         }
-        if (bookingValue.value.total_price){
+        if (bookingValue.value.total_price) {
             toast.add({
                 severity: "info",
                 summary: "Price Calculated",
@@ -240,10 +243,12 @@ watch(dates,async (newVal) => {
                     style: "currency",
                     currency: props.currency,
                     minimumFractionDigits: 0,
-                }).format(bookingValue.value.total_price)} for ${bookingValue.value.days} days`,
+                }).format(bookingValue.value.total_price)} for ${
+                    bookingValue.value.days
+                } days`,
                 life: 5000,
             });
-            }
+        }
     }
 });
 
@@ -258,18 +263,69 @@ const formattedPrice = computed(() => {
 
 const pickupDateDisplay = computed(() => {
     if (dates.value && dates.value[0]) {
-        return dates.value[0].toLocaleDateString("en-GB"); // Format as DD/MM/YYYY
+        return dates.value[0].toLocaleDateString("en-CA"); // Format as DD/MM/YYYY
     }
     return "Add date";
 });
 
 const returnDateDisplay = computed(() => {
     if (dates.value && dates.value[1]) {
-        return dates.value[1].toLocaleDateString("en-GB"); // Format as DD/MM/YYYY
+        return dates.value[1].toLocaleDateString("en-CA"); // Format as DD/MM/YYYY
     }
     return "Add date";
 });
 
+const startBook = () => {
+    if (!dates.value || dates.value.length < 2) {
+        toast.add({
+            severity: "warn",
+            summary: "Select Dates",
+            detail: "Please select both pick-up and return dates before proceeding.",
+            life: 5000,
+        });
+        return;
+    }
+
+    const start = dates.value[0];
+    const end = dates.value[1];
+    const formattedStart = start.toLocaleDateString("en-CA"); // YYYY-MM-DD
+    const formattedEnd = end.toLocaleDateString("en-CA"); // YYYY-MM-DD
+
+    // const formattedStart = new Date(dates.value[0]).toISOString().split("T")[0];
+    // const formattedEnd = new Date(dates.value[1]).toISOString().split("T")[0];
+    // Check if user is logged in
+    if (localStorage.getItem("token") === null) {
+        toast.add({
+            severity: "warn",
+            summary: "Login Required",
+            detail: "Please log in to proceed with the booking.",
+            life: 5000,
+        });
+        localStorage.setItem(
+            "pendingBooking",
+            JSON.stringify({
+                bike_id: router.currentRoute.value.params.id,
+                start_date: formattedStart,
+                end_date: formattedEnd,
+            })
+        );
+        router.push({ name: "Register" });
+    } else {
+        console.log('formattedStart, formattedEnd', formattedStart, formattedEnd);
+        router.push({
+            name: "booking.step",
+            query: {
+                bike_id: router.currentRoute.value.params.id,
+                start_date: formattedStart,
+                end_date: formattedEnd,
+                days: bookingValue.value.days,
+                total_price: bookingValue.value.total_price,
+                currency: props.currency,
+                price_per_day: props.pricePerDay,
+            },
+        });
+    }
+};
 // --- Logic for Sticky Behavior ---
 const handleScroll = () => {
     if (window.innerWidth < 992) {

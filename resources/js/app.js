@@ -41,6 +41,8 @@ import Tooltip from 'primevue/tooltip';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import 'primeicons/primeicons.css';
+import VueTelInput from 'vue-tel-input';
+import 'vue-tel-input/vue-tel-input.css';
 
 // Init theme in store
 store.dispatch('theme/initTheme');
@@ -48,6 +50,9 @@ store.dispatch('theme/initTheme');
 // Create app
 const app = createApp(App);
 
+const globalOptions = {
+  mode: 'auto',
+};
 // Components
 app.component('font-awesome-icon', FontAwesomeIcon);
 app.component('QuillEditor', QuillEditor);
@@ -63,6 +68,7 @@ app.use(router)
    .use(store)
    .use(i18n)
    .use(ToastService)
+   .use(VueTelInput, globalOptions)
    .use(PrimeVue, {
      theme: {
        preset: Aura
