@@ -45,11 +45,26 @@ const actions = {
         try {
             const response = await axios.post("/booking/create", bookingData);
             commit("addBooking", response.data);
+            return response.data;
         } catch (error) {
             const message = error.response?.data?.error || error.message;
             commit("setError", message);
             throw new Error(message);
             commit("setError", message);
+        } finally {
+            commit("setLoading", false);
+        }
+    },
+    async fetchBookingById({ commit }, bookingId) {
+        commit("setLoading", true);
+        try {
+            const response = await axios.get(`/bookings/${bookingId}`);
+            commit("setBooking", response.data);
+            return response; // Return the full response for further handling
+        } catch (error) {
+            const message = error.response?.data?.error || error.message;
+            commit("setError", message);
+            throw new Error(message);
         } finally {
             commit("setLoading", false);
         }
@@ -75,6 +90,19 @@ const actions = {
             commit("removeBooking", bookingId);
         } catch (error) {
             commit("setError", error.message);
+        } finally {
+            commit("setLoading", false);
+        }
+    },
+    async getBookDateWithBikeId({ commit }, bikeId) {
+        commit("setLoading", true);
+        try {
+            const response = await axios.get(`/bookings/bike/${bikeId}`);
+            commit("setBookings", response.data);
+            return response.data;
+        } catch (error) {
+            commit("setError", error.message);
+            throw error;
         } finally {
             commit("setLoading", false);
         }

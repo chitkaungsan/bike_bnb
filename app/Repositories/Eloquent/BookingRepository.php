@@ -5,7 +5,7 @@ namespace App\Repositories\Eloquent;
 use App\Models\Bike;
 use App\Models\Booking;
 use App\Repositories\Contracts\BookingRepositoryInterface;
-
+use App\Models\User;
 class BookingRepository implements BookingRepositoryInterface
 {
     public function calculateRentalPrice($bikeId, $startDate, $endDate)
@@ -50,6 +50,16 @@ class BookingRepository implements BookingRepositoryInterface
 
     public function createBooking($data)
     {
+        // update user phone if different
+        $user = User::find($data['user_id']);
+        $phone = $data['user_phone'];
+
+        if ($user->phone == null) {
+                $user->phone = $data['user_phone'];
+            }
+
+        $user->save();
+
         return Booking::create([
             'bike_id' => $data['bike_id'],
             'rider_id' => $data['user_id'],
@@ -78,5 +88,46 @@ class BookingRepository implements BookingRepositoryInterface
                     });
             })
             ->exists();
+    }
+
+    public function findById($id)
+    {
+        return Booking::select(
+            'bookings.id as booking_id',
+            'bookings.bike_id',
+            'bookings.rider_id',
+            'bookings.start_date',
+            'bookings.end_date',
+            'bookings.status',
+            'bookings.name as renter_name',
+            'bookings.email as renter_email',
+            'bookings.phone as renter_phone',
+            'bookings.days',
+            'bookings.daily_rate',
+            'bookings.total_price',
+            'bookings.payment_type',
+            'bikes.title as bike_title',
+            'bikes.price as bike_price',
+            'bikes.photo as bike_photo',
+            'stores.name as store_name',
+            'stores.phone as store_phone',
+            'stores.address as store_address',
+            'stores.logo as store_logo',
+            'users.name as user_name',
+            'users.email as user_email',
+            'users.phone as user_phone',
+            'bookings.created_at'
+        )
+            ->leftJoin('bikes', 'bookings.bike_id', '=', 'bikes.id')
+            ->leftJoin('stores', 'bikes.store_id', '=', 'stores.id')
+            ->leftJoin('users', 'bookings.rider_id', '=', 'users.id')
+            ->where('bookings.id', $id)
+            ->first();
+    }
+    public function findByBikeId($bikeId)
+    {
+        return Booking::where('bike_id', $bikeId)
+            ->select('start_date as start', 'end_date as end')
+            ->get();
     }
 }

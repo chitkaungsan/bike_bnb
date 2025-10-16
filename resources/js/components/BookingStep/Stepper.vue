@@ -90,7 +90,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { useToast } from 'primevue/usetoast';
 import Button from "primevue/button";
@@ -104,8 +104,9 @@ const toast = useToast();
 // Data Management
 const store = useStore();
 const route = useRoute();
+const router = useRouter();
 const bike = computed(() => store.getters["bikes/bike_details"] || {});
-const error = computed(() => store.getters["booking/errorMessage"]);
+
 const renterData = ref({});
 
 // Event handler to get data from child
@@ -145,7 +146,8 @@ const submitBooking = async () => {
       detail: 'Your bike booking was successful!',
       life: 3000
     });
-    console.log("Booking successful:", res);
+    console.log('Booking successful:', res.booking.id);
+    router.push({ name: 'booking.success', params: { id: res.booking.id } });
   } catch (err) {
     toast.add({
       severity: 'error',

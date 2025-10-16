@@ -70,4 +70,17 @@ class BookingController extends Controller
             'booking' => $booking,
         ], 201);
     }
+    public function getBookingWithId($id)
+    {
+        $booking = $this->bookingRepository->findById($id);
+        if (! $booking) {
+            return response()->json(['error' => 'Booking not found'], 404);
+        }
+        return response()->json($booking);
+    }
+    public function getBookingsByBikeId($bikeId)
+    {
+        $bookings = $this->bookingRepository->findByBikeId($bikeId);
+        return response()->json($bookings);
+    }
 }

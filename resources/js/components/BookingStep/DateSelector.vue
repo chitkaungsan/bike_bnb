@@ -34,7 +34,6 @@
                 dateFormat="dd/mm/yy"
                 numberOfMonths="2"
                 :showIcon="false"
-                disabled="true" 
             >
                 <template #date="slotProps">
                     <span v-if="isBooked(slotProps.date)" class="disabled-day">

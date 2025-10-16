@@ -93,11 +93,7 @@ const props = defineProps({
 const emit = defineEmits(['update:renterData']);
 
 const selectedDates = ref([]);
-const bookedDates = ref([
-  new Date(2025, 9, 20),
-  new Date(2025, 9, 25),
-  new Date(2025, 10, 1),
-]);
+const bookedDates = ref([]);
 const days = ref(0);
 const route = useRoute();
 const store = useStore();
@@ -186,6 +182,31 @@ onMounted(async () => {
       bike_price.value = props.bike.price || 0;
 
   }
+});
+
+function getDatesBetween(start, end) {
+  const dateArray = [];
+  let currentDate = new Date(start);
+  const endDate = new Date(end);
+
+  while (currentDate <= endDate) {
+    dateArray.push(new Date(currentDate));
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  return dateArray;
+}
+
+onMounted( async () => {
+  // Example booked ranges
+  let bike_id = route.query.bike_id;
+  const res = await store.dispatch("booking/getBookDateWithBikeId", bike_id);
+
+  let bookings = res
+      bookings.forEach((booking) => {
+      const dates = getDatesBetween(booking.start, booking.end);
+      bookedDates.value.push(...dates);
+    });
 });
 
 defineExpose({

@@ -17,6 +17,7 @@ class Booking extends Model
         'end_date',
         'status',
         'name',
+        'email',
         'phone',
         'days',
         'daily_rate',
