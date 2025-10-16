@@ -1,207 +1,186 @@
 <template>
-  <div class="container mx-auto flex justify-center">
-    <div class="card stepper-container w-full max-w-[50rem]">
-      <Stepper value="1" class="custom-stepper">
-        <StepList>
-          <Step value="1">Rent Information</Step>
-          <Step value="2">Payment</Step>
-          <Step value="3">Confirm</Step>
-        </StepList>
+  <div class="container mx-auto py-6 px-4">
+    <div class="booking-container card shadow-lg border-0">
+      <div class="stepper-header mb-4">
+        <h3 class="booking-title text-center mb-3">Complete Your Booking</h3>
+        <div class="steps d-flex justify-content-center">
+          <div class="step-item" :class="{ 'active': currentStep === 1, 'completed': currentStep > 1 }">
+            <div class="step-counter">1</div>
+            <div class="step-name">Rider Details</div>
+          </div>
+          <div class="step-connector"></div>
+          <div class="step-item" :class="{ 'active': currentStep === 2 }">
+            <div class="step-counter">2</div>
+            <div class="step-name">Payment</div>
+          </div>
+        </div>
+      </div>
 
-        <StepPanels>
-          <StepPanel v-slot="{ activateCallback }" value="1">
-            <div class="step-content">
-              <RenterInfo  :bike="bike" ref="renterRef" />
-            </div>
-            <div class="step-nav">
-              <div></div>
-              <Button
-                label="Next"
-                icon="pi pi-arrow-right"
-                iconPos="right"
-                @click="activateCallback('2')"
-                class="step-btn"
-              />
-            </div>
-          </StepPanel>
+      <div class="py-3">
+        <div v-show="currentStep === 1">
+          <RenterInfo 
+            :bike="bike" 
+            ref="renterInfoRef" 
+            @update:renterData="handleRenterDataUpdate" 
+          />
+        </div>
 
-          <StepPanel v-slot="{ activateCallback }" value="2">
-            <div class="step-content">
-              Content II
+        <div v-if="currentStep === 2" class="row">
+          <div class="col-lg-7 col-md-7 col-sm-12 mb-3">
+             <div class="booking-panel h-100">
+               <h5 class="panel-title">Confirm Your Details</h5>
+               <ul class="list-group list-group-flush">
+                 <li class="list-group-item d-flex justify-content-between"><strong>Bike:</strong> <span>{{ bike.title }}</span></li>
+                 <li class="list-group-item d-flex justify-content-between"><strong>Full Name:</strong> <span>{{ renterData.user_name }}</span></li>
+                 <li class="list-group-item d-flex justify-content-between"><strong>Email:</strong> <span>{{ renterData.user_email }}</span></li>
+                 <li class="list-group-item d-flex justify-content-between"><strong>Phone:</strong> <span>{{ renterData.user_phone }}</span></li>
+                 <li class="list-group-item d-flex justify-content-between"><strong>Rental Dates:</strong> <span>{{ formatDateRange(renterData.selectedDates) }}</span></li>
+               </ul>
             </div>
-            <div class="step-nav">
-              <Button
-                label="Back"
-                severity="secondary"
-                icon="pi pi-arrow-left"
-                @click="activateCallback('1')"
-                class="step-btn-secondary"
-              />
-              <Button
-                label="Next"
-                icon="pi pi-arrow-right"
-                iconPos="right"
-                @click="activateCallback('3')"
-                class="step-btn"
-              />
+          </div>
+          <div class="col-lg-5 col-md-5 col-sm-12 mb-3">
+            <div class="booking-panel d-flex flex-column h-100">
+              <h5 class="panel-title">💳 Payment Summary</h5>
+              <div class="summary-box border rounded-3 p-3 mb-3">
+                <div class="d-flex justify-content-between mb-2"><span class="text-muted">Price per day:</span> <span class="fw-semibold">{{ formatPrice(bike.price) }}</span></div>
+                <div class="d-flex justify-content-between mb-2"><span class="text-muted">Days:</span> <span class="fw-semibold">{{ renterData.days }}</span></div>
+                <div class="d-flex justify-content-between border-top pt-2 mt-2"><span class="fw-bold">Total:</span> <span class="fw-bold text-success fs-5">{{ formatPrice(renterData.totalPrice) }}</span></div>
+              </div>
+              <div class="payment-method mt-auto">
+                <label class="form-label fw-semibold">Select Payment Method</label>
+                <select v-model="paymentMethod" class="form-select custom-input">
+                  <option value="cash">Cash on Delivery</option>
+                  <option value="credit">Credit / Debit Card</option>
+                  <option value="wallet">E-Wallet</option>
+                </select>
+              </div>
             </div>
-          </StepPanel>
-
-          <StepPanel v-slot="{ activateCallback }" value="3">
-            <div class="step-content">
-              Content III
-            </div>
-            <div class="step-nav">
-              <Button
-                label="Back"
-                severity="secondary"
-                icon="pi pi-arrow-left"
-                @click="activateCallback('2')"
-                class="step-btn-secondary"
-              />
-              <Button
-                label="Confirm Booking"
-                severity="secondary"
-                icon="pi pi-check"
-                @click="submit"
-                class="step-btn"
-              />
-            </div>
-          </StepPanel>
-        </StepPanels>
-      </Stepper>
+          </div>
+        </div>
+      </div>
+      
+      <div class="d-flex justify-content-between mt-4">
+        <Button
+          v-if="currentStep > 1"
+          label="Back"
+          icon="pi pi-arrow-left"
+          class="p-button-secondary"
+          @click="prevStep"
+        />
+        <div v-else></div> <Button
+          v-if="currentStep < 2"
+          label="Next to Payment"
+          icon="pi pi-arrow-right"
+          iconPos="right"
+          class="step-btn"
+          @click="nextStep"
+        />
+        <Button
+          v-if="currentStep === 2"
+          label="Confirm Booking"
+          icon="pi pi-check"
+          class="step-btn"
+          @click="submitBooking"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted,ref } from "vue";
-import { useStore } from "vuex";
+import { ref, computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import Stepper from 'primevue/stepper';
-import StepList from 'primevue/steplist';
-import StepPanels from 'primevue/steppanels';
-import Step from 'primevue/step';
-import StepPanel from 'primevue/steppanel';
-import Button from 'primevue/button';
-import RenterInfo from './RenterInfo.vue';
-import renter from "../../router/renter";
+import { useStore } from "vuex";
+import Button from "primevue/button";
+import RenterInfo from "./RenterInfo.vue";
 
+// Component State
+const currentStep = ref(1);
+const renterInfoRef = ref(null);
+const paymentMethod = ref("cash");
+
+// Data Management
 const store = useStore();
 const route = useRoute();
-const renterRef = ref(null);
-const bike = computed(() => store.getters['bikes/bike_details']);
+const bike = computed(() => store.getters["bikes/bike_details"] || {});
+const renterData = ref({});
 
-const submit =async () => {
-  renterRef.value.saveRenterInfo();
-  console.log('renterRef', renterRef.value.user_name);
-  // await store.dispatch('booking/submitBooking', {
-    // bike_id: bike.value.id,
-    // user_name: renterRef.value.user_name,
-    // user_phone: renterRef.value.user_phone,
-    // user_email: renterRef.value.user_email,
-  // });
+// Event handler to get data from child
+const handleRenterDataUpdate = (data) => {
+  renterData.value = { ...data };
 };
+
+// Stepper Navigation
+const nextStep = async () => {
+  if (currentStep.value === 1) {
+    const isValid = await renterInfoRef.value.validateRenterInfo();
+    if (isValid) {
+      currentStep.value++;
+    }
+  }
+};
+
+const prevStep = () => {
+  if (currentStep.value > 1) {
+    currentStep.value--;
+  }
+};
+
+// Final Submission
+const submitBooking = async () => {
+  const bookingPayload = {
+    bike_id: bike.value.id,
+    payment_method: paymentMethod.value,
+    ...renterData.value
+  };
+  await store.dispatch("booking/createBooking", bookingPayload);
+  console.log("Submitting Booking:", bookingPayload);
+  // await store.dispatch("booking/submitBooking", bookingPayload);
+  // alert('Booking Confirmed!');
+};
+
+// Formatting Helpers
+const formatPrice = (value) => {
+  if (value === undefined || value === null) return "0 THB";
+  return new Intl.NumberFormat("en-TH", {
+    style: "currency",
+    currency: "THB",
+    minimumFractionDigits: 0,
+  }).format(value);
+};
+
+const formatDateRange = (dates) => {
+  if (!dates || dates.length < 2) return 'N/A';
+  const options = { year: 'numeric', month: 'short', day: 'numeric' };
+  const start = new Date(dates[0]).toLocaleDateString('en-US', options);
+  const end = new Date(dates[1]).toLocaleDateString('en-US', options);
+  return `${start} - ${end}`;
+};
+
 onMounted(async () => {
   const bike_id = Number(route.query.bike_id);
-  await store.dispatch('bikes/getBike', bike_id);
+  if (bike_id) {
+    await store.dispatch("bikes/getBike", bike_id);
+  }
 });
 </script>
 
 <style scoped>
-/*
-  NOTE: No modifications are needed here for dark mode.
-  This component correctly uses CSS variables (e.g., var(--section-bg-color)).
-  The global CSS file handles the theme switching by redefining these variables
-  when the `data-bs-theme="dark"` attribute is active on the root element.
-*/
+.booking-container { background-color: var(--section-bg-color); border-radius: var(--border-radius-lg); padding: 2rem; color: var(--text-color); }
+.booking-panel { background-color: var(--background-color); border: 1px solid var(--border-color); border-radius: var(--border-radius-md); padding: 1.5rem; }
+.booking-title { color: var(--primary-color); font-weight: 700; }
+.panel-title { font-weight: 600; margin-bottom: 1.5rem; color: var(--text-color); }
+.custom-input { background-color: var(--background-color); color: var(--text-color); border: 1px solid var(--border-color); }
+.step-btn { background-color: var(--primary-color); color: #fff; border: none; }
+.step-btn:hover { background-color: var(--primary-hover-color); }
+.list-group-item { background-color: transparent; border-color: var(--border-color); padding-left: 0; padding-right: 0;}
 
-/* Container card */
-.stepper-container {
-  padding: 1rem;
-  border-radius: var(--border-radius-lg);
-  background-color: var(--section-bg-color);
-  border: 1px solid var(--border-color);
-  transition: background-color 0.3s, border-color 0.3s, color 0.3s;
-}
-
-/* Step content */
-.step-content {
-  flex: 1;
-  min-height: 12rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 2px dashed var(--border-color);
-  border-radius: var(--border-radius-md);
-  background-color: var(--background-color);
-  color: var(--text-color);
-  font-weight: 500;
-  padding: 0.5rem;
-}
-
-/* Navigation buttons */
-.step-nav {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 1rem;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.step-btn {
-  background-color: var(--primary-color);
-  color: var(--text-color);
-  border-radius: var(--border-radius-md);
-  width: 6rem;
-}
-
-.step-btn:hover {
-  background-color: var(--primary-hover-color);
-}
-
-.step-btn-secondary {
-  background-color: transparent;
-  color: var(--text-color);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-md);
-  width: 6rem;
-}
-
-.step-btn-secondary:hover {
-  background-color: var(--border-color);
-}
-
-/* PrimeVue Stepper adjustments */
-.custom-stepper {
-  background-color: var(--section-bg-color);
-  border-radius: var(--border-radius-lg);
-}
-
-.custom-stepper .p-step {
-  color: var(--text-color);
-}
-
-.custom-stepper .p-step .p-step-title {
-  color: var(--text-color);
-}
-
-.custom-stepper .p-steppanel {
-  background-color: var(--section-bg-color);
-  border-radius: var(--border-radius-md);
-  border: 1px solid var(--border-color);
-  padding: 1rem;
-  color: var(--text-color);
-}
-
-/* Responsive */
-@media (max-width: 640px) {
-  .stepper-container {
-    padding: 0.75rem;
-  }
-  .step-btn,
-  .step-btn-secondary {
-    width: 100%;
-  }
-}
+/* Stepper Header Styles */
+.stepper-header .steps { align-items: center; }
+.step-item { display: flex; align-items: center; flex-direction: column; color: var(--light-text-color); }
+.step-counter { width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-weight: bold; margin-bottom: 0.5rem; background-color: var(--background-color); transition: all 0.3s; }
+.step-name { font-size: 0.9rem; font-weight: 500; }
+.step-item.active .step-counter, .step-item.completed .step-counter { background-color: var(--primary-color); border-color: var(--primary-color); color: #fff; }
+.step-item.active .step-name, .step-item.completed .step-name { color: var(--primary-color); font-weight: bold; }
+.step-connector { flex-grow: 1; height: 2px; background-color: var(--border-color); margin: 0 1rem; max-width: 100px; transform: translateY(-1rem); }
 </style>

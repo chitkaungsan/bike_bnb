@@ -20,6 +20,10 @@ return new class extends Migration
             $table->enum('status', ['pending', 'confirmed', 'in_use', 'completed', 'cancelled'])->default('pending');
             $table->string('name');
             $table->string('phone', 20);
+            $table->integer('days');
+            $table->decimal('daily_rate', 10, 2); // changed from integer to decimal
+            $table->decimal('total_price', 10, 2); // changed from integer to decimal
+            $table->string('payment_type')->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-         Schema::dropIfExists('bookings');
+        Schema::dropIfExists('bookings');
     }
 };

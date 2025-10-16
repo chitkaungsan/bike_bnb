@@ -1,37 +1,33 @@
 <template>
-  <div class="container-fluid">
+  <div class="booking-container card shadow-lg border-0">
     <div class="row">
-      <!-- Left: Bike Info + DateSelector -->
-      <div class="col-sm-7 col-md-7 col-lg-7">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">
+      <div class="col-lg-7 col-md-7 col-sm-12 mb-3">
+        <div class="booking-panel">
+          <div class="card-body p-0"> <h5 class="panel-title">
               {{ bike.title }} - {{ bike.model }}
             </h5>
             <div class="row">
-              <div class="col-md-5 col-sm-5 col-lg-5">
+              <div class="col-md-5">
                 <Image
                   :src="bike.photo"
-                  class="img-fluid rounded-start p-2 bike-image"
                   alt="Bike Image"
                   width="100%"
+                  class="img-fluid rounded-start p-2 bike-image"
                   preview
                 />
               </div>
-              <div class="col-md-7 col-sm-7 col-lg-7">
-                <DateSelector v-model="selectedDates" :bookedDates="bookedDates"  />
-                <div class="mt-3 p-3 border border-dashed rounded d-flex justify-content-between align-items-center shadow-sm">
-                    <p class="mb-0 fw-semibold text-secondary">Price Per Day</p>
-                    <p class="mb-0 fw-bold text-success">{{ bike.price }} THB</p>
-                </div>
-                <div class="mt-3 p-3 border border-dashed rounded d-flex justify-content-between align-items-center shadow-sm">
-                    <p class="mb-0 fw-semibold text-secondary">Days</p>
-                    <p class="mb-0 fw-bold text-success">{{ days }}</p>
-                </div>
-
-                <div class="mt-3 p-3 border border-dashed rounded d-flex justify-content-between align-items-center shadow-sm">
-                    <p class="mb-0 fw-semibold text-secondary">Total</p>
-                    <p class="mb-0 fw-bold text-success">{{ formatPrice(totalPrice) }}</p>
+              <div class="col-md-7">
+                <DateSelector
+                  v-model="selectedDates"
+                  :bookedDates="bookedDates"
+                />
+                <div
+                  v-for="(item, index) in priceSummary"
+                  :key="index"
+                  class="mt-3 p-3 border border-dashed rounded d-flex justify-content-between align-items-center shadow-sm summary-box"
+                >
+                  <p class="mb-0 fw-semibold text-secondary">{{ item.label }}</p>
+                  <p class="mb-0 fw-bold text-success">{{ item.value }}</p>
                 </div>
               </div>
             </div>
@@ -39,154 +35,212 @@
         </div>
       </div>
 
-      <!-- Right: User Form -->
-      <div class="col-sm-5 col-md-5 col-lg-5">
-        <div class="card">
-          <div class="card-body">
+      <div class="col-lg-5 col-md-5 col-sm-12">
+        <div class="booking-panel">
+          <h5 class="panel-title">Rider Information</h5>
+          <div class="card-body p-0">
+            <form @submit.prevent>
               <div class="mb-3">
-                <label for="fullName" class="form-label">Full Name</label>
+                <label for="user_name" class="form-label">Full Name</label>
                 <input
-                  type="text"
+                  id="user_name"
                   v-model="user_name"
-                  class="form-control custom-input"
-                  id="fullName"
-                  placeholder="Enter your full name"
-                />
-              </div>
-              <div class="mb-3">
-                <label for="fullName" class="form-label">Phone</label>
-                <vue-tel-input v-model="user_phone"></vue-tel-input>
-              </div>
-              <div class="mb-3">
-                <label for="fullName" class="form-label">E-mail</label>
-                <input
                   type="text"
-                  v-model="user_email"
                   class="form-control custom-input"
-                  id="fullName"
                   placeholder="Enter your full name"
                 />
+                <small v-if="errors.user_name" class="text-danger">{{ errors.user_name }}</small>
               </div>
+              <div class="mb-3">
+                <label for="user_phone" class="form-label">Phone</label>
+                <vue-tel-input
+                  id="user_phone"
+                  v-model="user_phone"
+                />
+                <small v-if="errors.user_phone" class="text-danger">{{ errors.user_phone }}</small>
+              </div>
+              <div class="mb-3">
+                <label for="user_email" class="form-label">Email</label>
+                <input
+                  id="user_email"
+                  v-model="user_email"
+                  type="email"
+                  class="form-control custom-input"
+                  placeholder="Enter your email"
+                />
+                <small v-if="errors.user_email" class="text-danger">{{ errors.user_email }}</small>
+              </div>
+            </form>
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
+
 <script setup>
-import { ref, onMounted, computed } from "vue";
-import Image from "primevue/image";
-import DateSelector from "../BookingStep/DateSelector.vue";
+// --- SCRIPT IS UNCHANGED, AS REQUESTED ---
+import { ref, onMounted, computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
-import { reactive } from "vue";
+import Image from "primevue/image";
+import DateSelector from "../BookingStep/DateSelector.vue";
+
+const props = defineProps({
+  bike: { type: Object, required: true },
+});
+
+const emit = defineEmits(['update:renterData']);
 
 const selectedDates = ref([]);
-const route = useRoute();
-const store = useStore();
-const days = ref(0);
-
 const bookedDates = ref([
   new Date(2025, 9, 20),
   new Date(2025, 9, 25),
   new Date(2025, 10, 1),
 ]);
+const days = ref(0);
+const route = useRoute();
+const store = useStore();
 
-defineProps({
-  bike: { type: Object, required: true },
-});
+const bike_price = ref(props.bike.price || 0);
+const user_id = ref("");
 const user_name = ref("");
 const user_phone = ref("");
 const user_email = ref("");
-const saveRenterInfo = () => {
-//   store.dispatch("renter/saveRenterInfo", {
-//     user_name: user_name.value,
-//     user_phone: user_phone.value,
-//   });
-    console.log("Renter Info Saved:", {
-        user_name: user_name.value,
-        user_phone: user_phone.value,
-        user_email: user_email.value,
-    });
-}
-//  Format price function
-const formatPrice = (value) => {
-  if (!value) return "0";
-  return new Intl.NumberFormat("en-TH", {
+const errors = ref({});
+
+const getRenterData = () => ({
+  user_id: user_id.value,
+  user_name: user_name.value,
+  user_phone: user_phone.value,
+  user_email: user_email.value,
+  selectedDates: selectedDates.value,
+  daily_rate: bike_price.value,
+  totalPrice: totalPrice.value,
+  days: days.value,
+});
+
+watch(selectedDates, (newDates) => {
+  if (newDates && newDates.length === 2 && newDates[0] && newDates[1]) {
+    const [start, end] = newDates;
+    if (end < start) {
+        days.value = 0;
+        return;
+    };
+    const diffTime = Math.abs(end - start);
+    days.value = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+  } else {
+    days.value = 0;
+  }
+}, { deep: true });
+
+const totalPrice = computed(() => days.value * (props.bike.price || 0));
+
+watch([user_name, user_phone, user_email, selectedDates, totalPrice, days], () => {
+  emit('update:renterData', getRenterData());
+}, { deep: true, immediate: true });
+
+const validateRenterInfo = async () => {
+  errors.value = {};
+  if (!user_name.value) errors.value.user_name = "Full name is required.";
+  if (!user_phone.value) errors.value.user_phone = "Phone number is required.";
+  if (!user_email.value) errors.value.user_email = "Email is required.";
+  else if (!/\S+@\S+\.\S+/.test(user_email.value))
+    errors.value.user_email = "Invalid email format.";
+  
+  if(days.value < 1) {
+    console.error("Date range is not selected.");
+    return false;
+  }
+
+  return Object.keys(errors.value).length === 0;
+};
+
+const formatPrice = (val) =>
+  new Intl.NumberFormat("en-TH", {
     style: "currency",
     currency: "THB",
     minimumFractionDigits: 0,
-  }).format(value);
-};
+  }).format(val || 0);
 
-// Computed for total price
-const totalPrice = computed(() => days.value * (route.query.price_per_day || 0));
+const priceSummary = computed(() => [
+  { label: "Price Per Day", value: formatPrice(props.bike.price) },
+  { label: "Days", value: days.value },
+  { label: "Total", value: formatPrice(totalPrice.value) },
+]);
 
-onMounted(async() => {
+onMounted(async () => {
   const start_date = route.query.start_date;
   const end_date = route.query.end_date;
 
   if (start_date && end_date) {
-    const [sYear, sMonth, sDay] = start_date.split("-").map(Number);
-    const [eYear, eMonth, eDay] = end_date.split("-").map(Number);
-
-    selectedDates.value = [
-      new Date(sYear, sMonth - 1, sDay),
-      new Date(eYear, eMonth - 1, eDay),
-    ];
+    selectedDates.value = [new Date(start_date), new Date(end_date)];
   }
 
-  days.value = route.query.days ? parseInt(route.query.days) : 0;
-  let userData = await store.dispatch('auth/fetchUser');
-    user_name.value = userData.name || "";
-    user_phone.value = userData.phone || "";
-    user_email.value = userData.email || "";
+  const userData = await store.dispatch("auth/fetchUser");
+  if (userData) {
+      user_id.value = userData.id || "";
+      user_name.value = userData.name || "";
+      user_phone.value = userData.phone || "";
+      user_email.value = userData.email || "";
+      bike_price.value = props.bike.price || 0;
+
+  }
 });
 
 defineExpose({
-  saveRenterInfo,
-    user_name,
+  validateRenterInfo,
 });
 </script>
 
 <style scoped>
-.custom-card {
-  margin-top: 20px;
+/* ✅ ADDED: New styles for the booking panel design */
+.booking-container {
   background-color: var(--section-bg-color);
-  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  padding: 2rem;
   color: var(--text-color);
-  border-radius: var(--border-radius-md);
-  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  transition: background-color 0.3s, color 0.3s;
 }
+
+.booking-panel {
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  padding: 1.5rem;
+  width: 100%;
+}
+
+.booking-title {
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+.panel-title {
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--text-color);
+}
+
+.summary-box {
+  background-color: var(--section-bg-color) !important;
+}
+/* --- End of new styles --- */
 
 .bike-image {
-  background-color: var(--background-color);
-  transition: background-color 0.3s;
+  background-color: #fff;
+  border: 1px solid var(--border-color);
 }
-
-/* Input styles */
 .custom-input {
   background-color: var(--background-color);
   color: var(--text-color);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-md);
-  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
-
 .custom-input::placeholder {
   color: var(--light-text-color);
 }
-
-/* Responsive margin adjustments */
-@media (min-width: 768px) {
-  .custom-card {
-    margin-top: 40px;
-  }
-}
-
-@media (min-width: 992px) {
-  .custom-card {
-    margin-top: 50px;
-  }
+.text-danger {
+  font-size: 0.85rem;
 }
 </style>

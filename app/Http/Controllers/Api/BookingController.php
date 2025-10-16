@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\CreateBookingRequest;
 use App\Repositories\Contracts\BookingRepositoryInterface;
-use App\Repositories\Eloquent\BookingRepository;
+use Illuminate\Http\Request;
 
 class BookingController extends Controller
 {
@@ -18,10 +18,10 @@ class BookingController extends Controller
 
     public function calculatePrice(Request $request)
     {
-       $request->merge([
-        'bike_id' => $request->query('bikeId'),
-        'start_date' => $request->query('startDate'),
-        'end_date' => $request->query('endDate'),
+        $request->merge([
+            'bike_id' => $request->query('bikeId'),
+            'start_date' => $request->query('startDate'),
+            'end_date' => $request->query('endDate'),
         ]);
 
         $request->validate([
@@ -41,20 +41,33 @@ class BookingController extends Controller
 
         return $res;
     }
-    public function createBooking(Request $request)
+
+    public function createBooking(CreateBookingRequest $request)
     {
-        $request->validate([
-            'bike_id' => 'required|integer',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
+        $data = $request->validated();
+
+        // Convert selectedDates to Y-m-d
+        $startDate = date('Y-m-d', strtotime($data['selectedDates'][0]));
+        $endDate = date('Y-m-d', strtotime($data['selectedDates'][1]));
+
+        // Check bike availability
+        if (! $this->bookingRepository->isBikeAvailable($data['bike_id'], $startDate, $endDate)) {
+            return response()->json([
+                'error' => 'This bike is already booked for the selected dates.',
+            ], 422);
+        }
+
+        // Prepare data for repository
+        $bookingData = array_merge($data, [
+            'start_date' => $startDate,
+            'end_date' => $endDate,
         ]);
 
-        $data = $request->only(['bike_id', 'start_date', 'end_date', 'name', 'phone']);
+        $booking = $this->bookingRepository->createBooking($bookingData);
 
-        $booking = $this->bookingRepository->createBooking($data);
-
-        return response()->json($booking, 201);
-    }   
+        return response()->json([
+            'message' => 'Booking created successfully',
+            'booking' => $booking,
+        ], 201);
+    }
 }

@@ -43,7 +43,7 @@ const actions = {
   async createBooking({ commit }, bookingData) {
     commit('setLoading', true);
     try {
-      const response = await axios.post('/bookings', bookingData);
+      const response = await axios.post('/booking/create', bookingData);
       commit('addBooking', response.data);
     } catch (error) {
       commit('setError', error.message);
