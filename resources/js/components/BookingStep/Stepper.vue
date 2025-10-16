@@ -1,5 +1,6 @@
 <template>
   <div class="container mx-auto py-6 px-4">
+    <Toast />
     <div class="booking-container card shadow-lg border-0">
       <div class="stepper-header mb-4">
         <h3 class="booking-title text-center mb-3">Complete Your Booking</h3>
@@ -91,6 +92,7 @@
 import { ref, computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
+import { useToast } from 'primevue/usetoast';
 import Button from "primevue/button";
 import RenterInfo from "./RenterInfo.vue";
 
@@ -98,11 +100,12 @@ import RenterInfo from "./RenterInfo.vue";
 const currentStep = ref(1);
 const renterInfoRef = ref(null);
 const paymentMethod = ref("cash");
-
+const toast = useToast();
 // Data Management
 const store = useStore();
 const route = useRoute();
 const bike = computed(() => store.getters["bikes/bike_details"] || {});
+const error = computed(() => store.getters["booking/errorMessage"]);
 const renterData = ref({});
 
 // Event handler to get data from child
@@ -133,10 +136,25 @@ const submitBooking = async () => {
     payment_method: paymentMethod.value,
     ...renterData.value
   };
-  await store.dispatch("booking/createBooking", bookingPayload);
-  console.log("Submitting Booking:", bookingPayload);
-  // await store.dispatch("booking/submitBooking", bookingPayload);
-  // alert('Booking Confirmed!');
+ 
+  try {
+    const res = await store.dispatch("booking/createBooking", bookingPayload);
+    toast.add({
+      severity: 'success',
+      summary: 'Booking Confirmed',
+      detail: 'Your bike booking was successful!',
+      life: 3000
+    });
+    console.log("Booking successful:", res);
+  } catch (err) {
+    toast.add({
+      severity: 'error',
+      summary: 'Booking Failed',
+      detail: err.message,
+      life: 5000
+    });
+    console.error('Booking failed:', err.message);
+  }
 };
 
 // Formatting Helpers
