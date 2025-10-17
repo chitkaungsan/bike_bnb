@@ -15,9 +15,9 @@
 
 <script setup>
 import { ref } from "vue";
-import FilterSidebar from "../components/Bikes/FilterSidebar.vue";
-import BikeList from "../components/Bikes/BikeList.vue";
-import HomeNav from "../components/Layout/HomeNav.vue";
+import FilterSidebar from "../../components/Bikes/FilterSidebar.vue";
+import BikeList from "../../components/Bikes/BikeList.vue";
+import HomeNav from "../../components/Layout/HomeNav.vue";
 </script>
 
 <style scoped>

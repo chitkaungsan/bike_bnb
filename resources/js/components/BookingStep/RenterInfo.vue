@@ -165,7 +165,7 @@ const priceSummary = computed(() => [
   { label: "Total", value: formatPrice(totalPrice.value) },
 ]);
 
-onMounted(async () => {
+onMounted( async () => {
   const start_date = route.query.start_date;
   const end_date = route.query.end_date;
 

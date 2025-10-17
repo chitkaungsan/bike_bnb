@@ -9,9 +9,10 @@ import OwnerDashboard from "../Pages/Owner/Dashboard.vue";
 import AdminDashboard from "../Pages/Admin/Dashboard.vue";
 // import Dashboard from '../Pages/Dashboard/index.vue';
 import AuthCallback from "../components/AuthCallback.vue";
-import BikeDetail from "../Pages/BikeDetail.vue";
+import BikeDetail from "../Pages/Bike/BikeDetail.vue";
 import StoreDetail from "../Pages/StoreDetail.vue";
-import Bikes from "../Pages/Bikes.vue";
+import Bikes from "../Pages/Bike/Bikes.vue";
+import MyBookingLayout from "../Pages/Booking/MyBookingLayout.vue";
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import ownerRoutes from './owner.js'
@@ -26,6 +27,7 @@ const routes = [
     { path : '/bikes', name: 'bikes', component: Bikes },
     { path : '/bike/:id', name: 'bikes.detail', component: BikeDetail },
     { path : '/store/:id', name: 'store.detail', component: StoreDetail },
+    { path : '/my/bookings', name: 'my.booking', component: MyBookingLayout },
 
     ...ownerRoutes,
     ...adminRoutes,

@@ -81,6 +81,7 @@ class BookingController extends Controller
     public function getBookingsByBikeId($bikeId)
     {
         $bookings = $this->bookingRepository->findByBikeId($bikeId);
+
         return response()->json($bookings);
     }
 }

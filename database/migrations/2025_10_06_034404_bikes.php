@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->decimal('price', 10, 2)->default(0);
-            $table->string('photo')->nullable();
+            $table->striCng('photo')->nullable();
             $table->string('license_image')->nullable();
             $table->string('model')->nullable();
             $table->smallInteger('year')->nullable();

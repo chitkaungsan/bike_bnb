@@ -1,4 +1,4 @@
-import BookingStep from "../Pages/BookingStep.vue"
+import BookingStep from "../Pages/Booking/BookingStep.vue"
 import BookingSuccess from "../components/BookingStep/BookingSuccess.vue"
 export default [
   {

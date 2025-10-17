@@ -150,7 +150,7 @@
 import { ref, onMounted, onUnmounted, computed, watch } from "vue";
 import Calendar from "primevue/calendar";
 import Button from "primevue/button";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { useToast } from "primevue/usetoast";
 import { useStore } from "vuex";
 
@@ -176,6 +176,7 @@ const props = defineProps({
 });
 
 const router = useRouter();
+const route = useRoute();
 // --- State ---
 
 const today = new Date();
@@ -190,11 +191,7 @@ const stickyClass = ref("");
 const bookingValue = ref([]);
 const loading = ref(false);
 const showTotal = ref(false);
-const bookedDates = ref([
-    new Date(2025, 9, 20), // Oct 20, 2025
-    new Date(2025, 9, 25), // Oct 25, 2025
-    new Date(2025, 10, 1), // Nov 1, 2025
-]);
+const bookedDates = ref([]);
 const isBooked = (slotDate) => {
     return bookedDates.value.some(
         (d) =>
@@ -363,9 +360,30 @@ const handleScroll = () => {
         panelEl.style.top = null;
     }
 };
+function getDatesBetween(start, end) {
+  const dateArray = [];
+  let currentDate = new Date(start);
+  const endDate = new Date(end);
 
-onMounted(() => {
+  while (currentDate <= endDate) {
+    dateArray.push(new Date(currentDate));
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  return dateArray;
+};
+
+
+onMounted( async () => {
     window.addEventListener("scroll", handleScroll);
+
+    let bike_id = route.params.id;
+    const res = await store.dispatch("booking/getBookDateWithBikeId", bike_id);
+  let bookings = res
+      bookings.forEach((booking) => {
+      const dates = getDatesBetween(booking.start, booking.end);
+      bookedDates.value.push(...dates);
+    });
 });
 
 onUnmounted(() => {

@@ -5,6 +5,6 @@
     </div>
 </template>
 <script setup>
-import HomeNav from "../components/Layout/HomeNav.vue";
-import Stepper from '../components/BookingStep/Stepper.vue';
+import HomeNav from "../../components/Layout/HomeNav.vue";
+import Stepper from '../../components/BookingStep/Stepper.vue';
 </script>

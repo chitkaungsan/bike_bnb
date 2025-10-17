@@ -10,10 +10,10 @@
 import { ref, onMounted, computed } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
-import Images from "../components/BikeDetail/Images.vue";
-import HomeNav from "../components/Layout/HomeNav.vue";
-import ListingPage from "../components/BikeDetail/ListingPage.vue";
-import DetailSkeleton from "../components/loader/DetailSkeleton.vue";
+import Images from "../../components/BikeDetail/Images.vue";
+import HomeNav from "../../components/Layout/HomeNav.vue";
+import ListingPage from "../../components/BikeDetail/ListingPage.vue";
+import DetailSkeleton from "../../components/loader/DetailSkeleton.vue";
 const store = useStore();
 const route = useRoute();
 const loading = ref(false);
