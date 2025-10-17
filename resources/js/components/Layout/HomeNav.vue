@@ -35,6 +35,11 @@
                 t("nav.become_owner")
               }}</router-link>
             </li>
+            <li class="nav-item" v-if="user && user.role=='renter'">
+              <router-link to="/my/bookings" class="nav-link" href="#">
+                My Bookings
+              </router-link>
+            </li>
             <li class="nav-item ms-lg-3">
               <LanguageSwitcher />
             </li>
@@ -49,10 +54,14 @@
 </template>
 
 <script setup>
+import { ref,computed } from "vue";
 import { useI18n } from "vue-i18n";
+import { useStore } from "vuex";
 import HomeMenu from "./HomeMenu.vue";
 import LanguageSwitcher from "../LanguageSwitcher.vue";
 
+const store = useStore();
+const user = computed(() => store.state.auth.user);
 // Translation function
 const { t } = useI18n();
 </script>

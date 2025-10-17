@@ -84,4 +84,10 @@ class BookingController extends Controller
 
         return response()->json($bookings);
     }
+    public function getBookingsByUserId($userId)
+    {
+        $bookings = $this->bookingRepository->getBookingsByUserId($userId);
+
+        return response()->json($bookings);
+    }
 }

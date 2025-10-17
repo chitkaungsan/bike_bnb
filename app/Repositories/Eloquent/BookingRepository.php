@@ -6,6 +6,7 @@ use App\Models\Bike;
 use App\Models\Booking;
 use App\Repositories\Contracts\BookingRepositoryInterface;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 class BookingRepository implements BookingRepositoryInterface
 {
     public function calculateRentalPrice($bikeId, $startDate, $endDate)
@@ -129,5 +130,39 @@ class BookingRepository implements BookingRepositoryInterface
         return Booking::where('bike_id', $bikeId)
             ->select('start_date as start', 'end_date as end')
             ->get();
+    }
+    public function getBookingsByUserId($userId)
+    {
+        return DB::table('bookings')
+        ->select(
+            'bookings.id',
+            'bookings.start_date',
+            'bookings.end_date',
+            'bookings.status',
+            'bookings.total_price',
+            'bookings.days',
+            'bookings.daily_rate',
+            'bookings.payment_type',
+            'bikes.id as bike_id',
+            'bikes.title as bike_title',
+            'bikes.photo as bike_photo',
+            'bikes.price as bike_price',
+            'bikes.model as bike_model',
+            'bikes.year as bike_year',
+            'stores.id as store_id',
+            'stores.name as store_name',
+            'stores.location as store_location',
+            'stores.phone as store_phone',
+            'stores.logo as store_logo',
+            'owners.id as owner_id',
+            'owners.name as owner_name',
+            'owners.phone as owner_phone'
+        )
+        ->leftJoin('bikes', 'bookings.bike_id', '=', 'bikes.id')
+        ->leftJoin('stores', 'bikes.store_id', '=', 'stores.id')
+        ->leftJoin('users as owners', 'bikes.user_id', '=', 'owners.id')
+        ->where('bookings.rider_id', $userId)
+        ->orderByDesc('bookings.created_at')
+        ->get();
     }
 }

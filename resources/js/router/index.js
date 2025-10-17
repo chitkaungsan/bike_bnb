@@ -12,7 +12,7 @@ import AuthCallback from "../components/AuthCallback.vue";
 import BikeDetail from "../Pages/Bike/BikeDetail.vue";
 import StoreDetail from "../Pages/StoreDetail.vue";
 import Bikes from "../Pages/Bike/Bikes.vue";
-import MyBookingLayout from "../Pages/Booking/MyBookingLayout.vue";
+import MyBooking from "../Pages/Booking/MyBooking.vue";
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import ownerRoutes from './owner.js'
@@ -27,7 +27,7 @@ const routes = [
     { path : '/bikes', name: 'bikes', component: Bikes },
     { path : '/bike/:id', name: 'bikes.detail', component: BikeDetail },
     { path : '/store/:id', name: 'store.detail', component: StoreDetail },
-    { path : '/my/bookings', name: 'my.booking', component: MyBookingLayout },
+    { path : '/my/bookings', name: 'my.booking', component: MyBooking },
 
     ...ownerRoutes,
     ...adminRoutes,

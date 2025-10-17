@@ -5,6 +5,7 @@ const state = {
     booking: null,
     loading: false,
     error: null,
+    my_bookings: [],
 };
 
 const getters = {
@@ -12,6 +13,7 @@ const getters = {
     singleBooking: (state) => state.booking,
     isLoading: (state) => state.loading,
     errorMessage: (state) => state.error,
+    myBookings: (state) => state.my_bookings,
 };
 
 const actions = {
@@ -107,6 +109,19 @@ const actions = {
             commit("setLoading", false);
         }
     },
+    async fetchUserBookings({ commit },user_id) {
+        commit("setLoading", true);
+        try {
+            const response = await axios.get(`/my/bookings/${user_id}`);
+            commit("setMyBookings", response.data);
+            console.log('user bookings response', response);
+            return response.data;
+        } catch (error) {
+            commit("setError", error.message);
+        } finally {
+            commit("setLoading", false);
+        }
+    },
 };
 
 const mutations = {
@@ -136,6 +151,9 @@ const mutations = {
     setError(state, error) {
         state.error = error;
     },
+    setMyBookings(state, bookings) {
+        state.my_bookings = bookings;
+    }
 };
 
 export default {
