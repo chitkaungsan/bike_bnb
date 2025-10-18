@@ -7,21 +7,68 @@
       <div class="search-bar-container" ref="searchBarRef">
         <form class="search-bar" @submit.prevent="performSearch">
           <div
-            class="search-field"
-            :class="{ active: activeField === 'location' }"
-            @click="setActiveField('location')"
-          >
-            <label for="location">{{ t("hero.search.location_label") }}</label>
-            <div class="input-wrapper">
-              <font-awesome-icon :icon="faLocationDot" class="field-icon" />
-              <input
-                type="text"
-                id="location"
-                class="form-control"
-                :placeholder="t('hero.search.location_placeholder')"
-              />
-            </div>
-          </div>
+  class="search-field"
+  :class="{ active: activeField === 'location' }"
+   @mousedown.stop="setActiveField('location')"
+>
+  <label for="location">{{ t("hero.search.location_label") }}</label>
+  <div class="input-wrapper">
+    <font-awesome-icon :icon="faLocationDot" class="field-icon" />
+    <input
+      type="text"
+      id="location"
+      class="form-control"
+      v-model="locationQuery"
+      @focus="onFocusLocation"
+      @input="showLocationDropdown = true"
+      :placeholder="t('hero.search.location_placeholder')"
+    />
+  </div>
+
+ 
+<!-- Location Dropdown -->
+<div v-if="showLocationDropdown && filteredLocations.length" class="location-dropdown">
+  <!-- Nearby Section -->
+  <div v-if="filteredLocations.some(l => l.type === 'nearby')" class="dropdown-section">
+    <h6 class="dropdown-section-title">{{ t('hero.search.nearby') || 'Nearby' }}</h6>
+    <ul>
+      <li
+        v-for="loc in filteredLocations.filter(l => l.type === 'nearby')"
+        :key="loc.name"
+        @click="selectLocation(loc)"
+        class="location-item"
+      >
+        <img :src="loc.image" alt="" class="location-img" />
+        <div class="location-info">
+          <strong>{{ loc.name }}</strong>
+          <p>{{ loc.description }}</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Other Locations -->
+  <div class="dropdown-section">
+    <h6 class="dropdown-section-title">{{ t('hero.search.other_locations') || 'Other locations' }}</h6>
+    <ul>
+      <li
+        v-for="loc in filteredLocations.filter(l => !l.type)"
+        :key="loc.name"
+        @click="selectLocation(loc)"
+        class="location-item"
+      >
+        <img :src="loc.image" alt="" class="location-img" loading="lazy" />
+        <div class="location-info">
+          <strong>{{ loc.name }}</strong>
+          <p>{{ loc.description }}</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+</div>
+
 
           <div
             class="search-field"
@@ -82,6 +129,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
+import "../../../css/hero_section.css";
 import { useI18n } from "vue-i18n";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import {
@@ -124,6 +172,56 @@ const categories = [
   { text: t("hero.search.category_electric"), value: "electric" },
 ];
 
+
+const locationQuery = ref("");
+const showLocationDropdown = ref(false);
+const locations = ref([
+  {
+    name: "Koh Samui",
+    description: "Tropical island with beaches and motorbike adventures",
+    image: "https://content.r9cdn.net/rimg/dimg/75/a7/44202281-city-56280-1767207b463.jpg?width=1366&height=768&xhint=2611&yhint=2498&crop=true",
+    type: "nearby",
+  },
+  {
+    name: "Bangkok",
+    description: "Vibrant city life, temples, and night markets",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7xbOt6lVS3x90_whZQtI0ZdyRSOYvUqjNbw&s",
+  },
+  {
+    name: "Chiang Mai",
+    description: "Mountain city full of culture and coffee vibes",
+    image: "https://res.klook.com/image/upload/fl_lossy.progressive,q_60/Mobile/City/cswglxpstphljdourpfu.jpg",
+  },
+  {
+    name: "Phuket",
+    description: "Island with clear water and nightlife fun",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Phuket_Aerial.jpg/1200px-Phuket_Aerial.jpg",
+  },
+  {
+    name: "Pattaya",
+    description: "Seaside city near Bangkok, good for quick trips",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPRE4mm3nN3BNk4Sv20moVjyZ9Unj54KdjYg&s",
+  },
+]);
+
+// Filter suggestions based on user input
+const filteredLocations = computed(() => {
+  if (!locationQuery.value) return locations.value;
+  return locations.value.filter((l) =>
+    l.name.toLowerCase().includes(locationQuery.value.toLowerCase())
+  );
+});
+
+const selectLocation = (loc) => {
+  locationQuery.value = loc.name;
+  showLocationDropdown.value = false;
+};
+
+const onFocusLocation = () => {
+  showLocationDropdown.value = true;
+  setActiveField("location");
+};
+
 // METHODS
 const setActiveField = (field) => {
   activeField.value = field;
@@ -146,9 +244,9 @@ const performSearch = () => {
 const handleClickOutside = (event) => {
   if (searchBarRef.value && !searchBarRef.value.contains(event.target)) {
     activeField.value = null;
+    showLocationDropdown.value = false;
   }
 };
-
 onMounted(() => {
   document.addEventListener("mousedown", handleClickOutside);
 });
@@ -158,286 +256,3 @@ onBeforeUnmount(() => {
 });
 </script>
 
-<style scoped>
-/* Scoped styles ensure these changes don't affect other parts of your app. */
-.hero-section {
-  /* Using a generic background for demonstration. Replace with your actual banner. */
-  background: url("/public/banner.jpg") no-repeat center center;
-  background-size: cover;
-  padding: 7rem 0;
-  color: white;
-  text-align: center;
-  position: relative;
-}
-
-.hero-section::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.45);
-  z-index: 1;
-}
-
-.hero-section .container {
-  position: relative;
-  z-index: 2;
-}
-
-.hero-title {
-  font-size: 3.5rem;
-  font-weight: 800;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-}
-
-.lead {
-  font-size: 1.25rem;
-  font-weight: 300;
-}
-
-/* =======================================
-   SEARCH BAR - THEME-AWARE AND REDESIGNED
-========================================== */
-.search-bar-container {
-  max-width: 850px;
-  margin: 2.5rem auto 0;
-}
-
-.search-bar {
-  display: flex;
-  background-color: var(--section-bg-color); /* THEME: Changed */
-  border-radius: 50px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
-  width: 100%;
-  height: 70px;
-  transition: all 0.3s ease;
-  border: 1px solid var(--border-color); /* THEME: Changed */
-}
-
-.search-field {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 0 25px;
-  text-align: left;
-  position: relative;
-  cursor: pointer;
-  border-radius: 50px;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.search-field:not(:last-child)::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 1px;
-  height: 30px;
-  background-color: var(--border-color); /* THEME: Changed */
-}
-
-.search-field:hover {
-  background-color: rgba(0, 0, 0, 0.04); /* THEME: Using rgba for universal hover */
-}
-:root[data-bs-theme="dark"] .search-field:hover {
-  background-color: rgba(255, 255, 255, 0.06); /* THEME: Dark mode hover */
-}
-
-.search-field.active {
-  background-color: var(--section-bg-color); /* THEME: Changed */
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-}
-
-.search-field label {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--text-color); /* THEME: Changed */
-  margin: 0;
-  padding: 0;
-}
-
-.input-wrapper {
-  display: flex;
-  align-items: center;
-  margin-top: 2px;
-}
-
-.field-icon {
-  color: var(--primary-color); /* THEME: Changed */
-  margin-right: 10px;
-  font-size: 1rem;
-}
-
-.form-control,
-.form-control-display {
-  border: none;
-  background: none;
-  padding: 0;
-  color: var(--light-text-color); /* THEME: Changed */
-  font-size: 0.9rem;
-  width: 100%;
-  outline: none;
-}
-.form-control::placeholder {
-  color: var(--light-text-color); /* THEME: Changed */
-}
-input.form-control {
-  color: var(--text-color); /* THEME: Changed */
-}
-
-.form-control-display {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* --- DatePicker Customization --- */
-.date-picker-control {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-
-/* --- Category Customization (REDESIGNED) --- */
-.search-field-last {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 10px 0 25px; /* Adjust padding for button */
-  flex-grow: 1;
-}
-
-.category-main-field {
-  flex-grow: 3;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  position: relative; /* For dropdown positioning */
-}
-
-.search-main-field {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  position: relative; /* For dropdown positioning */
-}
-
-.category-dropdown {
-  position: absolute;
-  top: 110%;
-  left: -25px; /* Align with field start */
-  background-color: var(--section-bg-color); /* THEME: Changed */
-  border-radius: var(--border-radius-lg); /* THEME: Using variable */
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  padding: 0.5rem 0;
-  min-width: 250px;
-  z-index: 10;
-  border: 1px solid var(--border-color); /* THEME: Changed */
-}
-.category-dropdown ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-.category-dropdown li {
-  padding: 0.75rem 1.5rem;
-  font-size: 0.9rem;
-  color: var(--text-color); /* THEME: Changed */
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-.category-dropdown li:hover {
-  background-color: rgba(0, 0, 0, 0.04); /* THEME: Using rgba for universal hover */
-}
-:root[data-bs-theme="dark"] .category-dropdown li:hover {
-  background-color: rgba(255, 255, 255, 0.06); /* THEME: Dark mode hover */
-}
-
-/* --- Search Button (REDESIGNED) --- */
-.btn-search-circular {
-  background: var(--primary-color); /* THEME: Changed */
-  color: white;
-  border: none;
-  border-radius: 50%;
-  height: 50px;
-  width: 50px;
-  min-width: 50px; /* Prevent squishing */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.2s;
-}
-.btn-search-circular:hover {
-  background: var(--primary-hover-color); /* THEME: Changed */
-}
-.btn-search-circular .search-icon {
-  font-size: 1.2rem;
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
-@media (max-width: 768px) {
-  .hero-title {
-    font-size: 2.5rem;
-  }
-  .search-bar {
-    flex-direction: column;
-    border-radius: var(--border-radius-lg); /* THEME: Using variable */
-    padding: 1rem;
-    height: auto;
-    align-items: stretch;
-    background-color: var(--section-bg-color); /* THEME: Changed */
-    border: none;
-  }
-  .search-field {
-    background-color: var(--background-color); /* THEME: Changed */
-    border: 1px solid var(--border-color); /* THEME: Changed */
-    border-radius: var(--border-radius-md); /* THEME: Using variable */
-    margin-bottom: 0.75rem;
-    padding: 0.75rem 1rem;
-    height: 60px;
-  }
-  .search-field:not(:last-child)::after {
-    display: none;
-  }
-  .search-field-last {
-    padding: 0;
-    margin-bottom: 0;
-    border: none;
-    background-color: transparent;
-  }
-  .search-field.active {
-    box-shadow: 0 0 0 2px var(--primary-color);
-  }
-  .category-dropdown {
-    width: 100%;
-    left: 0;
-    top: 105%;
-  }
-
-  /* Mobile layout for last field */
-  .search-field-last {
-    display: block;
-    background-color: transparent;
-  }
-  .category-main-field {
-    background-color: var(--background-color); /* THEME: Changed */
-    border: 1px solid var(--border-color); /* THEME: Changed */
-    border-radius: var(--border-radius-md); /* THEME: Using variable */
-    padding: 0.75rem 1rem;
-    height: 60px;
-    width: 100%;
-  }
-  .btn-search-circular {
-    width: 100%;
-    border-radius: var(--border-radius-md); /* THEME: Using variable */
-    margin-top: 0.75rem;
-    height: 50px;
-  }
-}
-</style>

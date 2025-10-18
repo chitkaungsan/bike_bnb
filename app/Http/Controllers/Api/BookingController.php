@@ -110,8 +110,8 @@ class BookingController extends Controller
         if (! $booking) {
             return response()->json(['error' => 'Booking not found'], 404); // 404 Not Found    
         }
-        $this->bookingRepository->confirmBooking($id);
-        return response()->json(['message' => 'Booking confirmed successfully']);
+        $res = $this->bookingRepository->confirmBooking($id);
+        return response()->json(['message' => 'Booking confirmed successfully'], 200);
     }
     public function cancelBooking($id)
     {
@@ -120,6 +120,6 @@ class BookingController extends Controller
             return response()->json(['error' => 'Booking not found'], 404); // 404 Not Found    
         }
         $this->bookingRepository->cancelBooking($id);
-        return response()->json(['message' => 'Booking canceled successfully']);
+        return response()->json(['message' => 'Booking canceled successfully'],);
     }   
 }
