@@ -1,5 +1,7 @@
 import OwnerLayout from '../components/Layout/OwnerLayout.vue'
 import Dashboard from '../Pages/Owner/Dashboard.vue'
+import OwnerBooking from "../Pages/Owner/Booking.vue"
+
 
 export default [
   {
@@ -31,6 +33,12 @@ export default [
         name: 'owner.stores.add',
         component: () => import('../components/Owner/components/Store/Add.vue'),
       },
+      { 
+        path: '/owner/bookings',
+        name: 'owener.bookings',
+        component: OwnerBooking
+      }
+
    
     ],
   },

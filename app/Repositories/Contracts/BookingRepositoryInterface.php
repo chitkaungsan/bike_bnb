@@ -9,4 +9,5 @@ interface BookingRepositoryInterface
     public function findById($id);
     public function findByBikeId($bikeId);
     public function getBookingsByUserId($userId);
+    public function getBookingsByOwnerId($ownerId);
 }

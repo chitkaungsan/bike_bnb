@@ -10,5 +10,7 @@ export default [
     path: '/booking/success/:id',
     name: 'booking.success',
     component: BookingSuccess
-  }
+  },
+  
+
 ]

@@ -1,7 +1,7 @@
 <template>
   <div>
     <TableSkeleton
-      :columns="['#', 'Name', 'Store', 'Logo', 'Photo', 'Price', 'Address', 'Created']"
+      :columns="['#', 'Name', 'Store', 'Logo', 'Photo', 'Price', 'Address','Rider','Phone','Created']"
       :rows="10"
       :rowHeight="32"
       :striped="true"
@@ -101,12 +101,17 @@ onMounted(async () => {
 
   await store.dispatch("auth/fetchUser");
 
-  setTimeout(async () => {
-    if (!user.value) return;
-    const response = await store.dispatch("bikes/fetchBikeList", user.value.id);
-    bikes.value = response;
+  // Step 2: Check if user exists before fetching bikes
+  if (!user.value) {
     loading.value = false;
-  }, 200);
+    return;
+  }
+
+  // Step 3: Fetch bike list safely after user is ready
+  const response = await store.dispatch("bikes/fetchBikeList", user.value.id);
+  bikes.value = response;
+
+  loading.value = false;
 });
 
 const formatDate = (dateStr) => {

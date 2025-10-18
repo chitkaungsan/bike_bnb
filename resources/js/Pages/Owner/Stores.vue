@@ -86,14 +86,14 @@ const loading = ref(false);
 onMounted(async () => {
   loading.value = true;
   await store.dispatch("auth/fetchUser");
-  setTimeout(async () => {
-    if (!user.value) return;
-    const response = await store.dispatch("store/fetchStoreList", user.value.id);
-    stores.value = response;
+  if (!user.value) {
     loading.value = false;
-  }, 100);
+    return;
+  }
+  const response = await store.dispatch("store/fetchStoreList", user.value.id);
+  stores.value = response;
+  loading.value = false;
 });
-
 const formatDate = (dateStr) => {
   const date = new Date(dateStr);
   const day = String(date.getDate()).padStart(2, "0");

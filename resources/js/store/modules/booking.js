@@ -122,6 +122,18 @@ const actions = {
             commit("setLoading", false);
         }
     },
+    async fetchOwnerBookings({ commit }, owner_id) {
+        commit("setLoading", true);
+        try {
+            const response = await axios.get(`/owner/bookings/${owner_id}`);
+            commit("setBookings", response.data);
+            return response.data;
+        } catch (error) {
+            commit("setError", error.message);
+        } finally {
+            commit("setLoading", false);
+        }
+    },
 };
 
 const mutations = {
