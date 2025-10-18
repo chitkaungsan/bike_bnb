@@ -20,12 +20,15 @@
 import { ref } from "vue";
 import Button from "primevue/button";
 import Menu from "primevue/menu";
+import { useRoute,useRouter } from "vue-router";
 
 const props = defineProps({
   booking: Object,
 });
 
 const menu = ref();
+const route = useRoute();
+const router = useRouter();
 
 const toggleMenu = (event) => {
   menu.value.toggle(event);
@@ -38,6 +41,7 @@ const menuItems = ref([
     icon: "pi pi-eye",
     command: () => {
       console.log("View booking:", props.booking.id);
+        router.push({ name: 'owner.bookings.detail', params: { id: props.booking.id } });
     },
   },
   {

@@ -96,4 +96,30 @@ class BookingController extends Controller
 
         return response()->json($bookings);
     }
+    public function getOwnerBookingById($id)
+    {
+        $booking = $this->bookingRepository->OwnerBookingById($id);
+        if (! $booking) {
+            return response()->json(['error' => 'Booking not found'], 404);
+        }
+        return response()->json($booking);
+    }
+    public function confirmBooking($id)
+    {
+        $booking = $this->bookingRepository->findById($id);
+        if (! $booking) {
+            return response()->json(['error' => 'Booking not found'], 404); // 404 Not Found    
+        }
+        $this->bookingRepository->confirmBooking($id);
+        return response()->json(['message' => 'Booking confirmed successfully']);
+    }
+    public function cancelBooking($id)
+    {
+        $booking = $this->bookingRepository->findById($id);
+        if (! $booking) {
+            return response()->json(['error' => 'Booking not found'], 404); // 404 Not Found    
+        }
+        $this->bookingRepository->cancelBooking($id);
+        return response()->json(['message' => 'Booking canceled successfully']);
+    }   
 }

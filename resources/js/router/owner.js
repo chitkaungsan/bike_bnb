@@ -1,6 +1,7 @@
 import OwnerLayout from '../components/Layout/OwnerLayout.vue'
 import Dashboard from '../Pages/Owner/Dashboard.vue'
 import OwnerBooking from "../Pages/Owner/Booking.vue"
+import BookDetail from '../Pages/Owner/BookDetail.vue'
 
 
 export default [
@@ -37,9 +38,12 @@ export default [
         path: '/owner/bookings',
         name: 'owener.bookings',
         component: OwnerBooking
-      }
-
-   
+      },
+      {
+        path: '/owner/bookings/:id',
+        name: 'owner.bookings.detail',
+        component: BookDetail
+      },
     ],
   },
 ]

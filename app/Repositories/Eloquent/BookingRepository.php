@@ -201,4 +201,57 @@ class BookingRepository implements BookingRepositoryInterface
         ->orderByDesc('bookings.created_at')
         ->get();
     }
+    public function OwnerBookingById($id)
+    {
+        return DB::table('bookings')
+        ->select(
+            'bookings.id',
+            'bookings.start_date',
+            'bookings.end_date',
+            'bookings.status',
+            'bookings.total_price',
+            'bookings.days',
+            'bookings.daily_rate',
+            'bookings.payment_type',
+            'bikes.id as bike_id',
+            'bikes.title as bike_title',
+            'bikes.photo as bike_photo',
+            'bikes.price as bike_price',
+            'bikes.model as bike_model',
+            'bikes.year as bike_year',
+            'stores.id as store_id',
+            'stores.name as store_name',
+            'stores.location as store_location',
+            'stores.phone as store_phone',
+            'stores.logo as store_logo',
+            'riders.id as rider_id',
+            'riders.name as rider_name',
+            'riders.phone as rider_phone'
+        )
+        ->leftJoin('bikes', 'bookings.bike_id', '=', 'bikes.id')
+        ->leftJoin('stores', 'bikes.store_id', '=', 'stores.id')
+        ->leftJoin('users as riders', 'bookings.rider_id', '=', 'riders.id')
+        ->where('bookings.id', $id)
+        ->first();
+    }
+    public function confirmBooking($id)
+    {
+        $booking = Booking::find($id);
+        if ($booking) {
+            $booking->status = 'confirmed';
+            $booking->updated_at = now();
+            $booking->save();    
+        }
+        return response()->json(['message' => 'Booking confirmed successfully'], 200);
+    }
+    public function cancelBooking($id)
+    {
+        $booking = Booking::find($id);
+        if ($booking) {
+            $booking->status = 'cancelled';
+            $booking->updated_at = now();
+            $booking->save();    
+        }
+        return response()->json(['message' => 'Booking cancelled successfully'], 200);
+    }
 }

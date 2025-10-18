@@ -134,6 +134,48 @@ const actions = {
             commit("setLoading", false);
         }
     },
+    async fetchBookingDetail({ commit }, bookingId) {
+        commit("setLoading", true);
+        try {
+            const response = await axios.get(`/owner/booking/${bookingId}`);
+            commit("setBooking", response.data);
+            return response;
+        } catch (error) {
+            const message = error.response?.data?.error || error.message;
+            commit("setError", message);
+            throw new Error(message);
+        } finally {
+            commit("setLoading", false);
+        }
+    }, 
+    async confirmBooking({ commit }, bookingId) {
+        commit("setLoading", true);
+        try {
+            const response = await axios.get(`/booking/confirm/${bookingId}`);
+            commit("setBooking", response.data);
+            return response.data;
+        } catch (error) {
+            const message = error.response?.data?.error || error.message;
+            commit("setError", message);
+            throw new Error(message);
+        } finally {
+            commit("setLoading", false);
+        }
+    },
+    async cancelBooking({ commit }, bookingId) {
+        commit("setLoading", true);
+        try {
+            const response = await axios.get(`/booking/cancel/${bookingId}`);
+            commit("setBooking", response.data);
+            return response.data;
+        } catch (error) {
+            const message = error.response?.data?.error || error.message;
+            commit("setError", message);
+            throw new Error(message);
+        } finally {
+            commit("setLoading", false);
+        }
+    }
 };
 
 const mutations = {

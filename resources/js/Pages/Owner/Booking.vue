@@ -75,16 +75,22 @@
         <!-- Status -->
         <Column field="status" header="Status" style="text-align:left;">
           <template #body="slotProps">
-            <span :class="[
+            <span
+            :class="[
               'px-3 py-1 rounded text-sm capitalize',
               slotProps.data.status === 'confirmed'
                 ? 'bg-green-500 text-white'
                 : slotProps.data.status === 'pending'
-                  ? 'bg-yellow-500 text-black'
-                  : 'bg-red-500 text-white'
-            ]">
-              {{ slotProps.data.status }}
-            </span>
+                ? 'bg-yellow-500 text-black'
+                : slotProps.data.status === 'in_use'
+                ? 'bg-blue-500 text-white'
+                : slotProps.data.status === 'completed'
+                ? 'bg-gray-500 text-white'
+                : 'bg-red-500 text-white' // cancelled
+            ]"
+          >
+            {{ slotProps.data.status.replace('_', ' ') }}
+          </span>
           </template>
         </Column>
 
