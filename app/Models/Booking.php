@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 class Booking extends Model
 {
     use HasFactory;
@@ -23,10 +24,23 @@ class Booking extends Model
         'daily_rate',
         'total_price',
         'payment_type',
+        'payment_status',
     ];
 
     protected $casts = [
         'start_date' => 'datetime',
         'end_date' => 'datetime',
     ];
+
+    public function holdPayment()
+    {
+        $this->payment_status = 'held';
+        $this->save();
+    }
+
+    public function releasePayment()
+    {
+        $this->payment_status = 'released';
+        $this->save();
+    }
 }

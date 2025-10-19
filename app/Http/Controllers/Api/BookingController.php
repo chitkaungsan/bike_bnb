@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateBookingRequest;
 use App\Repositories\Contracts\BookingRepositoryInterface;
 use Illuminate\Http\Request;
+use App\Models\Booking;
 
 class BookingController extends Controller
 {
@@ -121,5 +122,35 @@ class BookingController extends Controller
         }
         $this->bookingRepository->cancelBooking($id);
         return response()->json(['message' => 'Booking canceled successfully'],);
-    }   
+    }
+    public function startUse($id)
+    {
+        $booking = Booking::find($id);
+
+        if (! $booking) {
+            return response()->json(['message' => 'Booking not found'], 404);
+        }
+
+        if ($booking->status !== 'confirmed') {
+            return response()->json(['message' => 'Only confirmed bookings can start use'], 400);
+        }
+        if ($this->bookingRepository->startUse($id)) {
+            return response()->json(['message' => 'Booking marked as In Use successfully'], 200);
+        }
+        return response()->json(['message' => 'Booking not found'], 404);
+    }
+    public function completeBooking($id)
+    {
+        $booking = Booking::find($id);
+        if (! $booking) {
+            return response()->json(['message' => 'Booking not found'], 404);
+        }
+        if ($booking->status !== 'in_use') {
+            return response()->json(['message' => 'Only bookings in use can be completed'], 400);
+        }
+        if ($this->bookingRepository->completeBooking($id)) {
+            return response()->json(['message' => 'Booking marked as In Use successfully'], 200);
+        }
+        return response()->json(['message' => 'Booking not found'], 404);
+    }
 }

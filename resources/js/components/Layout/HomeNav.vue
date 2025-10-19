@@ -54,7 +54,7 @@
 </template>
 
 <script setup>
-import { ref,computed } from "vue";
+import { ref,computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useStore } from "vuex";
 import HomeMenu from "./HomeMenu.vue";
@@ -64,6 +64,8 @@ const store = useStore();
 const user = computed(() => store.state.auth.user);
 // Translation function
 const { t } = useI18n();
+
+
 </script>
 
 <style scoped>

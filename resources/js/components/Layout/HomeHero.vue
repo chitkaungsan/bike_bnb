@@ -6,94 +6,64 @@
 
       <div class="search-bar-container" ref="searchBarRef">
         <form class="search-bar" @submit.prevent="performSearch">
-          <div
-  class="search-field"
-  :class="{ active: activeField === 'location' }"
-   @mousedown.stop="setActiveField('location')"
->
-  <label for="location">{{ t("hero.search.location_label") }}</label>
-  <div class="input-wrapper">
-    <font-awesome-icon :icon="faLocationDot" class="field-icon" />
-    <input
-      type="text"
-      id="location"
-      class="form-control"
-      v-model="locationQuery"
-      @focus="onFocusLocation"
-      @input="showLocationDropdown = true"
-      :placeholder="t('hero.search.location_placeholder')"
-    />
-  </div>
-
- 
-<!-- Location Dropdown -->
-<div v-if="showLocationDropdown && filteredLocations.length" class="location-dropdown">
-  <!-- Nearby Section -->
-  <div v-if="filteredLocations.some(l => l.type === 'nearby')" class="dropdown-section">
-    <h6 class="dropdown-section-title">{{ t('hero.search.nearby') || 'Nearby' }}</h6>
-    <ul>
-      <li
-        v-for="loc in filteredLocations.filter(l => l.type === 'nearby')"
-        :key="loc.name"
-        @click="selectLocation(loc)"
-        class="location-item"
-      >
-        <img :src="loc.image" alt="" class="location-img" />
-        <div class="location-info">
-          <strong>{{ loc.name }}</strong>
-          <p>{{ loc.description }}</p>
-        </div>
-      </li>
-    </ul>
-  </div>
-
-  <!-- Other Locations -->
-  <div class="dropdown-section">
-    <h6 class="dropdown-section-title">{{ t('hero.search.other_locations') || 'Other locations' }}</h6>
-    <ul>
-      <li
-        v-for="loc in filteredLocations.filter(l => !l.type)"
-        :key="loc.name"
-        @click="selectLocation(loc)"
-        class="location-item"
-      >
-        <img :src="loc.image" alt="" class="location-img" loading="lazy" />
-        <div class="location-info">
-          <strong>{{ loc.name }}</strong>
-          <p>{{ loc.description }}</p>
-        </div>
-      </li>
-    </ul>
-  </div>
-</div>
-
-</div>
+          <div class="search-field" :class="{ active: activeField === 'location' }"
+            @mousedown.stop="setActiveField('location')">
+            <label for="location">{{ t("hero.search.location_label") }}</label>
+            <div class="input-wrapper">
+              <font-awesome-icon :icon="faLocationDot" class="field-icon" />
+              <input type="text" id="location" class="form-control" v-model="locationQuery" @focus="onFocusLocation"
+                @input="showLocationDropdown = true" :placeholder="t('hero.search.location_placeholder')" style="color: ;" />
+            </div>
 
 
-          <div
-            class="search-field"
-            :class="{ active: activeField === 'dates' }"
-            @click="setActiveField('dates')"
-          >
+            <!-- Location Dropdown -->
+            <div v-if="showLocationDropdown && filteredLocations.length" class="location-dropdown">
+              <!-- Nearby Section -->
+              <div v-if="filteredLocations.some(l => l.type === 'nearby')" class="dropdown-section">
+                <h6 class="dropdown-section-title">{{ t('hero.search.nearby') || 'Nearby' }}</h6>
+                <ul>
+                  <li v-for="loc in filteredLocations.filter(l => l.type === 'nearby')" :key="loc.name"
+                    @click="selectLocation(loc)" class="location-item">
+                    <img :src="loc.image" alt="" class="location-img" />
+                    <div class="location-info">
+                      <strong>{{ loc.name }}</strong>
+                      <p>{{ loc.description }}</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Other Locations -->
+              <div class="dropdown-section">
+                <h6 class="dropdown-section-title">{{ t('hero.search.other_locations') || 'Other locations' }}</h6>
+                <ul>
+                  <li v-for="loc in filteredLocations.filter(l => !l.type)" :key="loc.name" @click="selectLocation(loc)"
+                    class="location-item">
+                    <img :src="loc.image" alt="" class="location-img" loading="lazy" />
+                    <div class="location-info">
+                      <strong>{{ loc.name }}</strong>
+                      <p>{{ loc.description }}</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+
+
+          <div class="search-field" :class="{ active: activeField === 'dates' }" @click="setActiveField('dates')">
             <label for="dates">{{ t("hero.search.dates_label") }}</label>
             <div class="input-wrapper">
               <font-awesome-icon :icon="faCalendarDays" class="field-icon" />
-              <DatePicker
-                v-model="dates"
-                selectionMode="range"
-                :placeholder="t('hero.search.dates_placeholder')"
-                dateFormat="M dd"
-                class="date-picker-control"
-              />
+              <DatePicker v-model="dates" selectionMode="range" :placeholder="t('hero.search.dates_placeholder')"
+                dateFormat="M dd" class="date-picker-control" />
               <span class="form-control-display">{{ formattedDates }}</span>
             </div>
           </div>
 
-          <div
-            class="search-field search-field-last"
-            :class="{ active: activeField === 'category' }"
-            @click.self="setActiveField('category')"
-          >
+          <div class="search-field search-field-last" :class="{ active: activeField === 'category' }"
+            @click.self="setActiveField('category')">
             <div class="category-main-field" @click="setActiveField('category')">
               <label for="category">{{ t("hero.search.category_label") }}</label>
               <div class="input-wrapper">
@@ -102,11 +72,7 @@
               </div>
               <div v-if="activeField === 'category'" class="category-dropdown">
                 <ul>
-                  <li
-                    v-for="cat in categories"
-                    :key="cat.value"
-                    @click="selectCategory(cat)"
-                  >
+                  <li v-for="cat in categories" :key="cat.value" @click="selectCategory(cat)">
                     {{ cat.text }}
                   </li>
                 </ul>
@@ -255,4 +221,3 @@ onBeforeUnmount(() => {
   document.removeEventListener("mousedown", handleClickOutside);
 });
 </script>
-

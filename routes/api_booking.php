@@ -12,3 +12,5 @@ Route::get('/owner/bookings/{owner_id}', [BookingController::class, 'getOwnerBoo
 Route::get('/owner/booking/{id}', [BookingController::class, 'getOwnerBookingById']);
 Route::get('booking/confirm/{id}', [BookingController::class, 'confirmBooking']);
 Route::get('booking/cancel/{id}', [BookingController::class, 'cancelBooking']);
+Route::post('/bookings/{id}/in-use', [BookingController::class, 'startUse']);
+

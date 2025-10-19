@@ -72,7 +72,7 @@
 
       <!-- user  -->
       <li v-if="isAuthenticated && user && user.role === 'user'">
-        <span class="dropdown-item" @click="visible = true">Dashboard</span>
+        <span class="dropdown-item" @click="visible = true">Select for service</span>
       </li>
 
       <li>
@@ -200,6 +200,7 @@ const selectRole = async () => {
 
 const getData = async () => {
   const response = await store.dispatch("auth/fetchUser");
+  console.log(response);
   return response;
 };
 // Theme toggle
@@ -208,6 +209,7 @@ const toggleTheme = () => store.dispatch("theme/toggleTheme");
 
 // Fetch user on mount
 onMounted(async () => {
+
   if (isAuthenticated.value) getData();
 });
 </script>

@@ -13,4 +13,6 @@ interface BookingRepositoryInterface
     public function OwnerBookingById($id);
     public function confirmBooking($id);
     public function cancelBooking($id);
+    public function startUse($id);
+    public function completeBooking($id);
 }

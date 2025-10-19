@@ -12,13 +12,24 @@ class SocialLoginController extends Controller
 {
     public function redirect($provider)
     {
-        return Socialite::driver($provider)->stateless()->redirect();
+        try {
+            return Socialite::driver($provider)->stateless()->redirect();
+        } catch (\Throwable $th) {
+            \Log::error('Social login failed: ' . $th->getMessage());
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
     }
 
     public function callback($provider)
    {
         $frontendUrl = env('VITE_WEB_URL');
-        $googleUser = Socialite::driver('google')->stateless()->user();
+        
+        try {
+           $googleUser = Socialite::driver('google')->stateless()->user();
+        } catch (\Throwable $th) {
+           \Log::error('Google login failed: ' . $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
 
         $user = User::updateOrCreate(
             ['email' => $googleUser->getEmail()],

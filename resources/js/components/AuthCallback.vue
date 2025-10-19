@@ -45,7 +45,7 @@ onMounted(async () => {
 
     // 1️⃣ If Laravel returned a token directly
     if (tokenFromURL) {
-      localStorage.setItem("auth_token", tokenFromURL);
+      localStorage.setItem("token", tokenFromURL);
       axios.defaults.headers.common["Authorization"] = `Bearer ${tokenFromURL}`;
       user = await store.dispatch("auth/fetchUser");
     }
@@ -56,7 +56,7 @@ onMounted(async () => {
       token = data.token;
       user = data.user;
 
-      localStorage.setItem("auth_token", token);
+      localStorage.setItem("token", token);
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       store.commit("auth/SET_USER", user);
     }
@@ -75,9 +75,11 @@ onMounted(async () => {
     if (user && user.role === "owner") {
       router.push({ name: "owner.dashboard" });
     } else if (user && user.role === "renter") {
-      router.push({ name: "Home" });
+      // router.push({ name: "Home" });
+      window.location.href = "/";
     } else {
-      router.push("/");
+      // router.push("/");
+      window.location.href = "/";
     }
 
   } catch (err) {
