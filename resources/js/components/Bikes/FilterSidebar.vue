@@ -1,21 +1,29 @@
 <template>
   <div class="filter-sidebar-wrapper fix-top">
     <!-- Toggle button (only small screens) -->
-    <button class="btn toggle-sidebar-btn d-lg-none" @click="showSidebar = true">
-      <font-awesome-icon :icon="faFilter" class="me-2" />
-      Filters
-    </button>
+    <button
+  v-if="!showSidebar"
+  class="btn toggle-sidebar-btn d-lg-none"
+  @click="openSidebar"
+>
+  <font-awesome-icon :icon="faFilter" class="me-2" />
+  Filters
+</button>
 
     <!-- Overlay -->
-    <div v-if="showSidebar" class="sidebar-overlay" @click="showSidebar = false"></div>
+    <div
+  v-if="showSidebar"
+  class="sidebar-overlay"
+  @click="closeSidebar"
+></div>
+
 
     <!-- Sidebar -->
-    <aside class="filter-sidebar" :class="{ open: showSidebar }">
-      <!-- 🌴 Island Background -->
-      <IslandBackground :max-icons="4" />
+   <aside class="filter-sidebar" :class="{ open: showSidebar }">
+  <IslandBackground :max-icons="4" />
 
       <!-- Close button -->
-      <button class="btn-close d-lg-none" @click="showSidebar = false">&times;</button>
+       <button class="btn-close d-lg-none" @click="closeSidebar">&times;</button>
 
       <!-- Content -->
       <div class="filter-content">
@@ -69,7 +77,7 @@ import { ref } from "vue";
 import { faFilter, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-// ✅ Correct import path (adjust case if needed)
+//  Correct import path (adjust case if needed)
 import IslandBackground from "../islandBackground.vue";
 
 const categories = [
@@ -79,7 +87,19 @@ const categories = [
   { id: "catElectric", label: "Electric" },
 ];
 
+
 const showSidebar = ref(false);
+
+const openSidebar = () => {
+  showSidebar.value = true;
+  document.body.style.overflow = "hidden"; // prevent scroll
+};
+
+const closeSidebar = () => {
+  showSidebar.value = false;
+  document.body.style.overflow = ""; // restore scroll
+};
+
 </script>
 
 <style scoped>
@@ -89,10 +109,9 @@ const showSidebar = ref(false);
   z-index: 10;
 }
 
-/* ✅ Sidebar core */
+/* Sidebar core */
 .filter-sidebar {
-  position: relative;
-  overflow: hidden;
+  position: fixed;
   background-color: var(--section-bg-color);
   border-radius: var(--border-radius-lg);
   border: 1px solid var(--border-color);
@@ -100,10 +119,10 @@ const showSidebar = ref(false);
   min-height: 100%;
   padding: 1.5rem;
   transition: left 0.3s ease;
-  z-index: 1;
+  z-index: 1100;
 }
 
-/* ✅ Make island background visible inside */
+/*  Make island background visible inside */
 .filter-sidebar .island-background {
   position: absolute;
   inset: 0;
@@ -117,13 +136,13 @@ const showSidebar = ref(false);
   z-index: 2; /* sits above background */
 }
 
-/* 🌙 Dark mode tuning */
+/*  Dark mode tuning */
 :root[data-bs-theme="dark"] .filter-sidebar .island-background {
   opacity: 0.6;
   filter: brightness(0.7);
 }
 
-/* ✅ Mobile drawer behavior */
+/* Mobile drawer behavior */
 .filter-sidebar {
   position: fixed;
   top: 0;
@@ -147,6 +166,7 @@ const showSidebar = ref(false);
   background: rgba(0, 0, 0, 0.4);
   z-index: 1000;
 }
+
 
 /* ✅ Toggle button (mobile only) */
 .toggle-sidebar-btn {
