@@ -1,57 +1,72 @@
 <template>
-  <div class="container-fluid">
-    <!-- Bike Section -->
-    <div class="row mb-5">
-      <div class="row g-3">
-        <div
-          v-for="bike in bikes.data"
-          :key="bike.id"
-          class="col-6 col-sm-6 col-md-4 col-lg-5th"
-          v-if="!loading"
-        >
-          <BikeCard
-            :id="bike.id"
-            :image="bike.photo"
-            :title="bike.title"
-            :model="bike.model + ', ' + bike.year"
-            :price="bike.price"
-            :store_id="bike.store_id"
-            :store_logo="bike.store_logo"
-            :store_name="bike.store_name"
-            :review="4.5"
-          />
-        </div>
-        <div
-          v-else
-          class="col-6 col-sm-6 col-md-4 col-lg-5th"
-          v-for="n in skeletonCount"
-          :key="'skeleton-' + n"
-          v-show="loading"
-        >
-          <BikeCardSkeleton />
-        </div>
-        <div class="col-12 justify-content-center">
-          <Bootstrap5Pagination :data="bikes" @pagination-change-page="getResults" />
+  <section class="bike-list-section">
+    <!-- 🌴 Island Background Layer -->
+    <islandBackground :max-icons="16" />
+
+    <!-- 🏍️ Bike Section -->
+    <div class="container-fluid content-layer">
+      <div class="row mb-5">
+        <div class="row g-3">
+          <!-- Bikes Loaded -->
+          <div
+            v-for="bike in bikes.data"
+            :key="bike.id"
+            class="col-6 col-sm-6 col-md-4 col-lg-5th"
+            v-if="!loading"
+          >
+            <BikeCard
+              :id="bike.id"
+              :image="bike.photo"
+              :title="bike.title"
+              :model="bike.model + ', ' + bike.year"
+              :price="bike.price"
+              :store_id="bike.store_id"
+              :store_logo="bike.store_logo"
+              :store_name="bike.store_name"
+              :review="4.5"
+            />
+          </div>
+
+          <!-- Skeleton Loading -->
+          <div
+            v-else
+            class="col-6 col-sm-6 col-md-4 col-lg-5th"
+            v-for="n in skeletonCount"
+            :key="'skeleton-' + n"
+            v-show="loading"
+          >
+            <BikeCardSkeleton />
+          </div>
+
+          <!-- Pagination -->
+          <div class="col-12 justify-content-center mt-4">
+            <Bootstrap5Pagination
+              :data="bikes"
+              @pagination-change-page="getResults"
+            />
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
-import axios from "../../service/axios";
-import BikeCard from "./BikeCard.vue";
 import { useStore } from "vuex";
-import BikeCardSkeleton from "../loader/BikeCardSkeleton.vue";
 import { Bootstrap5Pagination } from "laravel-vue-pagination";
-const skeletonCount = 20; //
+import BikeCard from "./BikeCard.vue";
+import BikeCardSkeleton from "../loader/BikeCardSkeleton.vue";
+import islandBackground from "../islandBackground.vue"; // ✅ Added
 
-const store = useStore();
 const { t } = useI18n();
+const store = useStore();
+
 const bikes = ref([]);
 const loading = ref(true);
+const skeletonCount = 20;
+
 const getResults = async (page = 1) => {
   const res = await store.dispatch("bikes/fetchAllBikes", page);
   bikes.value = res.data || [];
@@ -60,7 +75,6 @@ const getResults = async (page = 1) => {
 onMounted(async () => {
   try {
     const res = await store.dispatch("bikes/fetchAllBikes");
-
     bikes.value = res.data || [];
   } catch (err) {
     console.error(err);
@@ -71,6 +85,29 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+/* 🌴 Section Wrapper */
+.bike-list-section {
+  position: relative;
+  min-height: 100vh;
+  /* overflow: hidden; */
+  background-color: transparent;
+}
+
+.island-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Foreground Content */
+.content-layer {
+  position: relative;
+  z-index: 2;
+}
+
+/* 🏍️ Bike Title Decoration */
 .bike-title {
   font-size: 2.5rem;
   font-weight: 700;
@@ -93,10 +130,11 @@ onMounted(async () => {
   border-radius: 2px;
   transition: width 0.3s;
 }
-
 .bike-title:hover::after {
   width: 100px;
 }
+
+/* 🧱 Grid Fix */
 @media (min-width: 992px) {
   .col-lg-5th {
     flex: 0 0 20%;

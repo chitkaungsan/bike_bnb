@@ -1,5 +1,8 @@
 <template>
   <div class="container my-5 bike-detail-page">
+    <!-- Island background layer -->
+    <IslandBackground :max-icons="5" />
+
     <div class="row g-5">
       <!-- LEFT: Bike Details -->
       <div class="col-lg-7">
@@ -29,6 +32,7 @@
             </div>
           </div>
 
+          <!-- Store Review -->
           <div class="d-flex align-items-start justify-content-between">
             <StoreReview
               :store_id="bike_detail.store_id"
@@ -48,7 +52,10 @@
       <!-- RIGHT: Booking Panel -->
       <div class="col-lg-5">
         <div ref="rightColumnRef" class="sticky-booking">
-          <BookingPanel :price-per-day="bike_detail.price" :parent-container="rightColumnRef" />
+          <BookingPanel
+            :price-per-day="bike_detail.price"
+            :parent-container="rightColumnRef"
+          />
         </div>
       </div>
     </div>
@@ -60,6 +67,8 @@ import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import BookingPanel from "./BookingPanel.vue";
 import StoreReview from "./StoreReview.vue";
+import IslandBackground from "../islandBackground.vue"; // ✅ added import
+
 const store = useStore();
 const bike_detail = computed(() => store.getters["bikes/bike_details"]);
 const rightColumnRef = ref(null);
@@ -70,7 +79,21 @@ const rightColumnRef = ref(null);
    Layout & Container
 ------------------------------ */
 .bike-detail-page {
+  position: relative;
   background-color: transparent;
+  overflow: hidden;
+  isolation: isolate; /* keep z-index layers clean */
+  min-height: 100vh;
+}
+
+/* Background layer behind all content */
+.island-background {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.6;
+  overflow: hidden;
 }
 
 /* ------------------------------
@@ -83,6 +106,8 @@ const rightColumnRef = ref(null);
   box-shadow: 0 4px 12px var(--shadow-color);
   padding: 2rem;
   transition: background-color var(--transition-speed), color var(--transition-speed);
+  position: relative;
+  z-index: 2;
 }
 
 /* ------------------------------
@@ -97,10 +122,12 @@ const rightColumnRef = ref(null);
   color: var(--secondary-text-color);
   font-size: 1rem;
 }
+
 .bike-description {
   color: var(--text-color);
   line-height: 1.6;
 }
+
 /* ------------------------------
    Brand Logo
 ------------------------------ */
@@ -130,18 +157,8 @@ const rightColumnRef = ref(null);
   border-color: var(--border-color);
 }
 
-.bike-description {
-  color: var(--text-color);
-  line-height: 1.6;
-}
-
-.bike-detail-text {
-  color: var(--secondary-text-color);
-  line-height: 1.7;
-  border-bottom: 1px solid var(--border-color);
-}
-.bike-detail-text:last-child {
-  border-bottom: none;
+.bike-description * {
+  color: inherit !important;
 }
 
 /* ------------------------------
@@ -150,25 +167,15 @@ const rightColumnRef = ref(null);
 .sticky-booking {
   position: sticky;
   top: 100px;
-}
-.bike-description * {
-  color: inherit !important; /* forces all inner elements to use dark/light text color */
-}
-.sticky-booking {
-  position: sticky;
-  top: 100px;
-}
-.bike-description * {
-  color: inherit !important; /* forces all inner elements to use dark/light text color */
+  z-index: 2;
 }
 
-/* NEW: Add padding to the bottom on mobile screens 
-  to prevent the fixed footer from overlapping the last bit of content.
-  The breakpoint 991.98px is right below Bootstrap's 'lg' breakpoint.
-*/
+/* ------------------------------
+   Mobile Spacing Fix
+------------------------------ */
 @media (max-width: 991.98px) {
   .bike-detail-page {
-    padding-bottom: 100px; /* Adjust this value if your footer height changes */
+    padding-bottom: 100px;
   }
 }
 </style>

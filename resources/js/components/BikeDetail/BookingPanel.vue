@@ -1,5 +1,6 @@
 <template>
     <div class="booking-panel-wrapper" ref="wrapperRef">
+        <IslandBackground :max-icons="2" />
         <div class="d-none d-lg-block">
             <div class="booking-panel" ref="panelRef" :class="stickyClass">
                 <div class="p-4 shadow rounded-4 border">
@@ -155,6 +156,7 @@ import { useToast } from "primevue/usetoast";
 import { useStore } from "vuex";
 
 import InputText from "primevue/inputtext";
+import IslandBackground from "../islandBackground.vue";
 
 const store = useStore();
 const toast = useToast();

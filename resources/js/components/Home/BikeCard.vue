@@ -1,6 +1,9 @@
 <template>
   <div class="bike-card-wrapper">
     <div class="bike-card">
+      <!-- 🌴 Background icons (1–2 random) -->
+      <IslandBackground :max-icons="iconCount" />
+
       <!-- Image + Overlay -->
       <div class="bike-card-img-wrapper">
         <div class="bike-logo ms-auto">
@@ -13,6 +16,7 @@
             loading="lazy"
           />
         </div>
+
         <!-- Review stars top-left -->
         <div class="bike-review">
           <span class="stars">
@@ -25,6 +29,7 @@
           </span>
           <span class="review-score">{{ reviewDisplay }}</span>
         </div>
+
         <!-- Wishlist heart top-right -->
         <div class="bike-wishlist" @click.stop="toggleWishlist">
           <font-awesome-icon :icon="[wishlist ? 'fas' : 'far', 'heart']" />
@@ -55,13 +60,13 @@
         </div>
 
         <div class="bike-card-footer">
-          <!-- formatted price -->
           <span class="bike-card-price">{{ "$" + formattedPrice + "/day" }}</span>
           <router-link
             :to="{ name: 'bikes.detail', params: { id: props.id } }"
             class="btn btn-book"
-            >{{ t("book_now") }}</router-link
           >
+            {{ t("book_now") }}
+          </router-link>
         </div>
       </div>
     </div>
@@ -70,11 +75,11 @@
 
 <script setup>
 import { ref, computed } from "vue";
-import Image from "primevue/image"; // note: lowercase path
+import Image from "primevue/image";
 import { useI18n } from "vue-i18n";
 import router from "../../router";
-import StoreDetail from "../../Pages/StoreDetail.vue";
-// assign defineProps to `props` and provide safe runtime defaults
+import IslandBackground from "../islandBackground.vue";
+
 const { t } = useI18n();
 const props = defineProps({
   id: { type: Number, default: 0 },
@@ -89,16 +94,12 @@ const props = defineProps({
 });
 
 const wishlist = ref(false);
+const iconCount = Math.random() > 0 ? 1 : 2; // randomly 1 or 2 icons
+
 function toggleWishlist() {
   wishlist.value = !wishlist.value;
 }
 
-/**
- * Safe number formatter:
- * - Accepts number or string (with or without commas/currency).
- * - Strips non-number chars (except dot and minus), converts to Number.
- * - Returns original value as string if it can't parse to a number.
- */
 function formatNumberRaw(value) {
   if (value === null || value === undefined || value === "") return "";
   const cleaned = String(value).replace(/[^0-9.-]/g, "");
@@ -106,6 +107,7 @@ function formatNumberRaw(value) {
   if (Number.isNaN(num)) return String(value);
   return new Intl.NumberFormat("en-US").format(num);
 }
+
 const storeDetail = (id) => router.push({ name: "store.detail", params: { id } });
 const formattedPrice = computed(() => formatNumberRaw(props.price));
 const reviewDisplay = computed(() => {
@@ -115,9 +117,9 @@ const reviewDisplay = computed(() => {
 </script>
 
 <style scoped>
-/* your existing styles kept, plus overlay styles at the bottom */
 .bike-card-wrapper {
   flex: 0 0 100%;
+  position: relative;
 }
 @media (min-width: 576px) {
   .bike-card-wrapper {
@@ -135,6 +137,7 @@ const reviewDisplay = computed(() => {
   }
 }
 
+/* Card container */
 .bike-card {
   border-radius: var(--border-radius-md);
   overflow: hidden;
@@ -143,17 +146,21 @@ const reviewDisplay = computed(() => {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s, box-shadow 0.2s;
   cursor: pointer;
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
 }
 .bike-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
 }
 
+/* Image section */
 .bike-card-img-wrapper {
   position: relative;
   width: 100%;
-  height: 200px; /* or any height you want */
-  overflow: hidden; /* crop overflow */
+  height: 200px;
+  overflow: hidden;
 }
 .bike-card-img {
   width: 100%;
@@ -162,7 +169,7 @@ const reviewDisplay = computed(() => {
   object-position: center;
 }
 
-/* Review stars top-left */
+/* Review + Wishlist */
 .bike-review {
   position: absolute;
   top: 0.5rem;
@@ -182,7 +189,6 @@ const reviewDisplay = computed(() => {
   color: #ffc107;
 }
 
-/* Wishlist heart top-right */
 .bike-wishlist {
   position: absolute;
   top: 0.5rem;
@@ -198,7 +204,7 @@ const reviewDisplay = computed(() => {
   align-items: center;
 }
 
-/* Card body */
+/* Body */
 .bike-card-body {
   padding: 0.75rem;
 }
@@ -244,40 +250,12 @@ const reviewDisplay = computed(() => {
   object-fit: cover;
 }
 
-/* Fullscreen overlay */
-.fullscreen-overlay {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(8px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2000;
-}
-.fullscreen-content {
-  position: relative;
-  max-width: 90%;
-  max-height: 90%;
-}
-.fullscreen-content img {
-  width: 100%;
-  height: auto;
-  border-radius: 10px;
-}
-.close-btn {
+/* Background inside card */
+.island-background {
   position: absolute;
-  top: -10px;
-  right: -10px;
-  color: white;
-  font-size: 2rem;
-  cursor: pointer;
-  background: rgba(0, 0, 0, 0.6);
-  border-radius: 50%;
-  padding: 0 10px;
-  border: none;
-}
-.no-scroll {
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
   overflow: hidden;
 }
 </style>

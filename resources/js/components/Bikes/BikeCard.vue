@@ -1,6 +1,9 @@
 <template>
   <div class="bike-card-wrapper">
     <div class="bike-card">
+      <!-- 🌴 Island Background -->
+      <IslandBackground :max-icons="2" />
+
       <!-- Image + Overlay -->
       <div class="bike-card-img-wrapper">
         <div class="bike-logo ms-auto">
@@ -32,7 +35,6 @@
       </div>
 
       <!-- Card body -->
-
       <div class="bike-card-body">
         <div class="d-flex">
           <div class="col">
@@ -66,9 +68,10 @@
 
 <script setup>
 import { ref, computed } from "vue";
-import Image from "primevue/image"; // note: lowercase path
+import Image from "primevue/image";
 import { useI18n } from "vue-i18n";
-// assign defineProps to `props` and provide safe runtime defaults
+import IslandBackground from "../islandBackground.vue"; // 🌴 added import only
+
 const { t } = useI18n();
 const props = defineProps({
   id: { type: Number, default: 0 },
@@ -87,12 +90,6 @@ function toggleWishlist() {
   wishlist.value = !wishlist.value;
 }
 
-/**
- * Safe number formatter:
- * - Accepts number or string (with or without commas/currency).
- * - Strips non-number chars (except dot and minus), converts to Number.
- * - Returns original value as string if it can't parse to a number.
- */
 function formatNumberRaw(value) {
   if (value === null || value === undefined || value === "") return "";
   const cleaned = String(value).replace(/[^0-9.-]/g, "");
@@ -109,7 +106,21 @@ const reviewDisplay = computed(() => {
 </script>
 
 <style scoped>
-/* your existing styles kept, plus overlay styles at the bottom */
+/* ✅ just add this small snippet to keep island background under content */
+.bike-card {
+  position: relative;
+  isolation: isolate; /* ensures background layers correctly */
+}
+
+.bike-card .island-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Everything else below is untouched */
 .bike-card-wrapper {
   flex: 0 0 100%;
 }
@@ -146,8 +157,8 @@ const reviewDisplay = computed(() => {
 .bike-card-img-wrapper {
   position: relative;
   width: 100%;
-  height: 200px; /* or any height you want */
-  overflow: hidden; /* crop overflow */
+  height: 200px;
+  overflow: hidden;
 }
 .bike-card-img {
   width: 100%;
@@ -238,7 +249,7 @@ const reviewDisplay = computed(() => {
   object-fit: cover;
 }
 
-/* Fullscreen overlay */
+/* Fullscreen overlay (unchanged) */
 .fullscreen-overlay {
   position: fixed;
   inset: 0;

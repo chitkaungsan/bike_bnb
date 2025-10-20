@@ -1,53 +1,64 @@
 <template>
   <div class="filter-sidebar-wrapper fix-top">
-    <!-- Toggle button only visible on small screens -->
+    <!-- Toggle button (only small screens) -->
     <button class="btn toggle-sidebar-btn d-lg-none" @click="showSidebar = true">
       <font-awesome-icon :icon="faFilter" class="me-2" />
       Filters
     </button>
 
-    <!-- Overlay for drawer effect -->
+    <!-- Overlay -->
     <div v-if="showSidebar" class="sidebar-overlay" @click="showSidebar = false"></div>
 
     <!-- Sidebar -->
     <aside class="filter-sidebar" :class="{ open: showSidebar }">
-      <!-- Close button for mobile -->
+      <!-- 🌴 Island Background -->
+      <IslandBackground :max-icons="4" />
+
+      <!-- Close button -->
       <button class="btn-close d-lg-none" @click="showSidebar = false">&times;</button>
 
-      <div class="filter-section">
-        <h5 class="filter-title">Bike Category</h5>
-        <div class="form-check" v-for="cat in categories" :key="cat.id">
-          <input class="form-check-input" type="checkbox" :id="cat.id" />
-          <label class="form-check-label" :for="cat.id">{{ cat.label }}</label>
+      <!-- Content -->
+      <div class="filter-content">
+        <div class="filter-section">
+          <h5 class="filter-title">Bike Category</h5>
+          <div class="form-check" v-for="cat in categories" :key="cat.id">
+            <input class="form-check-input" type="checkbox" :id="cat.id" />
+            <label class="form-check-label" :for="cat.id">{{ cat.label }}</label>
+          </div>
         </div>
-      </div>
 
-      <div class="filter-section">
-        <h5 class="filter-title">Price Range</h5>
-        <div class="price-input">
-          <input
-            type="range"
-            class="form-range"
-            min="0"
-            max="200"
-            step="5"
-            id="priceRange"
-          />
-          <div class="price-label">Up to $150 / day</div>
+        <div class="filter-section">
+          <h5 class="filter-title">Price Range</h5>
+          <div class="price-input">
+            <input
+              type="range"
+              class="form-range"
+              min="0"
+              max="200"
+              step="5"
+              id="priceRange"
+            />
+            <div class="price-label">Up to $150 / day</div>
+          </div>
         </div>
-      </div>
 
-      <div class="filter-section">
-        <h5 class="filter-title">Rating</h5>
-        <div class="rating-filter">
-          <font-awesome-icon v-for="n in 5" :key="n" :icon="faStar" class="star-icon" />
-          <span>4 stars & up</span>
+        <div class="filter-section">
+          <h5 class="filter-title">Rating</h5>
+          <div class="rating-filter">
+            <font-awesome-icon
+              v-for="n in 5"
+              :key="n"
+              :icon="faStar"
+              class="star-icon"
+            />
+            <span>4 stars & up</span>
+          </div>
         </div>
-      </div>
 
-      <div class="filter-actions">
-        <button class="btn btn-primary w-100">Apply Filters</button>
-        <button class="btn btn-outline-secondary w-100 mt-2">Reset</button>
+        <div class="filter-actions">
+          <button class="btn btn-primary w-100">Apply Filters</button>
+          <button class="btn btn-outline-secondary w-100 mt-2">Reset</button>
+        </div>
       </div>
     </aside>
   </div>
@@ -57,6 +68,9 @@
 import { ref } from "vue";
 import { faFilter, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+
+// ✅ Correct import path (adjust case if needed)
+import IslandBackground from "../islandBackground.vue";
 
 const categories = [
   { id: "catMountain", label: "Mountain" },
@@ -69,12 +83,77 @@ const showSidebar = ref(false);
 </script>
 
 <style scoped>
-/* Toggle button (hamburger) */
+/* 🌴 General wrapper */
+.filter-sidebar-wrapper {
+  position: relative;
+  z-index: 10;
+}
+
+/* ✅ Sidebar core */
+.filter-sidebar {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--section-bg-color);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--border-color);
+  width: 260px;
+  min-height: 100%;
+  padding: 1.5rem;
+  transition: left 0.3s ease;
+  z-index: 1;
+}
+
+/* ✅ Make island background visible inside */
+.filter-sidebar .island-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.filter-content {
+  position: relative;
+  z-index: 2; /* sits above background */
+}
+
+/* 🌙 Dark mode tuning */
+:root[data-bs-theme="dark"] .filter-sidebar .island-background {
+  opacity: 0.6;
+  filter: brightness(0.7);
+}
+
+/* ✅ Mobile drawer behavior */
+.filter-sidebar {
+  position: fixed;
+  top: 0;
+  left: -280px;
+  height: 100vh;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.filter-sidebar.open {
+  left: 0;
+  background-color: var(--section-bg-color);
+}
+
+/* ✅ Overlay for mobile */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+}
+
+/* ✅ Toggle button (mobile only) */
 .toggle-sidebar-btn {
   position: fixed;
-  top: 5rem; /* was 1rem */
+  top: 5rem;
   left: 1rem;
-  z-index: 1100;
+  z-index: 1200;
   background-color: var(--primary-color);
   color: #fff;
   padding: 0.5rem 1rem;
@@ -85,43 +164,10 @@ const showSidebar = ref(false);
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
 }
 .toggle-sidebar-btn:hover {
-  background-color: var(--primary-color-dark);
+  background-color: var(--primary-hover-color);
 }
 
-/* Overlay behind sidebar on mobile */
-.sidebar-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
-  z-index: 1000;
-  transition: opacity 0.3s ease;
-}
-
-/* Sidebar */
-.filter-sidebar {
-  background-color: var(--section-bg-color);
-  padding: 1.5rem;
-  border-radius: var(--border-radius-lg);
-  border: 1px solid var(--border-color);
-  height: 100%;
-  width: 250px;
-  position: fixed;
-  top: 0;
-  left: -300px;
-  z-index: 1100;
-  overflow-y: auto;
-  transition: left 0.3s ease;
-}
-
-/* Open state for mobile */
-.filter-sidebar.open {
-  left: 0;
-}
-
-/* Close button for mobile */
+/* ✅ Close button */
 .btn-close {
   background: none;
   border: none;
@@ -132,7 +178,7 @@ const showSidebar = ref(false);
   right: 1rem;
 }
 
-/* Keep all existing sidebar styling */
+/* ✅ Filter styling */
 .filter-section {
   margin-bottom: 2rem;
 }
@@ -170,25 +216,23 @@ const showSidebar = ref(false);
   margin-left: 0.5rem;
 }
 
+/* ✅ Buttons */
 .filter-actions button {
   margin-top: 0.5rem;
 }
 
-/* Large screen: always show sidebar */
+/* ✅ Desktop layout */
 @media (min-width: 992px) {
   .filter-sidebar {
     position: relative;
-    left: 0 !important;
-    height: fit-content;
-    width: auto;
+    left: 0;
+    height: auto;
     box-shadow: none;
+    width: 260px;
   }
 
   .toggle-sidebar-btn,
-  .btn-close {
-    display: none;
-  }
-
+  .btn-close,
   .sidebar-overlay {
     display: none;
   }

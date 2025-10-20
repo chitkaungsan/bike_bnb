@@ -1,6 +1,7 @@
 <template>
   <section class="section">
     <div class="container">
+    <IslandBackground :max-icons="5"/>
       <div class="col-12 text-center mb-2">
         <h3 class="text-center bike-title">{{ $t("browse_by_category") }}</h3>
       </div>
@@ -22,6 +23,7 @@
 import { ref } from "vue";
 import CategoryCard from "./CategoryCard.vue";
 import { useI18n } from "vue-i18n";
+import IslandBackground from "../islandBackground.vue";
 
 const { t } = useI18n();
 // Define categories
@@ -43,8 +45,21 @@ function selectCategory(key) {
 <style scoped>
 .section {
   padding: 4rem 0;
-  background-color: var(--background-color);
+  background-color: transparent; /* let icons show through */
+  position: relative;
+  overflow: hidden;
+  isolation: isolate; /* keeps z-index layering clean */
 }
+
+.section::before {
+  /* create subtle base background */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: var(--background-color);
+  z-index: -2; /* stays behind icons */
+}
+
 .section-title {
   font-weight: 700;
   margin-bottom: 2rem;

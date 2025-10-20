@@ -1,38 +1,32 @@
-/* --- Global Design System Variables --- */
 :root {
-  --primary-color: #63C1A2;
-  --primary-hover-color: #52a88a;
-  --background-color: #F8F9FA;
-  --section-bg-color: #FFFFFF;
-  --text-color: #333;
-  --light-text-color: #6c757d;
-  --secondary-text-color: #6c757d;
-  --border-color: #E5E7EB;
+  --primary-color: #5CBF99;           /* Tropical jade green */
+  --primary-hover-color: #4BA885;     /* Deeper lush green */
+  --background-color: #F4F7F3;        /* Misty island background */
+  --section-bg-color: #FFFFFF;        /* Clean bright contrast */
+  --text-color: #2E3D33;              /* Forest greenish text */
+  --light-text-color: #6F8176;        /* Soft moss gray */
+  --secondary-text-color: #7B8C83;    /* Calm mountain tone */
+  --border-color: #D8E2DC;            /* Pale natural border */
   --border-radius-lg: 20px;
   --border-radius-md: 12px;
-  --navbar-bg: #ffffff;
-
+  --navbar-bg: #FAFCF8;               /* Warm sandy white */
 }
 
 /* --- Dark Mode Variables --- */
-/* Prefer using [data-bs-theme="dark"] on the root/html element so Bootstrap 5's theme attribute
-   and the Vuex module (which sets document.documentElement.setAttribute('data-bs-theme', theme))
-   can control the CSS. Keep `body.dark` as a fallback for older code that toggles a class on body. */
 :root[data-bs-theme="dark"],
 body.dark {
-  --primary-color: #63C1A2;
-  --primary-hover-color: #52a88a;
-  --background-color: #121212;
-  --section-bg-color: #1c1c1c;
-  --text-color: #f0f0f0;
-  --light-text-color: #aaa;
-  --secondary-text-color: #ccc;
-  --border-color: #333;
-  --navbar-bg: #1e1e1e;
-  --search-bg: #2b2b2b;
-  --border-color-muted: #22040400;
+  --primary-color: #5CBF99;           /* Same natural jade */
+  --primary-hover-color: #4BA885;     /* Slightly darker green */
+  --background-color: #101A14;        /* Deep jungle tone */
+  --section-bg-color: #18241E;        /* Dark forest green */
+  --text-color: #E8F5EF;              /* Misty light text */
+  --light-text-color: #A8C0B3;        /* Muted tropical fog */
+  --secondary-text-color: #B7D0C2;    /* Fern tone */
+  --border-color: #2A3B33;            /* Dark leaf border */
+  --navbar-bg: #1B2923;               /* Jungle navbar */
+  --search-bg: #24372E;               /* Calm muted green-gray */
+  --border-color-muted: rgba(255,255,255,0.05);
 }
-
 /* --- Base Body Styles --- */
 body {
   font-family: 'Inter', sans-serif;
@@ -216,3 +210,4 @@ main {
 .p-toast {
     max-width: 90vw; /* make toast fit smaller screens */
 }
+

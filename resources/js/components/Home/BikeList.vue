@@ -1,53 +1,61 @@
 <template>
   <div class="container-fluid">
-    <div class="row py-4">
-      <div class="col-12 text-center">
-        <h3 class="text-center bike-title">{{ $t("bike") }}</h3>
-      </div>
-      <div class="col-12">
-        <div class="bike-carousel-wrapper">
-          <button class="carousel-btn btn-left" @click="scrollLeft">
-            <font-awesome-icon icon="chevron-left" />
-          </button>
+    <section class="bike-section position-relative py-4">
+  <IslandBackground :max-icons="2" />
 
-          <div class="bike-cards-container" ref="containerRef">
-            <!-- Show skeletons when loading -->
-            <template v-if="loading">
-              <div
-                class="bike-card-wrapper"
-                v-for="n in skeletonCount"
-                :key="'skeleton-' + n"
-              >
-                <BikeCardSkeleton />
-              </div>
-            </template>
-
-            <!-- Show real bikes when loaded -->
-            <template v-else>
-              <div class="bike-card-wrapper" v-for="bike in bikes" :key="bike.id">
-                <BikeCard
-                  :id="bike.bike_id"
-                  :image="bike.photo"
-                  :title="bike.title"
-                  :model="bike.model + ', ' + bike.year"
-                  :price="bike.price"
-                  :store_id="bike.store_id"
-                  :store_logo="bike.store_logo"
-                  :store_name="bike.store_name"
-                  :review="4.5"
-                />
-              </div>
-            </template>
-          </div>
-
-          <button class="carousel-btn btn-right" @click="scrollRight">
-            <font-awesome-icon icon="chevron-right" />
-          </button>
-        </div>
-      </div>
+  <div class="container-fluid position-relative">
+    <div class="col-12 text-center mb-2">
+      <h3 class="text-center bike-title">{{ $t("bike") }}</h3>
     </div>
+
+    <div class="bike-carousel-wrapper">
+      <button class="carousel-btn btn-left" @click="scrollLeft">
+        <font-awesome-icon icon="chevron-left" />
+      </button>
+
+      <div class="bike-cards-container" ref="containerRef">
+        <template v-if="loading">
+          <div
+            class="bike-card-wrapper"
+            v-for="n in skeletonCount"
+            :key="'skeleton-' + n"
+          >
+            <BikeCardSkeleton />
+          </div>
+        </template>
+
+        <template v-else>
+          <div
+            class="bike-card-wrapper"
+            v-for="bike in bikes"
+            :key="bike.id"
+          >
+            <BikeCard
+              :id="bike.bike_id"
+              :image="bike.photo"
+              :title="bike.title"
+              :model="bike.model + ', ' + bike.year"
+              :price="bike.price"
+              :store_id="bike.store_id"
+              :store_logo="bike.store_logo"
+              :store_name="bike.store_name"
+              :review="4.5"
+            />
+          </div>
+        </template>
+      </div>
+
+      <button class="carousel-btn btn-right" @click="scrollRight">
+        <font-awesome-icon icon="chevron-right" />
+      </button>
+    </div>
+  </div>
+</section>
     <!-- scooter section -->
-    <div class="row py-4">
+    <section class="bike-section position-relative py-4">
+
+      <IslandBackground :max-icons="2"/>
+
       <div class="col-12 text-center">
         <h3 class="text-center bike-title">{{ $t("scooter") }}</h3>
       </div>
@@ -96,10 +104,11 @@
           </button>
         </div>
       </div>
-    </div>
+    </section>
     <!-- end scooter section -->
     <!-- Adventure section -->
-    <div class="row py-4">
+    <section class="bike-section position-relative py-4">
+      <IslandBackground :max-icons="2"/>
       <div class="col-12 text-center">
         <h3 class="text-center bike-title">{{ $t("adventure") }}</h3>
       </div>
@@ -144,7 +153,7 @@
           </button>
         </div>
       </div>
-    </div>
+    </section>
   </div>
 </template>
 <script setup>
@@ -153,6 +162,7 @@ import BikeCard from "./BikeCard.vue";
 import { useI18n } from "vue-i18n";
 import BikeCardSkeleton from "../loader/BikeCardSkeleton.vue";
 import axios from "../../service/axios";
+import IslandBackground from "../islandBackground.vue";
 const t = useI18n();
 const bikes = ref([]);
 const loading = ref(true);
@@ -201,7 +211,7 @@ const scrollScoRight = () => {
   display: flex;
   align-items: center;
   gap: 1rem;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 .bike-cards-container {
@@ -270,5 +280,27 @@ const scrollScoRight = () => {
 
 .bike-title {
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
+.bike-section {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate; /* keep background z-index local */
+  background-color: transparent; /* make sure icons show */
+}
+
+.bike-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2; /* sits behind the icons */
+}
+
+/* ensure the floating icons layer is visible */
+.island-background {
+  position: absolute;
+  inset: 0;
+  opacity: 0.6;
+  z-index: -1;
+  pointer-events: none;
 }
 </style>

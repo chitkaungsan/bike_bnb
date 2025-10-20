@@ -5,6 +5,14 @@ use App\Http\Controllers\Auth\SocialLoginController;
 use App\Http\Controllers\Api\AuthController;
 
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TestMail;
+
+Route::get('/test-mail', function () {
+    Mail::to('mlbb.com2024@gmail.com')->send(new TestMail());
+    return response()->json(['message' => 'Mail sent!']);
+});
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 

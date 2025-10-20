@@ -2,6 +2,7 @@
   <div
     class="info-card d-flex align-items-center justify-content-between p-3 border rounded shadow-sm"
   >
+  <IslandBackground :max-icons="4"/>
     <!-- Left Section: Icon + Text -->
     <div class="d-flex align-items-center gap-2">
       <router-link :to="{ name: 'store.detail', params: { id: store_id } }">
@@ -36,6 +37,8 @@
   </div>
 </template>
 <script setup>
+import IslandBackground from '../islandBackground.vue';
+
 const props = defineProps({
   store_id: {
     type: Number,
@@ -61,6 +64,7 @@ const props = defineProps({
   color: var(--text-color);
   gap: 1rem;
   transition: background-color 0.3s, color 0.3s;
+  
 }
 .info-card i {
   vertical-align: middle;

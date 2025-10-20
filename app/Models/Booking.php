@@ -43,4 +43,15 @@ class Booking extends Model
         $this->payment_status = 'released';
         $this->save();
     }
+
+    public function user()
+{
+    return $this->belongsTo(User::class, 'rider_id');
+}
+
+    public function bike()
+    {
+        return $this->belongsTo(Bike::class);
+    }
+
 }

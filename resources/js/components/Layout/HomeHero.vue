@@ -221,3 +221,14 @@ onBeforeUnmount(() => {
   document.removeEventListener("mousedown", handleClickOutside);
 });
 </script>
+<style scoped>
+.hero-section {
+  position: relative;
+  background-color: var(--background-color);
+  padding: 5rem 0;
+}
+.content {
+  position: relative;
+  z-index: 0;
+}
+</style>
