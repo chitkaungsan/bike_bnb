@@ -11,6 +11,6 @@ Artisan::command('inspire', function () {
 
 
 Schedule::command('bookings:update-status')
-    ->everyMinute() // change to hourly() or dailyAt('00:00') later
+    ->hourly() // change to hourly() or dailyAt('00:00') later
     ->timezone('Asia/Bangkok')
     ->withoutOverlapping();

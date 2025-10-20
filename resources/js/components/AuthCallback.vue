@@ -66,10 +66,18 @@ onMounted(async () => {
 
     // 4️⃣ Handle redirect logic
     const redirectPath = getRedirectPath();
-    if (redirectPath) {
-      router.push(redirectPath);
-      return;
-    }
+console.log('redirectPath', redirectPath);
+
+if (redirectPath) {
+  // 🧭 If redirectPath is /login or /register, go home instead
+  if (redirectPath === '/login' || redirectPath === '/register') {
+    router.push('/');
+  } else {
+    router.push(redirectPath);
+  }
+  return;
+}
+
 
     // 5️⃣ Default redirects by role
     if (user && user.role === "owner") {

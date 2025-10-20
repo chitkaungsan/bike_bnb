@@ -181,6 +181,7 @@ const handleGoogleLogin = async () => {
   const redirect = checkRedirect() || window.location.pathname;
   localStorage.setItem('oauth_redirect', JSON.stringify(redirect));
   window.location.href = `${import.meta.env.VITE_API_URL}/auth/google/redirect`;
+
 };
 onMounted(() => {
   let roleParam = new URLSearchParams(window.location.search).get("role");

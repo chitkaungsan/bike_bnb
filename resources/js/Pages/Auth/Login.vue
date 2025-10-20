@@ -116,7 +116,11 @@ const loading = ref(false);
 const errors = ref(null);
 
 const handleGoogleLogin = async () => {
-  window.location.href = `${import.meta.env.VITE_API_URL}/auth/google/redirect`;
+  const redirect = checkRedirect() || window.location.pathname;
+ const path =  localStorage.setItem('oauth_redirect', JSON.stringify(redirect));
+  if(path === undefined) {
+    window.location.href = `${import.meta.env.VITE_API_URL}/auth/google/redirect`;
+  }
 };
 const handleLogin = async () => {
   loading.value = true;
