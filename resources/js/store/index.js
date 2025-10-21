@@ -6,6 +6,7 @@ import auth from './modules/Auth';
 import store from './modules/store';
 import bikes from './modules/bikes';
 import booking from './modules/booking';
+import cities from './modules/cities';
 const stores = createStore({
   modules: {
     users,
@@ -13,7 +14,8 @@ const stores = createStore({
     auth,
     store,
     bikes,
-    booking
+    booking,
+    cities
   }
 });
 export default stores;

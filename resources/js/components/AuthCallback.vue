@@ -16,7 +16,7 @@ const router = useRouter();
 const loading = ref(true);
 const error = ref("");
 
-// ✅ Helper for safe redirect
+//  Helper for safe redirect
 function getRedirectPath() {
   try {
     const saved = localStorage.getItem("oauth_redirect");
@@ -43,14 +43,14 @@ onMounted(async () => {
     let token = tokenFromURL;
     let user = null;
 
-    // 1️⃣ If Laravel returned a token directly
+    // 1️ If Laravel returned a token directly
     if (tokenFromURL) {
       localStorage.setItem("token", tokenFromURL);
       axios.defaults.headers.common["Authorization"] = `Bearer ${tokenFromURL}`;
       user = await store.dispatch("auth/fetchUser");
     }
 
-    // 2️⃣ If only `code` returned (in dev flow)
+    // 2️ If only `code` returned (in dev flow)
     if (code) {
       const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/auth/google/callback?code=${code}`);
       token = data.token;
@@ -61,10 +61,10 @@ onMounted(async () => {
       store.commit("auth/SET_USER", user);
     }
 
-    // 3️⃣ Save user locally
+    // 3️ Save user locally
     if (user) localStorage.setItem("user", JSON.stringify(user));
 
-    // 4️⃣ Handle redirect logic
+    // 4️ Handle redirect logic
     const redirectPath = getRedirectPath();
 console.log('redirectPath', redirectPath);
 

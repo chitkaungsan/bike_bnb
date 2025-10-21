@@ -1,0 +1,132 @@
+<template>
+  <div class="filter-section text-start airbnb-date">
+    <h5 class="filter-title">Pick your ride days</h5>
+
+    <DatePicker
+      v-model="dates"
+      selectionMode="range"
+      :manualInput="false"
+      dateFormat="d M y"
+      placeholder="When will you ride?"
+      class="p-fluid airbnb-datepicker"
+    />
+<!-- 
+    <transition name="fade">
+      <div v-if="dates && dates.length === 2" class="selected-range">
+        <div class="range-text">
+          {{ formatDate(dates[0]) }} → {{ formatDate(dates[1]) }}
+        </div>
+      </div>
+    </transition> -->
+  </div>
+</template>
+
+<script setup>
+import { ref } from "vue";
+import DatePicker from "primevue/datepicker";
+
+const dates = ref(null);
+
+const formatDate = (date) => {
+  if (!date) return "";
+  return new Date(date).toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+  });
+};
+</script>
+
+<style scoped>
+/* 🏝️ Container */
+.airbnb-date {
+  font-family: "Inter", sans-serif;
+}
+
+/* 🌿 Airbnb compact input style */
+:deep(.p-inputtext) {
+  width: 100%;
+  border-radius: 12px !important;
+  padding: 0.6rem 0.8rem !important;
+  font-size: 0.9rem !important;
+  font-weight: 500;
+  border: 1px solid var(--border-color) !important;
+  background-color: var(--section-bg-color) !important;
+  color: var(--text-color) !important;
+  transition: all 0.2s ease;
+}
+
+:deep(.p-inputtext:hover) {
+  border-color: var(--primary-color) !important;
+}
+
+:deep(.p-inputtext:focus) {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 3px rgba(99, 193, 162, 0.25) !important;
+}
+
+/* 📅 Calendar Panel (Airbnb vibe) */
+:deep(.p-datepicker-panel) {
+  border-radius: 16px !important;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15) !important;
+  border: none !important;
+  padding: 0.75rem 1rem;
+}
+
+/* 🗓️ Date cell style */
+:deep(.p-datepicker-calendar td > span) {
+  width: 2.4rem;
+  height: 2.4rem;
+  line-height: 2.4rem;
+  border-radius: 50%;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+/* Hover date */
+:deep(.p-datepicker-calendar td > span:hover) {
+  background: rgba(99, 193, 162, 0.15);
+  color: var(--primary-color);
+}
+
+/* Selected date range style */
+:deep(.p-highlight) {
+  background: var(--primary-color) !important;
+  color: #fff !important;
+}
+
+/* Date range middle highlight (Airbnb style) */
+:deep(.p-highlight-range) {
+  background: rgba(99, 193, 162, 0.15) !important;
+}
+
+/* 🌙 Dark mode tune */
+:root[data-bs-theme="dark"] :deep(.p-datepicker-panel) {
+  box-shadow: 0 12px 24px rgba(255, 255, 255, 0.05);
+}
+
+/* 🌺 Range text */
+.selected-range {
+  margin-top: 0.6rem;
+  text-align: left;
+}
+
+.range-text {
+  font-size: 0.85rem;
+  color: var(--text-color);
+  background: rgba(99, 193, 162, 0.1);
+  padding: 0.4rem 0.75rem;
+  border-radius: 8px;
+  display: inline-block;
+  font-weight: 500;
+}
+
+/* ✨ Smooth fade for range display */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

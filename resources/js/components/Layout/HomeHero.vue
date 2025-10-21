@@ -10,14 +10,24 @@
             @mousedown.stop="setActiveField('location')">
             <label for="location">{{ t("hero.search.location_label") }}</label>
             <div class="input-wrapper">
-              <font-awesome-icon :icon="faLocationDot" class="field-icon" />
-              <input type="text" id="location" class="form-control" v-model="locationQuery" @focus="onFocusLocation"
-                @input="showLocationDropdown = true" :placeholder="t('hero.search.location_placeholder')" style="color: ;" />
-            </div>
+  <font-awesome-icon :icon="faLocationDot" class="field-icon" />
+  <input
+    type="text"
+    id="location"
+    class="form-control"
+    v-model="locationQuery"
+    @focus="onFocusLocation"
+    @input="showLocationDropdown = true"
+    :placeholder="t('hero.search.location_placeholder')"
+  />
+  <button v-if="locationQuery" type="button" class="btn-clear" @click="clearLocation">
+    &times;
+  </button>
+</div>
 
 
             <!-- Location Dropdown -->
-            <div v-if="showLocationDropdown && filteredLocations.length" class="location-dropdown">
+            <div v-if="showLocationDropdown && filteredLocations && filteredLocations.length" class="location-dropdown">
               <!-- Nearby Section -->
               <div v-if="filteredLocations.some(l => l.type === 'nearby')" class="dropdown-section">
                 <h6 class="dropdown-section-title">{{ t('hero.search.nearby') || 'Nearby' }}</h6>
@@ -55,11 +65,21 @@
           <div class="search-field" :class="{ active: activeField === 'dates' }" @click="setActiveField('dates')">
             <label for="dates">{{ t("hero.search.dates_label") }}</label>
             <div class="input-wrapper">
-              <font-awesome-icon :icon="faCalendarDays" class="field-icon" />
-              <DatePicker v-model="dates" selectionMode="range" :placeholder="t('hero.search.dates_placeholder')"
-                dateFormat="M dd" class="date-picker-control" />
-              <span class="form-control-display">{{ formattedDates }}</span>
-            </div>
+  <font-awesome-icon :icon="faCalendarDays" class="field-icon" />
+  <DatePicker
+    v-model="dates"
+    selectionMode="range"
+    :placeholder="t('hero.search.dates_placeholder')"
+    dateFormat="M dd"
+    class="date-picker-control"
+  />
+  <span class="form-control-display">{{ formattedDates }}</span>
+
+  <button v-if="dates && dates.length" type="button" class="btn-clear" @click="clearDates">
+    &times;
+  </button>
+</div>
+
           </div>
 
           <div class="search-field search-field-last" :class="{ active: activeField === 'category' }"
@@ -67,9 +87,18 @@
             <div class="category-main-field" @click="setActiveField('category')">
               <label for="category">{{ t("hero.search.category_label") }}</label>
               <div class="input-wrapper">
-                <font-awesome-icon :icon="faShapes" class="field-icon" />
-                <span class="form-control-display">{{ selectedCategory.text }}</span>
-              </div>
+  <font-awesome-icon :icon="faShapes" class="field-icon" />
+  <span class="form-control-display">{{ selectedCategory.text }}</span>
+  <button
+    v-if="selectedCategory.value !== 'all'"
+    type="button"
+    class="btn-cat mx-1"
+    @click="clearCategory"
+  >
+    &times;
+  </button>
+</div>
+
               <div v-if="activeField === 'category'" class="category-dropdown">
                 <ul>
                   <li v-for="cat in categories" :key="cat.value" @click="selectCategory(cat)">
@@ -104,10 +133,11 @@ import {
   faShapes, // Changed from faBicycle
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
+import { useStore } from "vuex";
 import DatePicker from "primevue/datepicker";
 
 const { t } = useI18n();
-
+const store = useStore();
 // STATE MANAGEMENT
 const activeField = ref(null);
 const searchBarRef = ref(null);
@@ -141,35 +171,7 @@ const categories = [
 
 const locationQuery = ref("");
 const showLocationDropdown = ref(false);
-const locations = ref([
-  {
-    name: "Koh Samui",
-    description: "Tropical island with beaches and motorbike adventures",
-    image: "https://content.r9cdn.net/rimg/dimg/75/a7/44202281-city-56280-1767207b463.jpg?width=1366&height=768&xhint=2611&yhint=2498&crop=true",
-    type: "nearby",
-  },
-  {
-    name: "Bangkok",
-    description: "Vibrant city life, temples, and night markets",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7xbOt6lVS3x90_whZQtI0ZdyRSOYvUqjNbw&s",
-  },
-  {
-    name: "Chiang Mai",
-    description: "Mountain city full of culture and coffee vibes",
-    image: "https://res.klook.com/image/upload/fl_lossy.progressive,q_60/Mobile/City/cswglxpstphljdourpfu.jpg",
-  },
-  {
-    name: "Phuket",
-    description: "Island with clear water and nightlife fun",
-    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Phuket_Aerial.jpg/1200px-Phuket_Aerial.jpg",
-  },
-  {
-    name: "Pattaya",
-    description: "Seaside city near Bangkok, good for quick trips",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPRE4mm3nN3BNk4Sv20moVjyZ9Unj54KdjYg&s",
-  },
-]);
-
+const locations = computed(() => store.getters["cities/allCities"]);
 // Filter suggestions based on user input
 const filteredLocations = computed(() => {
   if (!locationQuery.value) return locations.value;
@@ -213,8 +215,22 @@ const handleClickOutside = (event) => {
     showLocationDropdown.value = false;
   }
 };
-onMounted(() => {
+
+const clearDates = () => {
+  dates.value = [];
+};
+const clearLocation = () => {
+  locationQuery.value = "";
+  showLocationDropdown.value = false;
+};
+const clearCategory = () => {
+  selectedCategory.value = { text: t("hero.search.category_all"), value: "all" };
+};
+
+onMounted( async () => {
   document.addEventListener("mousedown", handleClickOutside);
+
+  await store.dispatch("cities/fetchCities");
 });
 
 onBeforeUnmount(() => {

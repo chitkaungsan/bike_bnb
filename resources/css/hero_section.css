@@ -355,3 +355,40 @@ input.form-control {
 .location-dropdown::-webkit-scrollbar {
     display: none;
 }
+.btn-clear {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: var(--secondary-text-color);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  opacity: 0.6;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.btn-cat {
+  background: transparent;
+  border: none;
+  color: var(--secondary-text-color);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  opacity: 0.6;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.btn-cat:hover {
+  opacity: 1;
+  color: var(--primary-color);
+}
+
+.input-wrapper {
+  position: relative;
+}
+

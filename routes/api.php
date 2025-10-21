@@ -38,3 +38,4 @@ require __DIR__.'/api_store.php';
 require __DIR__.'/api_bike.php';
 require __DIR__.'/api_home.php';
 require __DIR__.'/api_booking.php';
+require __DIR__.'/api_city.php';
