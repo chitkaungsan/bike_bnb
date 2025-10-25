@@ -168,5 +168,9 @@ class BikeController extends Controller
             ->paginate(10);
         return response()->json($bikes);
     }
+    public function getAllCategories(){
+        $categories = DB::table('categories')->select('id', 'name')->get();
+        return response()->json($categories);
+    }
 
 }

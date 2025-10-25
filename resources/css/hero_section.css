@@ -250,24 +250,30 @@ input.form-control {
     }
 }
 .hero-section input#location.form-control {
-  all: unset; 
-  border-radius: 6px !important;
-  background-color: #fff !important;
-  padding: 8px 12px !important;
-  font-size: 0.9rem !important;
-  width: 100% !important;
+  background-color: var(--section-bg-color); 
+  color: var(--text-color);
+  /* border: 1px solid var(--border-color); */ /* <-- This line is removed */
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  width: 100%;
   box-sizing: border-box;
-   color: var(--text-color, #000) !important; 
+  border: 0px;
+}
+
+/* REPLACE your existing .hero-section input#location.form-control:focus rule */
+.hero-section input#location.form-control:focus {
+  /* REPLACED hardcoded blue with theme variable */
+  border-color: var(--primary-color);
+  
+  /* REPLACED hardcoded blue shadow with theme variable */
+  box-shadow: 0 0 0 2px var(--primary-color); 
 }
 
 .search-field{
     cursor: pointer;
 }
 
-.hero-section input#location.form-control:focus {
-  border-color: #007bff !important;
-  box-shadow: 0 0 4px rgba(0, 123, 255, 0.3) !important;
-}
 .location-dropdown {
     right: 25px;
     background-color: var(--section-bg-color);

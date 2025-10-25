@@ -126,7 +126,7 @@ const store = useStore();
 // STATE MANAGEMENT
 const activeField = ref(null);
 const searchBarRef = ref(null);
-
+const location_id = ref(null);
 // --- Dates State ---
 const dates = ref();
 const formattedDates = computed(() => {
@@ -167,6 +167,7 @@ const filteredLocations = computed(() => {
 
 const selectLocation = (loc) => {
   locationQuery.value = loc.name;
+  location_id.value = loc.id;
   showLocationDropdown.value = false;
 };
 
@@ -189,10 +190,12 @@ const selectCategory = (category) => {
 const performSearch = () => {
   console.log("Performing search with:", {
     location: document.getElementById("location").value,
+    location_id: location_id.value,
     dates: dates.value,
     category: selectedCategory.value.value,
   });
   activeField.value = null;
+
 };
 
 // --- Click Outside Handler ---
@@ -216,8 +219,8 @@ const clearCategory = () => {
 
 onMounted(async () => {
   document.addEventListener("mousedown", handleClickOutside);
-
   await store.dispatch("cities/fetchCities");
+  await store.dispatch("bikes/fetchAllCategories");
 });
 
 onBeforeUnmount(() => {

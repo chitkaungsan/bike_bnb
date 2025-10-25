@@ -13,6 +13,7 @@ const state = {
   },
   store_bikes: [],
   bike_details: [],
+  categories: [],
 }
 
 const mutations = {
@@ -33,11 +34,22 @@ const mutations = {
   },
   SET_STORE_BIKES(state, store_bikes) {
     state.store_bikes = store_bikes
-  },  
+  },
+  SET_CATEGORIES(state, categories) {
+    state.categories = categories
+  }  
 
 }
 
 const actions = {
+  async fetchAllCategories({ commit }) {
+    try {
+      const response = await axios.get("/get/all/categories");
+      commit("SET_CATEGORIES", response.data);
+    } catch (error) {
+      console.error("Failed to fetch categories:", error);
+    } 
+  },
   async addBike({ commit }, formData) {
     commit("SET_LOADING", true);
     try {
@@ -126,7 +138,8 @@ const getters = {
     return state.bikes.data.find((bike) => bike.id === id) || null;
   },
   bike_details: (state) => state.bike_details,
-  store_bikes: (state) => state.store_bikes
+  store_bikes: (state) => state.store_bikes,
+  categories: (state) => state.categories
 }
 
 export default {
