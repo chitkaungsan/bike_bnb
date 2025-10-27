@@ -7,6 +7,7 @@ import store from './modules/store';
 import bikes from './modules/bikes';
 import booking from './modules/booking';
 import cities from './modules/cities';
+import homeFilter from './modules/homeFilter';
 const stores = createStore({
   modules: {
     users,
@@ -15,7 +16,8 @@ const stores = createStore({
     store,
     bikes,
     booking,
-    cities
+    cities,
+    homeFilter
   }
 });
 export default stores;

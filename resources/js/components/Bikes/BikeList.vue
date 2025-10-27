@@ -52,36 +52,40 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { useI18n } from "vue-i18n";
-import { useStore } from "vuex";
+import { defineProps } from "vue";
 import { Bootstrap5Pagination } from "laravel-vue-pagination";
 import BikeCard from "./BikeCard.vue";
 import BikeCardSkeleton from "../loader/BikeCardSkeleton.vue";
-import islandBackground from "../islandBackground.vue"; // ✅ Added
+import islandBackground from "../islandBackground.vue";
 
-const { t } = useI18n();
-const store = useStore();
+const props = defineProps({
+  bikes: {
+    type: Array,
+    required: true,
+  },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
+});
 
-const bikes = ref([]);
-const loading = ref(true);
 const skeletonCount = 20;
-
 const getResults = async (page = 1) => {
-  const res = await store.dispatch("bikes/fetchAllBikes", page);
+  const hasFilter =
+    route.query.location_id ||
+    route.query.start_date ||
+    route.query.end_date ||
+    (route.query.category_id && route.query.category_id !== "all");
+
+  const params = { ...route.query, page };
+  const res = hasFilter
+    ? await store.dispatch("homeFilter/fetchFilterBikes", params)
+    : await store.dispatch("bikes/fetchAllBikes", page);
+
   bikes.value = res.data || [];
 };
 
-onMounted(async () => {
-  try {
-    const res = await store.dispatch("bikes/fetchAllBikes");
-    bikes.value = res.data || [];
-  } catch (err) {
-    console.error(err);
-  } finally {
-    loading.value = false;
-  }
-});
+
 </script>
 
 <style scoped>

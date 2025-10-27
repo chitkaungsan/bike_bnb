@@ -106,7 +106,7 @@ const reviewDisplay = computed(() => {
 </script>
 
 <style scoped>
-/* ✅ just add this small snippet to keep island background under content */
+/*  just add this small snippet to keep island background under content */
 .bike-card {
   position: relative;
   isolation: isolate; /* ensures background layers correctly */

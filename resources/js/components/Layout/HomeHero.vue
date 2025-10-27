@@ -3,7 +3,6 @@
     <div class="container">
       <h1 class="hero-title">{{ t("hero.title") }}</h1>
       <p class="lead">{{ t("hero.subtitle") }}</p>
-
       <div class="search-bar-container" ref="searchBarRef">
         <form class="search-bar" @submit.prevent="performSearch">
           <div class="search-field" :class="{ active: activeField === 'location' }"
@@ -17,8 +16,6 @@
                 &times;
               </button>
             </div>
-
-
             <!-- Location Dropdown -->
             <div v-if="showLocationDropdown && filteredLocations && filteredLocations.length" class="location-dropdown">
               <!-- Nearby Section -->
@@ -51,10 +48,7 @@
                 </ul>
               </div>
             </div>
-
           </div>
-
-
           <div class="search-field" :class="{ active: activeField === 'dates' }" @click="setActiveField('dates')">
             <label for="dates">{{ t("hero.search.dates_label") }}</label>
             <div class="input-wrapper">
@@ -67,7 +61,6 @@
                 &times;
               </button>
             </div>
-
           </div>
 
           <div class="search-field search-field-last" :class="{ active: activeField === 'category' }"
@@ -76,7 +69,7 @@
               <label for="category">{{ t("hero.search.category_label") }}</label>
               <div class="input-wrapper">
                 <font-awesome-icon :icon="faShapes" class="field-icon" />
-                <span class="form-control-display">{{ selectedCategory.text }}</span>
+                <span class="form-control-display">{{ selectedCategory.name }}</span>
                 <button v-if="selectedCategory.value !== 'all'" type="button" class="btn-cat mx-1"
                   @click="clearCategory">
                   &times;
@@ -86,7 +79,7 @@
               <div class="category-dropdown" v-if="activeField === 'category'">
                 <ul>
                   <li v-for="cat in categories" :key="cat.value" @mousedown.stop.prevent="selectCategory(cat)">
-                    {{ cat.text }}
+                    {{ cat.name }}
                   </li>
                 </ul>
               </div>
@@ -120,9 +113,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useStore } from "vuex";
 import DatePicker from "primevue/datepicker";
+import { useRouter } from "vue-router";
 
 const { t } = useI18n();
 const store = useStore();
+const router = useRouter();
 // STATE MANAGEMENT
 const activeField = ref(null);
 const searchBarRef = ref(null);
@@ -137,26 +132,21 @@ const formattedDates = computed(() => {
   const options = { month: "short", day: "numeric" };
   const startDate = start.toLocaleDateString("en-US", options);
   if (!end) {
-    return startDate;
+    return startDate; 
   }
   const endDate = end.toLocaleDateString("en-US", options);
   return `${startDate} - ${endDate}`;
 });
 
 // --- Category State ---
-const selectedCategory = ref({ text: t("hero.search.category_all"), value: "all" });
-const categories = [
-  { text: t("hero.search.category_all"), value: "all" },
-  { text: t("hero.search.category_mountain"), value: "mountain" },
-  { text: t("hero.search.category_road"), value: "road" },
-  { text: t("hero.search.category_city"), value: "city" },
-  { text: t("hero.search.category_electric"), value: "electric" },
-];
-
-
+const selectedCategory = ref({ name: t("hero.search.category_all") || "All", value: "all" });
 const locationQuery = ref("");
 const showLocationDropdown = ref(false);
 const locations = computed(() => store.getters["cities/allCities"]);
+const categories = computed(() => {
+  const cats = store.getters["bikes/categories"] || [];
+  return [{ name: t("hero.search.category_all") || "All", value: "all" }, ...cats];
+});
 // Filter suggestions based on user input
 const filteredLocations = computed(() => {
   if (!locationQuery.value) return locations.value;
@@ -187,12 +177,18 @@ const selectCategory = (category) => {
   activeField.value = null;
 };
 
-const performSearch = () => {
-  console.log("Performing search with:", {
-    location: document.getElementById("location").value,
+ const performSearch = () => {
+  const searchParams = {
+    location: locationQuery.value,
     location_id: location_id.value,
-    dates: dates.value,
-    category: selectedCategory.value.value,
+    start_date: dates.value?.[0] || null,
+    end_date: dates.value?.[1] || null,
+    category_id: selectedCategory.value.id || selectedCategory.value.value || null,
+  };
+
+  router.push({
+    name: 'bikes',
+    query: searchParams,
   });
   activeField.value = null;
 
@@ -214,7 +210,7 @@ const clearLocation = () => {
   showLocationDropdown.value = false;
 };
 const clearCategory = () => {
-  selectedCategory.value = { text: t("hero.search.category_all"), value: "all" };
+  selectedCategory.value = { name: t("hero.search.category_all") || "All", value: "all" };
 };
 
 onMounted(async () => {

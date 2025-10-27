@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from "../../service/axios";
 
 const state = {
   cities: [],
@@ -17,7 +17,7 @@ const actions = {
     commit('setLoading', true)
     commit('setError', null)
     try {
-      const response = await axios.get('/api/cities')
+      const response = await axios.get('/cities')
       commit('setCities', response.data)
     } catch (error) {
       commit('setError', error.response?.data?.message || 'Failed to fetch cities')
@@ -28,7 +28,7 @@ const actions = {
 
   async addCity({ commit }, cityData) {
     try {
-      const response = await axios.post('/api/cities', cityData)
+      const response = await axios.post('/cities', cityData)
       commit('addCity', response.data)
     } catch (error) {
       commit('setError', error.response?.data?.message || 'Failed to add city')
@@ -37,7 +37,7 @@ const actions = {
 
   async updateCity({ commit }, cityData) {
     try {
-      const response = await axios.put(`/api/cities/${cityData.id}`, cityData)
+      const response = await axios.put(`/cities/${cityData.id}`, cityData)
       commit('updateCity', response.data)
     } catch (error) {
       commit('setError', error.response?.data?.message || 'Failed to update city')
@@ -46,7 +46,7 @@ const actions = {
 
   async deleteCity({ commit }, id) {
     try {
-      await axios.delete(`/api/cities/${id}`)
+      await axios.delete(`/cities/${id}`)
       commit('removeCity', id)
     } catch (error) {
       commit('setError', error.response?.data?.message || 'Failed to delete city')

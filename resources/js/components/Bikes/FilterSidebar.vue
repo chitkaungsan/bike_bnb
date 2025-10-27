@@ -24,7 +24,7 @@
       </div>
 
       <div class="filter-actions">
-        <button class="btn btn-primary w-100">Show Bikes</button>
+        <button class="btn btn-primary w-100" @click="searchBikes">Show Bikes</button>
         <button class="btn btn-outline-secondary w-100 mt-2">Start Over</button>
       </div>
     </aside>
@@ -35,13 +35,14 @@
 import { ref } from "vue";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import IslandBackground from "../islandBackground.vue";
-
+import { useStore } from "vuex";
 import FilterCategory from "./FilterComponents/FilterCategory.vue";
 import FilterPrice from "./FilterComponents/FilterPrice.vue";
 import FilterRating from "./FilterComponents/FilterRating.vue";
 import FilterCity from "./FilterComponents/FilterCity.vue";
 import FilterDatepicker from "./FilterComponents/FilterDatepicker.vue";
 
+const store = useStore();
 const showSidebar = ref(false);
 const openSidebar = () => {
   showSidebar.value = true;
@@ -51,6 +52,10 @@ const closeSidebar = () => {
   showSidebar.value = false;
   document.body.style.overflow = "";
 };
+const searchBikes = async () => {
+  console.log("Search Bikes");
+  await store.dispatch("homeFilter/searchBikesFilter");
+}
 </script>
 
 <style scoped>
