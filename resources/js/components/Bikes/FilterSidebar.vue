@@ -36,12 +36,14 @@ import { ref } from "vue";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import IslandBackground from "../islandBackground.vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import FilterCategory from "./FilterComponents/FilterCategory.vue";
 import FilterPrice from "./FilterComponents/FilterPrice.vue";
 import FilterRating from "./FilterComponents/FilterRating.vue";
 import FilterCity from "./FilterComponents/FilterCity.vue";
 import FilterDatepicker from "./FilterComponents/FilterDatepicker.vue";
 
+const router = useRouter();
 const store = useStore();
 const showSidebar = ref(false);
 const openSidebar = () => {
@@ -54,7 +56,7 @@ const closeSidebar = () => {
 };
 const searchBikes = async () => {
   console.log("Search Bikes");
-  await store.dispatch("homeFilter/searchBikesFilter");
+  await store.dispatch("homeFilter/searchBikesFilter",router);
 }
 </script>
 

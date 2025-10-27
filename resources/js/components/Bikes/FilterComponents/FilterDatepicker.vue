@@ -9,32 +9,67 @@
       dateFormat="d M y"
       placeholder="When will you ride?"
       class="p-fluid airbnb-datepicker"
+      @update:modelValue="updateSelectedDates"
     />
-<!-- 
-    <transition name="fade">
-      <div v-if="dates && dates.length === 2" class="selected-range">
-        <div class="range-text">
-          {{ formatDate(dates[0]) }} → {{ formatDate(dates[1]) }}
-        </div>
-      </div>
-    </transition> -->
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
 import DatePicker from "primevue/datepicker";
+import { useStore } from "vuex";
+
+const store = useStore();
+const route = useRoute();
 
 const dates = ref(null);
+const selectedDate = ref({
+  start_date: null,
+  end_date: null,
+});
 
+//  Load only from URL query when page loads
+onMounted(() => {
+  const { start_date, end_date } = route.query;
+
+  if (start_date && end_date) {
+    const start = new Date(start_date);
+    const end = new Date(end_date);
+
+    if (!isNaN(start) && !isNaN(end)) {
+      dates.value = [start, end];
+      selectedDate.value.start_date = start;
+      selectedDate.value.end_date = end;
+    }
+  }
+
+});
+
+//  When user changes date in picker, update local state only
+function updateSelectedDates(value) {
+  if (Array.isArray(value) && value.length === 2) {
+    selectedDate.value.start_date = value[0];
+    selectedDate.value.end_date = value[1];
+  } else {
+    selectedDate.value.start_date = null;
+    selectedDate.value.end_date = null;
+  }
+
+  store.dispatch("homeFilter/updateDates", selectedDate.value);
+}
+
+//  Helper for displaying readable dates
 const formatDate = (date) => {
   if (!date) return "";
   return new Date(date).toLocaleDateString("en-GB", {
     day: "2-digit",
     month: "short",
+    year: "numeric",
   });
 };
 </script>
+
 
 <style scoped>
 /* 🏝️ Container */

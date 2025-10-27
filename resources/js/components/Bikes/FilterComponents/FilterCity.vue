@@ -19,7 +19,7 @@
       {{ selectedCity ? 'Ride somewhere new' : 'Find place to ride' }}
     </button>
 
-    <!-- 🌴 Modal -->
+    <!--  Modal -->
     <div v-if="showModal" class="city-modal-overlay" @click.self="closeModal">
       <div class="city-modal">
         <!--  Search bar -->
@@ -33,7 +33,7 @@
           />
         </div>
 
-        <!-- 🏙️ City Grid -->
+        <!--  City Grid -->
         <div class="city-grid">
           <div
             v-for="city in filteredCities"
@@ -47,7 +47,7 @@
               :alt="city.name"
               class="city-image"
             />
-            <div v-else class="city-placeholder">🏝️</div>
+            <div v-else class="city-placeholder"></div>
 
             <!-- info below image -->
             <div class="city-info">
@@ -67,16 +67,18 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { computed, ref, onMounted, watch } from "vue";
 import { useStore } from "vuex";
+import { useRoute } from "vue-router";
 
+const route = useRoute();
 const store = useStore();
-store.dispatch("cities/fetchCities");
 
-const cities = computed(() => store.getters["cities/allCities"]);
 const selectedCity = ref(null);
 const showModal = ref(false);
 const searchTerm = ref("");
+
+const cities = computed(() => store.getters["cities/allCities"]);
 
 const filteredCities = computed(() => {
   const term = searchTerm.value.toLowerCase();
@@ -88,12 +90,37 @@ const filteredCities = computed(() => {
 const selectCity = (city) => {
   selectedCity.value = city;
   showModal.value = false;
+  store.dispatch("homeFilter/setSelectedCity", city.id);
 };
 
 const closeModal = () => {
   showModal.value = false;
 };
+
+// Wait until cities are fetched, THEN set selectedCity
+onMounted(async () => {
+  await store.dispatch("cities/fetchCities");
+
+  const locationId = Number(route.query.location_id);
+  if (locationId) {
+    selectedCity.value = cities.value.find((c) => c.id === locationId) || null;
+  }
+});
+
+//  If route changes later (user navigates), update selection
+watch(
+  () => route.query.location_id,
+  (newId) => {
+    const id = Number(newId);
+    if (id) {
+      selectedCity.value = cities.value.find((c) => c.id === id) || null;
+    } else {
+      selectedCity.value = null;
+    }
+  }
+);
 </script>
+
 
 <style scoped>
 /* 🏝️ Sidebar Selected City */
