@@ -98,6 +98,15 @@ const actions = {
     updateSelectedDate({ commit }, selectedDate) {
         commit("setSelectedDate", selectedDate);
     },
+    resetFilter({ commit }) {
+        commit("setCatId", null);
+        commit("setSelectedCity", null);
+        commit("setSelectedDate", {
+            start_date: null,
+            end_date: null,
+        });
+        router.replace({ name: "bikes" });
+    },
 };
 
 const mutations = {

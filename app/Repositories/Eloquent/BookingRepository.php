@@ -8,6 +8,7 @@ use App\Repositories\Contracts\BookingRepositoryInterface;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use App\Notifications\BookingConfirmed;
+use App\Notifications\BookingCancel;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 
@@ -248,12 +249,9 @@ class BookingRepository implements BookingRepositoryInterface
             $booking->updated_at = now();
             $booking->save();
 
-        if ($booking->user) {
-            $booking->user->notify(new BookingConfirmed($booking));
-        } else {
             Notification::route('mail', $booking->email)
                 ->notify(new BookingConfirmed($booking));
-        }
+
         }
         return response()->json(['message' => 'Booking confirmed successfully'], 200);
     }
@@ -264,6 +262,9 @@ class BookingRepository implements BookingRepositoryInterface
             $booking->status = 'cancelled';
             $booking->updated_at = now();
             $booking->save();
+
+            Notification::route('mail', $booking->email)
+                ->notify(new BookingCancel($booking));
         }
         return response()->json(['message' => 'Booking cancelled successfully'], 200);
     }

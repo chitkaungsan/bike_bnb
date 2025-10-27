@@ -1,9 +1,9 @@
 <template>
   <section class="bike-list-section">
-    <!-- 🌴 Island Background Layer -->
+    <!-- Island Background Layer -->
     <islandBackground :max-icons="16" />
 
-    <!-- 🏍️ Bike Section -->
+    <!--  Bike Section -->
     <div class="container-fluid content-layer">
       <div class="row mb-5">
         <div class="row g-3">

@@ -56,7 +56,7 @@ function updateSelectedDates(value) {
     selectedDate.value.end_date = null;
   }
 
-  store.dispatch("homeFilter/updateDates", selectedDate.value);
+  store.dispatch("homeFilter/updateSelectedDate", selectedDate.value);
 }
 
 //  Helper for displaying readable dates

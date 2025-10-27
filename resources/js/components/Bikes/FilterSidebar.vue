@@ -24,8 +24,8 @@
       </div>
 
       <div class="filter-actions">
-        <button class="btn btn-primary w-100" @click="searchBikes">Show Bikes</button>
-        <button class="btn btn-outline-secondary w-100 mt-2">Start Over</button>
+        <button class="btn btn-ride w-100" @click="searchBikes">Show Bikes</button>
+        <button class="btn btn-outline-danger w-100 mt-2" @click="reset">Reset</button>
       </div>
     </aside>
   </div>
@@ -58,6 +58,10 @@ const searchBikes = async () => {
   console.log("Search Bikes");
   await store.dispatch("homeFilter/searchBikesFilter",router);
 }
+const reset = async () => {
+  console.log("Reset");
+  await store.dispatch("homeFilter/resetFilter");
+}
 </script>
 
 <style scoped>
@@ -87,6 +91,16 @@ const searchBikes = async () => {
   z-index: 0;
   opacity: 0.6;
   pointer-events: none;
+}
+.btn-ride {
+  background-color: #6c757d; /* your requested color */
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  padding: 0.55rem 1rem;
+  border-radius: 8px;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 /* Filter content */
