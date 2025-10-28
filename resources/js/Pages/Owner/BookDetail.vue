@@ -3,7 +3,15 @@
 
     <!-- Booking Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <h4 class="fw-bold mb-0">Booking #{{ booking.id }}</h4>
+      <div class="col">
+        <button class="btn btn-outline-secondary" @click="$router.back()">
+          <i class="bi bi-arrow-left me-1"></i> Back
+        </button>
+      </div>
+
+      <div class="col">
+        <h4 class="fw-bold mb-0">Booking #{{ booking.id }}</h4>
+      </div>
       <span :class="statusClass" class="badge fs-6 text-uppercase">
         {{ booking.status }}
       </span>
@@ -12,14 +20,14 @@
     <!-- Booking Date Info -->
     <div class="text-muted mb-4">
       <i class="bi bi-calendar-event me-2"></i>
-      Booked from <strong>{{ formatDate(booking.start_date) }}</strong> 
+      Booked from <strong>{{ formatDate(booking.start_date) }}</strong>
       to <strong>{{ formatDate(booking.end_date) }}</strong>
       ({{ booking.days }} days)
     </div>
 
     <div class="row g-4">
       <!-- Bike Information -->
-      <div class="col-lg-6">
+      <div class="col-lg-4">
         <div class="card shadow-sm">
           <img :src="booking.bike_photo" class="card-img-top" alt="Bike photo" />
           <div class="card-body">
@@ -57,32 +65,54 @@
             <p class="mb-0"><i class="bi bi-credit-card me-2"></i>Payment: {{ booking.payment_type }}</p>
           </div>
         </div>
+        <!-- button area -->
+        <div class="mt-4 text-end">
+          <!-- Confirm button -->
+          <button v-if="booking.status === 'pending'" class="btn btn-success me-2" @click="confirmBooking"
+            :disabled="loadingConfirm">
+            <span v-if="!loadingConfirm">
+              <i class="bi bi-check-circle me-1"></i> Confirm
+            </span>
+            <span v-else>
+              <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+              Confirming...
+            </span>
+          </button>
+
+          <!-- Cancel button -->
+          <button v-if="booking.status === 'pending'" class="btn btn-outline-danger" @click="cancelBooking"
+            :disabled="loadingCancel">
+            <span v-if="!loadingCancel">
+              <i class="bi bi-x-circle me-1"></i> Cancel
+            </span>
+            <span v-else>
+              <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+              Cancelling...
+            </span>
+          </button>
+
+          <!-- Confirmed -->
+          <button v-if="booking.status === 'confirmed'" class="btn btn-success" disabled>
+            Confirmed ✅
+          </button>
+
+          <!-- Cancelled -->
+          <button v-if="booking.status === 'cancelled'" class="btn btn-secondary" disabled>
+            Cancelled ❌
+          </button>
+        </div>
+
       </div>
     </div>
 
     <!-- Actions -->
-    <div class="mt-4 text-end">
-      <button v-if="booking.status === 'pending'" class="btn btn-success me-2" @click="confirmBooking">
-        <i class="bi bi-check-circle me-1"></i> Confirm
-      </button>
-      <button v-if="booking.status === 'pending'" class="btn btn-outline-danger" @click="cancelBooking">
-        <i class="bi bi-x-circle me-1"></i> Cancel
-      </button>
 
-      <button v-if="booking.status === 'confirmed'" class="btn btn-success" disabled>
-        Confirmed ✅
-      </button>
-
-      <button v-if="booking.status === 'cancelled'" class="btn btn-secondary" disabled>
-        Cancelled ❌
-      </button>
-    </div>
 
   </div>
 </template>
 
 <script setup>
-import { ref, computed,onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import { useToast } from "primevue/usetoast";
@@ -92,6 +122,8 @@ const toast = useToast()
 const route = useRoute()
 const store = useStore()
 const booking = ref({})
+const loadingConfirm = ref(false);
+const loadingCancel = ref(false);
 
 // Map link
 const googleMapUrl = computed(() =>
@@ -120,40 +152,44 @@ const formatDate = (dateString) => {
 
 // Simulate actions
 const confirmBooking = async () => {
+  loadingConfirm.value = true
 
-    try {
-        const bookingId = booking.value.id
-        await store.dispatch('booking/confirmBooking', bookingId)
-    } catch (error) {
-        console.error('Error confirming booking:', error)
-        toast.add({severity:'error', summary: 'Error', detail: 'Failed to confirm booking.', life: 3000});
-    } finally {
-       toast.add({severity:'success', summary: 'Success', detail: 'Booking confirmed successfully.', life: 3000});
-    }
+  try {
+    const bookingId = booking.value.id
+    await store.dispatch('booking/confirmBooking', bookingId)
+  } catch (error) {
+    console.error('Error confirming booking:', error)
+    toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to confirm booking.', life: 3000 });
+  } finally {
+    toast.add({ severity: 'success', summary: 'Success', detail: 'Booking confirmed successfully.', life: 3000 });
+    loadingConfirm.value = false
+  }
   // In real app, you'd call an API to confirm the booking   
   booking.value.status = 'confirmed'
 }
 
 const cancelBooking = async () => {
+  loadingCancel.value = true
   booking.value.status = 'cancelled'
- try {
-        const bookingId = booking.value.id
-        await store.dispatch('booking/cancelBooking', bookingId)
-    } catch (error) {
-        console.error('Error cancelling booking:', error)
-        toast.add({severity:'error', summary: 'Error', detail: 'Failed to cancel booking.', life: 3000});
-    } finally {
-       toast.add({severity:'success', summary: 'Success', detail: 'Booking cancelled successfully.', life: 3000});
-    }
+  try {
+    const bookingId = booking.value.id
+    await store.dispatch('booking/cancelBooking', bookingId)
+  } catch (error) {
+    console.error('Error cancelling booking:', error)
+    toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to cancel booking.', life: 3000 });
+  } finally {
+    toast.add({ severity: 'success', summary: 'Success', detail: 'Booking cancelled successfully.', life: 3000 });
+    loadingCancel.value = false
+  }
   // In real app, you'd call an API to cancel the booking  
   booking.value.status = 'cancelled'
 }
 
-onMounted( async () => {
+onMounted(async () => {
 
-    const bookingId = route.params.id
-    const res = await store.dispatch('booking/fetchBookingDetail', bookingId)
-    booking.value = res.data
+  const bookingId = route.params.id
+  const res = await store.dispatch('booking/fetchBookingDetail', bookingId)
+  booking.value = res.data
   // Here you could fetch booking details from an API if needed
 })
 </script>
@@ -161,5 +197,8 @@ onMounted( async () => {
 <style scoped>
 .card img {
   object-fit: cover;
+}
+.card-img-top {
+  object-fit: cover
 }
 </style>

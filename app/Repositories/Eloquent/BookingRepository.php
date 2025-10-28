@@ -7,6 +7,7 @@ use App\Models\Booking;
 use App\Repositories\Contracts\BookingRepositoryInterface;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use App\Notifications\BookingPending;
 use App\Notifications\BookingConfirmed;
 use App\Notifications\BookingCancel;
 use Illuminate\Support\Facades\Mail;
@@ -56,32 +57,45 @@ class BookingRepository implements BookingRepositoryInterface
     }
 
     public function createBooking($data)
-    {
-        // update user phone if different
-        $user = User::find($data['user_id']);
-        $phone = $data['user_phone'];
+{
+    $user = User::find($data['user_id']);
 
-        if ($user->phone == null) {
-            $user->phone = $data['user_phone'];
-        }
-
+    if ($user->phone == null) {
+        $user->phone = $data['user_phone'];
         $user->save();
-
-        return Booking::create([
-            'bike_id' => $data['bike_id'],
-            'rider_id' => $data['user_id'],
-            'name' => $data['user_name'],
-            'email' => $data['user_email'],
-            'phone' => $data['user_phone'],
-            'daily_rate' => $data['daily_rate'],
-            'days' => $data['days'],
-            'payment_type' => $data['payment_method'],
-            'total_price' => $data['totalPrice'],
-            'start_date' => $data['start_date'],
-            'end_date' => $data['end_date'],
-            'status' => 'pending',
-        ]);
     }
+
+    // Create the booking first
+    $booking = Booking::create([
+        'bike_id' => $data['bike_id'],
+        'rider_id' => $data['user_id'],
+        'name' => $data['user_name'],
+        'email' => $data['user_email'],
+        'phone' => $data['user_phone'],
+        'daily_rate' => $data['daily_rate'],
+        'days' => $data['days'],
+        'payment_type' => $data['payment_method'],
+        'total_price' => $data['totalPrice'],
+        'start_date' => $data['start_date'],
+        'end_date' => $data['end_date'],
+        'status' => 'pending',
+    ]);
+
+    // Get owner email + store name
+    $ownerInfo = DB::table('bikes')
+        ->join('users', 'bikes.user_id', '=', 'users.id')
+        ->join('stores', 'bikes.store_id', '=', 'stores.id')
+        ->where('bikes.id', $data['bike_id'])
+        ->select('users.email', 'stores.name as store_name')
+        ->first();
+
+    // Send notification to owner (include store name)
+    Notification::route('mail', $ownerInfo->email)
+        ->notify(new \App\Notifications\BookingPending($booking, $ownerInfo->store_name));
+
+    return $booking;
+}
+
 
     public function isBikeAvailable($bikeId, $startDate, $endDate)
     {

@@ -52,6 +52,7 @@ class BookingCancel extends Notification
             ->line('🔹 **End Date:** ' . $this->booking->end_date->format('d M Y'))
             ->line('If this cancellation was unexpected, please contact the owner or our support team. We’ll do our best to help. 🤝')
             ->line('We hope to see you again soon for another sabai sabai ride. 🌴🚲')
+            ->action('🚲 View My Booking', url('/bookings/success/' . $this->booking->id))
             ->salutation('With warm regards and sad hearts 💚😔 — The BikeBnB Team');
     }
 

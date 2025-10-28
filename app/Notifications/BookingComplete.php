@@ -52,6 +52,7 @@ class BookingComplete extends Notification
         ->line('🔹 **Start Date:** ' . $this->booking->start_date->format('d M Y'))
         ->line('🔹 **End Date:** ' . $this->booking->end_date->format('d M Y'))
         ->line('If you enjoyed your experience, we’d love to see you again for your next adventure! 🌈')
+        ->action('🚲 View My Booking', url('/bookings/success/' . $this->booking->id))
         ->line('Your next sabai sabai ride is just one click away. 🚴‍♂️💨')
         ->salutation('With gratitude and good vibes 💚🌞 — The BikeBnB Team 🌴');
 }

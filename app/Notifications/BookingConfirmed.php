@@ -50,6 +50,7 @@ class BookingConfirmed extends Notification
         ->line('🔹 **Start Date:** ' . $this->booking->start_date->format('d M Y'))
         ->line('🔹 **End Date:** ' . $this->booking->end_date->format('d M Y'))
         ->line('🏝️ Get ready to ride freely and enjoy your trip!')
+        ->action('🚲 View My Booking', url('/bookings/success/' . $this->booking->id))
         ->line('Thank you for choosing BikeBnB — where every ride feels sabai sabai! 🌞')
         ->salutation('With smiles, 😎 BikeBnB Team 🌴');
 

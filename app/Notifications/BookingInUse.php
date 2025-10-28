@@ -42,17 +42,18 @@ class BookingInUse extends Notification
             : ($this->booking->name ?? 'Guest');
 
         return (new MailMessage)
-            ->subject('🚲 Your BikeBnB Ride Starts Today! 🌞')
-            ->greeting('Sawasdee krub, ' . $name . '! 😄')
-            ->line('It’s time! Your BikeBnB booking starts today — get ready to ride freely and feel the wind! 🌴💨')
-            ->line('Here’s your booking summary:')
-            ->line('🔹 **Booking ID:** ' . $this->booking->id)
-            ->line('🔹 **Bike:** ' . ($this->booking->bike->title ?? 'N/A'))
-            ->line('🔹 **Start Date:** ' . $this->booking->start_date->format('d M Y'))
-            ->line('🔹 **End Date:** ' . $this->booking->end_date->format('d M Y'))
-            ->line('Make sure your bike is ready and ride safely. 🛞💚')
-            ->line('Thank you for choosing BikeBnB — may your journey be smooth and sabai sabai all the way! 🌈')
-            ->salutation('Enjoy your ride! 😎 — The BikeBnB Team 🌴');
+    ->subject('🚲 Your BikeBnB Ride Starts Today! 🌞')
+    ->greeting('Sawasdee krub, ' . $name . '! 😄')
+    ->line('It’s time! Your BikeBnB booking starts today — get ready to ride freely and feel the wind! 🌴💨')
+    ->line('Here’s your booking summary:')
+    ->line('🔹 **Booking ID:** ' . $this->booking->id)
+    ->line('🔹 **Bike:** ' . ($this->booking->bike->title ?? 'N/A'))
+    ->line('🔹 **Start Date:** ' . $this->booking->start_date->format('d M Y'))
+    ->line('🔹 **End Date:** ' . $this->booking->end_date->format('d M Y'))
+    ->line('Make sure your bike is ready and ride safely. 🛞💚')
+    ->action('🚲 View My Booking', url('/bookings/success/' . $this->booking->id))
+    ->line('Thank you for choosing BikeBnB — may your journey be smooth and sabai sabai all the way! 🌈')
+    ->salutation('Enjoy your ride! 😎 — The BikeBnB Team 🌴');
     }
 
 
