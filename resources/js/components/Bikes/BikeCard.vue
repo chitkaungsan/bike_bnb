@@ -120,25 +120,6 @@ const reviewDisplay = computed(() => {
   pointer-events: none;
 }
 
-/* Everything else below is untouched */
-.bike-card-wrapper {
-  flex: 0 0 100%;
-}
-@media (min-width: 576px) {
-  .bike-card-wrapper {
-    flex: 0 0 48%;
-  }
-}
-@media (min-width: 768px) {
-  .bike-card-wrapper {
-    flex: 0 0 30%;
-  }
-}
-@media (min-width: 1200px) {
-  .bike-card-wrapper {
-    flex: 0 0 23%;
-  }
-}
 
 .bike-card {
   border-radius: var(--border-radius-md);

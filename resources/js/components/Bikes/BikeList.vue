@@ -6,12 +6,12 @@
     <!--  Bike Section -->
     <div class="container-fluid content-layer">
       <div class="row mb-5">
-        <div class="row g-3">
+        <div class="row g-2">
           <!-- Bikes Loaded -->
           <div
             v-for="bike in bikes.data"
             :key="bike.id"
-            class="col-6 col-sm-6 col-md-4 col-lg-5th"
+            class="col-6 col-sm-6 col-md-4 col-lg-2"
             v-if="!loading"
           >
             <BikeCard
@@ -30,7 +30,7 @@
           <!-- Skeleton Loading -->
           <div
             v-else
-            class="col-6 col-sm-6 col-md-4 col-lg-5th"
+            class="col-6 col-sm-6 col-md-4 col-lg-2"
             v-for="n in skeletonCount"
             :key="'skeleton-' + n"
             v-show="loading"

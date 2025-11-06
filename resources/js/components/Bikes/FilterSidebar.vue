@@ -1,5 +1,5 @@
 <template>
-  <div class="filter-sidebar-wrapper fix-top">
+  <div class="filter-sidebar-wrapper fix-top" >
     <button v-if="!showSidebar" class="btn toggle-sidebar-btn d-lg-none" @click="openSidebar">
       <font-awesome-icon :icon="faFilter" class="me-2" /> Filters
     </button>
@@ -82,6 +82,10 @@ const reset = async () => {
   padding: 1rem; /* Reduced from 1.5rem */
   transition: left 0.3s ease;
   z-index: 1100;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: var(--border-color) transparent;
 }
 
 /*  Island background */

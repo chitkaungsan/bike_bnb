@@ -2,7 +2,7 @@
   <div class="bike-list-page-wrapper">
     <IslandBackground :max-icons="5" />
     <div class="bike-list-page">
-      <div class="container-fluid content-layer">
+      <div class="container-fluid content-layer" >
         <header class="page-header text-center mb-4">
           <HomeNav />
         </header>
@@ -110,8 +110,7 @@ watch(
 
 .layout-wrapper {
   display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 2rem;
+  grid-template-columns: 250px 1fr;
 }
 
 @media (max-width: 992px) {
