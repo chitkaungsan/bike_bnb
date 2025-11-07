@@ -25,34 +25,18 @@
         <!--  Search bar -->
         <div class="modal-header">
           <h5 class="modal-title">Pick your paradise</h5>
-          <input
-            type="text"
-            class="form-control city-search"
-            placeholder="Search city..."
-            v-model="searchTerm"
-          />
+          <input type="text" class="form-control city-search" placeholder="Search city..." v-model="searchTerm" />
         </div>
 
         <!--  City Grid -->
         <div class="city-grid">
-          <div
-            v-for="city in filteredCities"
-            :key="city.id"
-            class="city-card"
-            @click="selectCity(city)"
-          >
-            <img
-              v-if="city.image"
-              :src="city.image"
-              :alt="city.name"
-              class="city-image"
-            />
+          <div v-for="city in filteredCities" :key="city.id" class="city-card" @click="selectCity(city)">
+            <img v-if="city.image" :src="city.image" :alt="city.name" class="city-image" />
             <div v-else class="city-placeholder"></div>
 
             <!-- info below image -->
             <div class="city-info">
               <h6 class="city-name">{{ city.name }}</h6>
-              <p class="city-tagline">{{ city.tagline }}</p>
               <p class="city-description">{{ city.description }}</p>
             </div>
           </div>
@@ -259,12 +243,20 @@ watch(
 
 /* ✨ Animation */
 @keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .btn-ride {
-  background-color: #6c757d; /* your requested color */
+  background-color: #6c757d;
+  /* your requested color */
   border: none;
   color: #fff;
   font-weight: 600;
@@ -275,7 +267,44 @@ watch(
 }
 
 .btn-ride:hover {
-  background-color: #5a6268; /* slightly darker on hover */
+  background-color: #5a6268;
+  /* slightly darker on hover */
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+}
+
+@media (min-width: 1600px) and (max-width: 1920px) {
+  /* .layout-wrapper {
+    grid-template-columns: 220px 1fr;
+  } */
+}
+
+@media (min-width: 1440px) and (max-width: 1599px) {
+  .filter-title {
+    font-size: 1.0rem;
+    font-weight: bold;
+  }
+  .no-city {
+    font-size: 0.75rem;
+  }
+  .btn-ride {
+    font-size: 0.8rem;
+    padding: 0.5rem 1.0rem;
+  }
+  .selected-city-img {
+    width: 100%;
+    height: 100px;
+    border-radius: 8px;
+    margin-bottom: 0.4rem;
+  }
+  .city-name {
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+    font-size: 0.8rem;
+  }
+
+  .city-description {
+    font-size: 0.7rem;
+    margin: 0;
+  }
 }
 </style>

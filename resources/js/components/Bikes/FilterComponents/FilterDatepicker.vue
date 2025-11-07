@@ -164,4 +164,16 @@ const formatDate = (date) => {
 .fade-leave-to {
   opacity: 0;
 }
+@media (min-width: 1440px) and (max-width: 1599px) {
+  .filter-title {
+    font-size: 1.0rem;
+    font-weight: bold;
+  }
+  :deep(.p-inputtext) {
+  border-radius: 12px !important;
+  padding: 0.4rem 0.6rem !important;
+  font-size: 0.8rem !important;
+  font-weight: 500;
+}
+}
 </style>

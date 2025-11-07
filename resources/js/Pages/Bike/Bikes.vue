@@ -112,18 +112,19 @@ watch(
   display: grid;
   grid-template-columns: 250px 1fr;
 }
-
-/* @media (max-width: 992px) {
+@media (max-width: 991px) {
   .layout-wrapper {
     grid-template-columns: 1fr;
   }
-} */
-@media (min-width: 970px) and (max-width: 1300px) {
+}
+
+@media (min-width: 992px) and (max-width: 1300px) {
   .layout-wrapper {
     grid-template-columns: 190px 1fr;
   }
 }
-@media (min-width: 1299px) and (max-width: 1600px) {
+
+@media (min-width: 1301px) and (max-width: 1600px) {
   .layout-wrapper {
     grid-template-columns: 220px 1fr;
   }

@@ -381,13 +381,13 @@ const reviewDisplay = computed(() => {
     height: 100px;
   }
   .bike-card-title {
-    font-size: 0.6rem;
+    font-size: 0.8rem;
   }
   .bike-card-model {
-    font-size: 0.5rem;
+    font-size: 0.6rem;
   }
   .bike-card-price {
-    font-size: 0.5rem;
+    font-size: 0.7rem;
   }
   .btn-book {
     padding: 0.17rem 0.4rem;
