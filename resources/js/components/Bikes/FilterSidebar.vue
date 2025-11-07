@@ -225,4 +225,24 @@ const reset = async () => {
     display: none;
   }
 }
+
+
+@media (min-width: 1440px) and (max-width: 1600px) {
+  .filter-sidebar {
+    width: 210px;
+  }
+}
+@media (min-width: 1200px) and (max-width: 1441px) {
+  .filter-sidebar {
+    width: 190px;
+  }
+}
+@media (min-width: 900px) and (max-width: 1199px) {
+  .filter-sidebar {
+    width: 180px;
+  }
+}
+
+
+
 </style>

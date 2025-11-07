@@ -11,7 +11,7 @@
           <div
             v-for="bike in bikes.data"
             :key="bike.id"
-            class="col-6 col-sm-6 col-md-4 col-lg-2"
+            class="col-6 col-sm-6 col-md-3 col-lg-2"
             v-if="!loading"
           >
             <BikeCard
@@ -138,11 +138,5 @@ const getResults = async (page = 1) => {
   width: 100px;
 }
 
-/* 🧱 Grid Fix */
-@media (min-width: 992px) {
-  .col-lg-5th {
-    flex: 0 0 20%;
-    max-width: 20%;
-  }
-}
+
 </style>

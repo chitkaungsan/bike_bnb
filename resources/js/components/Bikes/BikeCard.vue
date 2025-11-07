@@ -42,8 +42,12 @@
               class="bike-card-link text-decoration-none"
               :to="{ name: 'bikes.detail', params: { id: props.id } }"
             >
-              <h6 class="bike-card-title">{{ props.title }}</h6>
-              <p class="bike-card-model">{{ props.model }}</p>
+              <h6 class="bike-card-title">
+                <LimitText :text="props.title" :limit="20" />
+              </h6>
+              <p class="bike-card-model">
+                <LimitText :text="props.model" :limit="20" />
+              </p>
             </router-link>
           </div>
           <div class="bike-logo ms-auto" v-tooltip.top="store_name">
@@ -56,9 +60,9 @@
 
         <div class="bike-card-footer">
           <!-- formatted price -->
-          <span class="bike-card-price">{{ "$" + formattedPrice + "/day" }}</span>
+          <span class="bike-card-price">{{ "฿" + formattedPrice + "/day"  }}</span>
           <router-link :to="{ name: 'bikes.detail', params: { id: props.id } }">
-            <button class="btn btn-book">{{ t("book_now") }}</button>
+            <button class="btn btn-book no-wrap">{{ t("book_now") }}</button>
           </router-link>
         </div>
       </div>
@@ -71,6 +75,7 @@ import { ref, computed } from "vue";
 import Image from "primevue/image";
 import { useI18n } from "vue-i18n";
 import IslandBackground from "../islandBackground.vue"; // 🌴 added import only
+import LimitText from "./LimitText.vue";
 
 const { t } = useI18n();
 const props = defineProps({
@@ -265,5 +270,204 @@ const reviewDisplay = computed(() => {
 }
 .no-scroll {
   overflow: hidden;
+}
+/* 🖥️  >1920px (Ultra-wide 4K monitors) */
+@media (min-width: 1921px) {
+  .bike-card-img-wrapper {
+    height: auto;
+  }
+  .bike-card-title {
+    font-size: 1.1rem;
+  }
+  .bike-card-model {
+    font-size: 0.95rem;
+  }
+  .bike-card-price {
+    font-size: 1.15rem;
+  }
+  .btn-book {
+    padding: 0.45rem 0.9rem;
+    font-size: 0.95rem;
+  }
+  .bike-logo img {
+    width: 50px;
+    height: 50px;
+  }
+}
+.no-wrap {
+  white-space: nowrap;
+}
+
+/* 🖥️ 1601px – 1920px (Large desktop / 27"–32") */
+@media (min-width: 1601px) and (max-width: 1920px) {
+  .bike-card-img-wrapper {
+    height: auto;
+  }
+  .bike-card-title {
+    font-size: 1rem;
+  }
+  .bike-card-model {
+    font-size: 0.9rem;
+  }
+  .bike-card-price {
+    font-size: 1rem;
+  }
+  .btn-book {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.9rem;
+  }
+  .bike-logo img {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* 💻 1300px – 1600px (Large laptop / small desktop) */
+@media (min-width: 1300px) and (max-width: 1600px) {
+  .bike-card-img-wrapper {
+    height: auto;
+  }
+  .bike-card-title {
+    font-size: 0.85rem;
+  }
+  .bike-card-model {
+    font-size: 0.75rem;
+  }
+  .bike-card-price {
+    font-size: 0.85rem;
+  }
+  .btn-book {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+  }
+  .bike-logo img {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+/* 💻 990px – 1299px (MacBook Air / mid-laptop) */
+@media (min-width: 1180px) and (max-width: 1299px) {
+  .bike-card-img-wrapper {
+    height: auto;
+  }
+  .bike-card-img {
+    height: 100px;
+  }
+  .bike-card-title {
+    font-size: 0.75rem;
+  }
+  .bike-card-model {
+    font-size: 0.65rem;
+  }
+  .bike-card-price {
+    font-size: 0.75rem;
+  }
+  .btn-book {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.7rem;
+  }
+  .bike-logo img {
+    width: 30px;
+    height: 30px;
+  }
+}
+/* 💻 990px – 1299px (MacBook Air / mid-laptop) */
+@media (min-width: 990px) and (max-width: 1179px) {
+  .bike-card-img-wrapper {
+    height: auto;
+  }
+  .bike-card-img {
+    height: 100px;
+  }
+  .bike-card-title {
+    font-size: 0.6rem;
+  }
+  .bike-card-model {
+    font-size: 0.5rem;
+  }
+  .bike-card-price {
+    font-size: 0.5rem;
+  }
+  .btn-book {
+    padding: 0.17rem 0.4rem;
+    font-size: 0.5rem;
+  }
+  .bike-logo img {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* 📱 768px – 989px (Tablet landscape) */
+@media (min-width: 768px) and (max-width: 989px) {
+  .bike-card-img-wrapper {
+    height: auto;
+  }
+  .bike-card-title {
+    font-size: 0.8rem;
+  }
+  .bike-card-model {
+    font-size: 0.65rem;
+  }
+  .bike-card-price {
+    font-size: 0.8rem;
+  }
+  .btn-book {
+    padding: 0.3rem 0.55rem;
+    font-size: 0.75rem;
+  }
+  .bike-logo img {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* 📱 576px – 767px (Tablet portrait / large mobile) */
+@media (min-width: 576px) and (max-width: 767px) {
+  .bike-card-img-wrapper {
+    height: auto;
+  }
+  .bike-card-title {
+    font-size: 0.9rem;
+  }
+  .bike-card-model {
+    font-size: 0.7rem;
+  }
+  .bike-card-price {
+    font-size: 0.85rem;
+  }
+  .btn-book {
+    padding: 0.25rem 0.6rem;
+    font-size: 0.75rem;
+  }
+  .bike-logo img {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+/* 📱 <576px (Small phones) */
+@media (max-width: 575px) {
+  .bike-card-img-wrapper {
+    height: auto;
+  }
+  .bike-card-title {
+    font-size: 0.8rem;
+  }
+  .bike-card-model {
+    font-size: 0.6rem;
+  }
+  .bike-card-price {
+    font-size: 0.8rem;
+  }
+  .btn-book {
+    padding: 0.2rem 0.5rem;
+    font-size: 0.7rem;
+  }
+  .bike-logo img {
+    width: 28px;
+    height: 28px;
+  }
 }
 </style>

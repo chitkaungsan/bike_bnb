@@ -2,7 +2,7 @@
   <div class="filter-section city-filter">
     <h5 class="filter-title">Ride destination</h5>
 
-    <!-- 🏝️ Sidebar content -->
+    <!--  Sidebar content -->
     <div v-if="selectedCity" class="selected-city">
       <img :src="selectedCity.image" alt="selected city" class="selected-city-img" />
       <div class="selected-city-info">
@@ -123,7 +123,7 @@ watch(
 
 
 <style scoped>
-/* 🏝️ Sidebar Selected City */
+/*  Sidebar Selected City */
 .selected-city {
   text-align: left;
   width: 100%;
@@ -159,7 +159,7 @@ watch(
   font-size: 0.9rem;
 }
 
-/* 🌅 Modal Overlay */
+/*  Modal Overlay */
 .city-modal-overlay {
   position: fixed;
   inset: 0;
@@ -170,7 +170,7 @@ watch(
   z-index: 1200;
 }
 
-/* 🌴 Modal Box */
+/*  Modal Box */
 .city-modal {
   background: var(--section-bg-color);
   border-radius: 16px;
@@ -182,7 +182,7 @@ watch(
   animation: fadeIn 0.3s ease;
 }
 
-/* 🔍 Search */
+/*  Search */
 .modal-header {
   margin-bottom: 1.2rem;
 }
@@ -201,7 +201,7 @@ watch(
   width: 100%;
 }
 
-/* 🏙️ City Grid */
+/*  City Grid */
 .city-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -237,7 +237,7 @@ watch(
   font-size: 1.8rem;
 }
 
-/* 🏝️ City info below image */
+/*  City info below image */
 .city-info {
   padding: 0.75rem;
   text-align: left;
