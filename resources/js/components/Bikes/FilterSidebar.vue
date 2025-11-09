@@ -69,6 +69,7 @@ const reset = async () => {
 .filter-sidebar-wrapper {
   position: relative;
   z-index: 10;
+  padding-top: 0.4rem; /* ↓ smaller top space */
 }
 
 /* Sidebar core */
@@ -79,68 +80,85 @@ const reset = async () => {
   border: 1px solid var(--border-color);
   width: 240px;
   min-height: 100%;
-  padding: 1rem; /* Reduced from 1.5rem */
+  padding: 0.7rem 0.8rem; /* ↓ reduced padding */
   transition: left 0.3s ease;
   z-index: 1100;
   overflow-y: auto;
   overflow-x: hidden;
-  scrollbar-width: thin; /* For Firefox */
+  scrollbar-width: thin;
   scrollbar-color: var(--border-color) transparent;
 }
 
-/*  Island background */
+/* Island background */
 .filter-sidebar .island-background {
   position: absolute;
   inset: 0;
   z-index: 0;
-  opacity: 0.6;
+  opacity: 0.55; /* ↓ slightly lighter */
   pointer-events: none;
-}
-.btn-ride {
-  background-color: #6c757d; /* your requested color */
-  border: none;
-  color: #fff;
-  font-weight: 600;
-  padding: 0.55rem 1rem;
-  border-radius: 8px;
-  transition: all 0.25s ease;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 /* Filter content */
 .filter-content {
   position: relative;
   z-index: 2;
-  margin-top: 0.5rem;
+  margin-top: 0.4rem; /* ↓ less gap above filters */
 }
 
-/* Filter sections */
+/* Filter section spacing */
 .filter-section {
-  margin-bottom: 1.2rem; /* reduced from 2rem */
+  margin-bottom: 0.8rem; /* ↓ compact sections */
 }
 
 /* Titles */
 .filter-title {
   font-weight: 600;
   font-size: 0.9rem;
-  margin-bottom: 0.6rem; /* tighter */
+  margin-bottom: 0.4rem; /* ↓ reduced */
   color: var(--text-color);
-  padding-bottom: 0.3rem;
+  padding-bottom: 0.25rem; /* ↓ tighter */
   border-bottom: 1px solid var(--border-color);
+}
+
+/* Buttons */
+.btn-ride {
+  background-color: #6c757d;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  padding: 0.45rem 0.8rem; /* ↓ smaller */
+  border-radius: 6px;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+.filter-actions {
+  margin-top: 0.7rem; /* ↓ less space from filters */
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem; /* ↓ smaller gap */
+}
+
+/* Divider */
+.divider {
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(to right, transparent, var(--border-color), transparent);
+  margin: 0.55rem 0; /* ↓ tighter spacing */
+  opacity: 0.6;
+  border-radius: 2px;
 }
 
 /* Mobile drawer */
 .filter-sidebar {
-  position: fixed;
   top: 0;
   left: -260px;
   height: 100vh;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.25);
 }
 
 .filter-sidebar.open {
   left: 0;
-  background-color: var(--section-bg-color);
 }
 
 /* Overlay */
@@ -157,58 +175,32 @@ const reset = async () => {
 /* Toggle button */
 .toggle-sidebar-btn {
   position: fixed;
-  top: 4.5rem;
+  top: 4.2rem; /* ↓ from 4.5rem */
   left: 1rem;
   z-index: 1200;
   background-color: var(--primary-color);
   color: #fff;
-  padding: 0.4rem 0.9rem;
-  border-radius: 6px;
+  padding: 0.35rem 0.8rem; /* ↓ smaller */
+  border-radius: 5px;
   display: flex;
   align-items: center;
   font-weight: 600;
-  font-size: 0.85rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-}
-
-.toggle-sidebar-btn:hover {
-  background-color: var(--primary-hover-color);
+  font-size: 0.82rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 /* Close button */
 .btn-close {
   background: none;
   border: none;
-  font-size: 1.6rem;
+  font-size: 1.4rem; /* ↓ smaller */
   color: var(--text-color);
   position: absolute;
-  top: 0.6rem;
-  right: 0.6rem;
+  top: 0.45rem; /* ↓ tighter */
+  right: 0.5rem;
 }
 
-/* Divider (soft + compact) */
-.divider {
-  height: 1px;
-  width: 100%;
-  background: linear-gradient(
-    to right,
-    transparent,
-    var(--border-color),
-    transparent
-  );
-  margin: 0.7rem 0;
-  opacity: 0.6;
-  border-radius: 2px;
-}
-
-/* Filter actions */
-.filter-actions button {
-  margin-top: 0.4rem;
-  padding: 0.4rem 0.8rem;
-  font-size: 0.85rem;
-}
-
-/* Desktop */
+/* Desktop adjustments */
 @media (min-width: 992px) {
   .filter-sidebar {
     position: relative;
@@ -216,7 +208,7 @@ const reset = async () => {
     height: auto;
     box-shadow: none;
     width: 240px;
-    padding: 0.9rem;
+    padding: 0.7rem 0.8rem; /* ↓ smaller padding */
   }
 
   .toggle-sidebar-btn,
@@ -224,25 +216,32 @@ const reset = async () => {
   .sidebar-overlay {
     display: none;
   }
+
+  .filter-sidebar-wrapper {
+    padding-top: 0.7rem; /* ↓ from 1rem */
+  }
 }
 
-
+/* Desktop width fine-tuning */
 @media (min-width: 1440px) and (max-width: 1600px) {
   .filter-sidebar {
     width: 210px;
+    padding: 0.75rem;
   }
 }
-@media (min-width: 1200px) and (max-width: 1441px) {
+
+@media (min-width: 1200px) and (max-width: 1439px) {
   .filter-sidebar {
     width: 190px;
+    padding: 0.7rem;
   }
 }
+
 @media (min-width: 900px) and (max-width: 1199px) {
   .filter-sidebar {
     width: 180px;
+    padding: 0.65rem;
   }
 }
-
-
 
 </style>

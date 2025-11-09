@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="user && user.role=='owner'">
     <TableSkeleton
       :columns="['#', 'Name', 'Email', 'Status']"
       :rows="10"
@@ -70,6 +70,9 @@
     </div>
     <div class="d-flex justify-content-end mt-3"></div>
   </div>
+  <div v-else>
+    <Forbidden /> 
+  </div>
 </template>
 <script setup>
 import { ref, onMounted, computed } from "vue";
@@ -78,6 +81,7 @@ import { useStore } from "vuex";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import Image from "primevue/image";
+import Forbidden from "../../components/Forbidden.vue";
 const store = useStore();
 
 const stores = ref([]);

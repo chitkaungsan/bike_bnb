@@ -1,54 +1,43 @@
 <template>
-  <aside :class="['sidebar', { 'sidebar-collapsed': collapsed }]">
+  <aside :class="['sidebar', { 'sidebar-collapsed': collapsed }]" v-if="user && user.role=='owner'">
     <div class="sidebar-header">
       <a href="/" class="brand-logo">
-        <font-awesome-icon :icon="faBicycle" class="logo-icon" />
-        <h2 class="brand-name" v-if="!collapsed">BikeDash</h2>
+        <div class="row">
+          <div class="col-12 text-center">
+            <font-awesome-icon :icon="faBicycle" class="logo-icon" />
+            <h2 class="brand-name" v-if="!collapsed">BikeDash</h2>
+          </div>
+          <div class="col-12 text-center">
+            <small>Owner Panel</small>
+
+          </div>
+        </div>
+
       </a>
     </div>
 
     <nav class="sidebar-nav">
-      <router-link
-        to="/owner/dashboard"
-        class="nav-link"
-        v-tooltip.right="{ value: 'Overview', disabled: !collapsed }"
-      >
+      <router-link to="/owner/dashboard" class="nav-link" v-tooltip.right="{ value: 'Overview', disabled: !collapsed }">
         <font-awesome-icon :icon="faChartLine" />
         <span v-if="!collapsed">Overview</span>
       </router-link>
 
-      <router-link
-        to="/owner/stores"
-        class="nav-link"
-        v-tooltip.right="{ value: 'Stores', disabled: !collapsed }"
-      >
+      <router-link to="/owner/stores" class="nav-link" v-tooltip.right="{ value: 'Stores', disabled: !collapsed }">
         <font-awesome-icon :icon="faStore" />
         <span v-if="!collapsed">Stores</span>
       </router-link>
 
-      <router-link
-        to="/owner/bikes"
-        class="nav-link"
-        v-tooltip.right="{ value: 'Bikes', disabled: !collapsed }"
-      >
+      <router-link to="/owner/bikes" class="nav-link" v-tooltip.right="{ value: 'Bikes', disabled: !collapsed }">
         <font-awesome-icon :icon="faBicycle" />
         <span v-if="!collapsed">Bikes</span>
       </router-link>
 
-      <router-link
-        to="/owner/bookings"
-        class="nav-link"
-        v-tooltip.right="{ value: 'Bookings', disabled: !collapsed }"
-      >
+      <router-link to="/owner/bookings" class="nav-link" v-tooltip.right="{ value: 'Bookings', disabled: !collapsed }">
         <font-awesome-icon :icon="faCalendarCheck" />
         <span v-if="!collapsed">Bookings</span>
       </router-link>
 
-      <router-link
-        to="/owner/payouts"
-        class="nav-link"
-        v-tooltip.right="{ value: 'Payouts', disabled: !collapsed }"
-      >
+      <router-link to="/owner/payouts" class="nav-link" v-tooltip.right="{ value: 'Payouts', disabled: !collapsed }">
         <font-awesome-icon :icon="faWallet" />
         <span v-if="!collapsed">Payouts</span>
       </router-link>
@@ -65,6 +54,7 @@
 </template>
 
 <script setup>
+import { onMounted,computed } from "vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import {
   faChartLine,
@@ -76,11 +66,26 @@ import {
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import LogoutButton from "../LogoutButton.vue";
+import { useStore } from "vuex";
 
+const store = useStore();
 defineProps({
   collapsed: Boolean,
 });
 const emit = defineEmits(["toggle"]);
+const user = computed(() => store.state.auth.user);
+
+const getData = async () => {
+  const response = await store.dispatch("auth/fetchUser");
+  console.log(response);
+  return response;
+};
+onMounted(() => {
+  // Any setup logic if needed
+  getData();
+  
+
+});
 </script>
 
 <style scoped>
@@ -91,7 +96,8 @@ const emit = defineEmits(["toggle"]);
   display: flex;
   flex-direction: column;
   padding: 1.5rem 1rem;
-  transition: transform 0.3s ease; /* CHANGED: Now transitioning transform */
+  transition: transform 0.3s ease;
+  /* CHANGED: Now transitioning transform */
   position: fixed;
   top: 0;
   left: 0;
@@ -104,12 +110,14 @@ const emit = defineEmits(["toggle"]);
 .sidebar-collapsed {
   transform: translateX(-100%);
 }
+
 /* --- MODIFICATION END --- */
 
 .sidebar-header {
   margin-bottom: 2rem;
   padding: 0 0.5rem;
 }
+
 .brand-logo {
   display: flex;
   align-items: center;
@@ -118,22 +126,26 @@ const emit = defineEmits(["toggle"]);
   text-decoration: none;
   color: var(--text-color);
 }
+
 .logo-icon {
   font-size: 1.8rem;
   color: var(--primary-color);
 }
+
 .brand-name {
   font-size: 1.5rem;
   font-weight: 700;
   margin: 0;
   white-space: nowrap;
 }
+
 .sidebar-nav {
   display: flex;
   flex-direction: column;
   /* MODIFIED: Align items to the start for better look when sliding */
   align-items: flex-start;
 }
+
 .nav-link {
   display: flex;
   align-items: center;
@@ -153,11 +165,13 @@ const emit = defineEmits(["toggle"]);
   background-color: var(--background-color);
   color: var(--text-color);
 }
+
 .router-link-active.nav-link {
   background-color: var(--primary-color);
   color: white;
   box-shadow: 0 4px 10px rgba(99, 193, 162, 0.3);
 }
+
 .nav-link svg {
   min-width: 24px;
   font-size: 1.1rem;
@@ -168,18 +182,22 @@ const emit = defineEmits(["toggle"]);
   margin-top: auto;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* MODIFIED */
+  align-items: flex-start;
+  /* MODIFIED */
 }
 
 @media (max-width: 767px) {
+
   /* This rule is now covered by the main .sidebar-collapsed rule */
   .sidebar {
     transform: translateX(-100%);
   }
+
   .sidebar:not(.sidebar-collapsed) {
     transform: translateX(0);
     width: 260px;
   }
+
   .collapse-toggle {
     display: none;
   }

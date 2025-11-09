@@ -1,5 +1,5 @@
 <template>
-  <header class="main-header">
+  <header class="main-header" v-if="user && user.role=='owner'">
     <div class="header-content">
       <button class="sidebar-toggle-btn" @click="$emit('toggle-sidebar')">
         <font-awesome-icon :icon="faBars" />
@@ -11,9 +11,13 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
+import { useStore } from "vuex";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 
+const store = useStore();
+const user = computed(() => store.state.auth.user);
 defineProps({
   title: String,
 });

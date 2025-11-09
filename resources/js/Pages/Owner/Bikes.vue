@@ -1,20 +1,9 @@
 <template>
-  <div>
-    <TableSkeleton
-      :columns="['#', 'Name', 'Store', 'Logo', 'Photo', 'Price', 'Address','Rider','Phone','Created']"
-      :rows="10"
-      :rowHeight="32"
-      :striped="true"
-      v-if="loading"
-    />
+  <div v-if="user && user.role == 'owner'">
+    <TableSkeleton :columns="['#', 'Name', 'Store', 'Logo', 'Photo', 'Price', 'Address', 'Rider', 'Phone', 'Created']"
+      :rows="10" :rowHeight="32" :striped="true" v-if="loading" />
     <div class="card" v-else>
-      <DataTable
-        :value="bikes"
-        tableStyle="min-width: 60rem"
-        :loading="loading"
-        responsiveLayout="scroll"
-        stripedRows
-      >
+      <DataTable :value="bikes" tableStyle="min-width: 60rem" :loading="loading" responsiveLayout="scroll" stripedRows>
         <!-- Header -->
         <template #header>
           <div class="flex flex-wrap items-center justify-between gap-2">
@@ -30,34 +19,18 @@
         <Column field="store_name" header="Store" />
         <Column header="Logo">
           <template #body="slotProps">
-            <div
-              class="w-20 h-20 rounded-full overflow-hidden flex items-center justify-center"
-              style="display: inline-block"
-            >
-              <Image
-                :src="slotProps.data.store_logo"
-                alt="photo"
-                preview
-                width="80"
-                class="w-24 rounded"
-              />
+            <div class="w-20 h-20 rounded-full overflow-hidden flex items-center justify-center"
+              style="display: inline-block">
+              <Image :src="slotProps.data.store_logo" alt="photo" preview width="80" class="w-24 rounded" />
             </div>
           </template>
         </Column>
 
         <Column header="photo">
           <template #body="slotProps">
-            <div
-              class="w-20 h-20 rounded-full overflow-hidden flex items-center justify-center"
-              style="display: inline-block"
-            >
-              <Image
-                :src="slotProps.data.photo"
-                alt="photo"
-                preview
-                width="100"
-                class="w-24 rounded"
-              />
+            <div class="w-20 h-20 rounded-full overflow-hidden flex items-center justify-center"
+              style="display: inline-block">
+              <Image :src="slotProps.data.photo" alt="photo" preview width="100" class="w-24 rounded" />
             </div>
           </template>
         </Column>
@@ -68,7 +41,7 @@
           <template #body="slotProps">
             <span class="block max-w-xs truncate">{{
               slotProps.data.store_address
-            }}</span>
+              }}</span>
           </template>
         </Column>
 
@@ -83,6 +56,9 @@
       </DataTable>
     </div>
   </div>
+  <div v-else>
+    <Forbidden />
+  </div>
 </template>
 <script setup>
 import { onMounted, ref, computed } from "vue";
@@ -91,6 +67,7 @@ import { useStore } from "vuex";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import Image from "primevue/image";
+import Forbidden from "../../components/Forbidden.vue";
 
 const store = useStore();
 const user = computed(() => store.getters["auth/user"]);

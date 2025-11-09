@@ -1,6 +1,5 @@
 <template>
-  <div class="container py-4">
-
+  <div class="container py-4" v-if="user && user.role=='owner'">
     <!-- Booking Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
       <div class="col">
@@ -109,6 +108,10 @@
 
 
   </div>
+  <div v-else>
+    <Forbidden/>
+  </div>
+
 </template>
 
 <script setup>
@@ -116,7 +119,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import { useToast } from "primevue/usetoast";
-
+import Forbidden from '../../components/Forbidden.vue';
 
 const toast = useToast()
 const route = useRoute()
@@ -124,7 +127,7 @@ const store = useStore()
 const booking = ref({})
 const loadingConfirm = ref(false);
 const loadingCancel = ref(false);
-
+const user = computed(() => store.state.auth.user);
 // Map link
 const googleMapUrl = computed(() =>
   `https://maps.google.com/?q=${booking.value.store_location}`

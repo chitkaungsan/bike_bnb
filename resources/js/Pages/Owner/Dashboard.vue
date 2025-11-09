@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-page">
+  <div class="dashboard-page" v-if="user && user.role=='owner'">
     <div class="card">
       <h2>Welcome to your Dashboard</h2>
       <p>
@@ -8,9 +8,18 @@
       </p>
     </div>
   </div>
+  <div v-else>
+    <Forbidden />
+  </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { ref,computed } from "vue";
+import Forbidden from "../../components/Forbidden.vue";
+import { useStore } from "vuex";
+const store = useStore();
+const user = computed(() => store.getters["auth/user"]);
+</script>
 
 <style scoped>
 .dashboard-page {

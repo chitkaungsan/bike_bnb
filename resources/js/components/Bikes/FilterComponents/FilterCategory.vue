@@ -93,4 +93,59 @@ onMounted(async () => {
     font-size: 0.9rem;
   }
 }
+/* 🖥️ 1600px – 1920px (Large desktop) */
+@media (min-width: 1600px) and (max-width: 1920px) {
+  .category-pill {
+    padding: 0.25rem 0.6rem;
+    font-size: 0.75rem;
+  }
+  .filter-title {
+    font-size: 1.1rem;
+  }
+}
+
+/* 🖥️ 1440px – 1599px (Standard laptop / desktop) */
+@media (min-width: 1440px) and (max-width: 1599px) {
+  .category-pill {
+    padding: 0.2rem 0.5rem;
+    font-size: 0.7rem;
+  }
+  .filter-title {
+    font-size: 1.0rem;
+  }
+}
+
+/* 💻 1300px – 1439px (Mid laptop screens) */
+@media (min-width: 1300px) and (max-width: 1439px) {
+  .category-pill {
+    padding: 0.2rem 0.45rem;
+    font-size: 0.68rem;
+  }
+  .filter-title {
+    font-size: 0.95rem;
+  }
+}
+
+/* 💻 1200px – 1299px (Small laptop / large tablet) */
+@media (min-width: 1200px) and (max-width: 1299px) {
+  .category-pill {
+    padding: 0.18rem 0.4rem;
+    font-size: 0.65rem;
+  }
+  .filter-title {
+    font-size: 0.9rem;
+  }
+}
+
+/* 💻 992px – 1199px (Tablet landscape / small MacBook) */
+@media (min-width: 992px) and (max-width: 1199px) {
+  .category-pill {
+    padding: 0.15rem 0.35rem;
+    font-size: 0.6rem;
+  }
+  .filter-title {
+    font-size: 0.85rem;
+  }
+}
+
 </style>

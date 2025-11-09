@@ -72,4 +72,74 @@ const selectRating = (value) => {
 .filter-section {
   text-align: center;
 }
+/* 🖥️ 1600px – 1920px (Large desktop / 27"–32") */
+@media (min-width: 1600px) and (max-width: 1920px) {
+  .filter-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+  .star-icon {
+    font-size: 1.1rem;
+  }
+  .rating-label {
+    font-size: 0.9rem;
+  }
+}
+
+/* 🖥️ 1440px – 1599px (Standard laptop / desktop) */
+@media (min-width: 1440px) and (max-width: 1599px) {
+  .filter-title {
+    font-size: 1.0rem;
+    font-weight: bold;
+  }
+  .star-icon {
+    font-size: 1.0rem;
+  }
+  .rating-label {
+    font-size: 0.85rem;
+  }
+}
+
+/* 💻 1300px – 1439px (Mid laptop screens) */
+@media (min-width: 1300px) and (max-width: 1439px) {
+  .filter-title {
+    font-size: 0.95rem;
+    font-weight: bold;
+  }
+  .star-icon {
+    font-size: 0.95rem;
+  }
+  .rating-label {
+    font-size: 0.8rem;
+  }
+}
+
+/* 💻 1200px – 1299px (Small laptop) */
+@media (min-width: 1200px) and (max-width: 1299px) {
+  .filter-title {
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+  .star-icon {
+    font-size: 0.9rem;
+  }
+  .rating-label {
+    font-size: 0.75rem;
+  }
+}
+
+/* 💻 992px – 1199px (Tablet landscape / small MacBook Air) */
+@media (min-width: 992px) and (max-width: 1199px) {
+  .filter-title {
+    font-size: 0.85rem;
+    font-weight: bold;
+  }
+  .star-icon {
+    font-size: 0.85rem;
+  }
+  .rating-label {
+    font-size: 0.7rem;
+  }
+}
+
 </style>

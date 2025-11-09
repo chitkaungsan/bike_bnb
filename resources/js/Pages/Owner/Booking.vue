@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="user && user.role == 'owner'">
     <!-- Skeleton Loader -->
     <TableSkeleton
       :columns="['#', 'booking id', 'Photo', 'Modal', 'Store', 'Rate', 'Total', 'Status','Rider','Rider Phone', 'Created', 'Action']"
@@ -129,6 +129,9 @@
       </DataTable>
     </div>
   </div>
+  <div v-else>
+    <Forbidden />
+  </div>
 </template>
 
 <script setup>
@@ -139,6 +142,7 @@ import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import Image from "primevue/image";
 import DropdownMenu from "../../components/Owner/components/Booking/Dropdownmenu.vue";
+import Forbidden from "../../components/Forbidden.vue";
 
 const store = useStore();
 const user = computed(() => store.getters["auth/user"]);

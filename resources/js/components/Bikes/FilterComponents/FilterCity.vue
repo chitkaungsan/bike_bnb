@@ -2,8 +2,12 @@
   <div class="filter-section city-filter">
     <h5 class="filter-title">Ride destination</h5>
 
-    <!--  Sidebar content -->
-    <div v-if="selectedCity" class="selected-city">
+    <!-- If a city is selected -->
+    <div
+      v-if="selectedCity"
+      class="selected-city"
+      @click="showModal = true"
+    >
       <img :src="selectedCity.image" alt="selected city" class="selected-city-img" />
       <div class="selected-city-info">
         <h6 class="city-name">{{ selectedCity.name }}</h6>
@@ -11,13 +15,13 @@
       </div>
     </div>
 
+    <!-- If no city selected -->
     <div v-else class="no-city">
-      <p>No place? choose one below</p>
+      <p>No place? Choose one below</p>
+      <button class="btn btn-ride w-100 mt-2" @click="showModal = true">
+        Find place to ride
+      </button>
     </div>
-
-    <button class="btn btn-ride w-100 mt-2" @click="showModal = true">
-      {{ selectedCity ? 'Ride somewhere new' : 'Find place to ride' }}
-    </button>
 
     <!--  Modal -->
     <div v-if="showModal" class="city-modal-overlay" @click.self="closeModal">
@@ -25,13 +29,28 @@
         <!--  Search bar -->
         <div class="modal-header">
           <h5 class="modal-title">Pick your paradise</h5>
-          <input type="text" class="form-control city-search" placeholder="Search city..." v-model="searchTerm" />
+          <input
+            type="text"
+            class="form-control city-search"
+            placeholder="Search city..."
+            v-model="searchTerm"
+          />
         </div>
 
         <!--  City Grid -->
         <div class="city-grid">
-          <div v-for="city in filteredCities" :key="city.id" class="city-card" @click="selectCity(city)">
-            <img v-if="city.image" :src="city.image" :alt="city.name" class="city-image" />
+          <div
+            v-for="city in filteredCities"
+            :key="city.id"
+            class="city-card"
+            @click="selectCity(city)"
+          >
+            <img
+              v-if="city.image"
+              :src="city.image"
+              :alt="city.name"
+              class="city-image"
+            />
             <div v-else class="city-placeholder"></div>
 
             <!-- info below image -->
@@ -49,6 +68,7 @@
     </div>
   </div>
 </template>
+
 
 <script setup>
 import { computed, ref, onMounted, watch } from "vue";
@@ -107,6 +127,14 @@ watch(
 
 
 <style scoped>
+.selected-city {
+  cursor: pointer; /* ✨ show hand cursor */
+  transition: transform 0.2s ease;
+}
+
+.selected-city:hover {
+  transform: scale(1.02);
+}
 /*  Sidebar Selected City */
 .selected-city {
   text-align: left;
@@ -277,7 +305,37 @@ watch(
     grid-template-columns: 220px 1fr;
   } */
 }
+/* 🖥️ 1600px – 1920px (Large desktop / 27"–32") */
+@media (min-width: 1600px) and (max-width: 1920px) {
+  .filter-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+  .no-city {
+    font-size: 0.8rem;
+  }
+  .btn-ride {
+    font-size: 0.9rem;
+    padding: 0.55rem 1.1rem;
+  }
+  .selected-city-img {
+    width: 100%;
+    height: 120px;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+  }
+  .city-name {
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    font-size: 0.9rem;
+  }
+  .city-description {
+    font-size: 0.75rem;
+    margin: 0;
+  }
+}
 
+/* 🖥️ 1440px – 1599px (Standard laptop / small desktop) */
 @media (min-width: 1440px) and (max-width: 1599px) {
   .filter-title {
     font-size: 1.0rem;
@@ -301,10 +359,88 @@ watch(
     margin-bottom: 0.2rem;
     font-size: 0.8rem;
   }
-
   .city-description {
     font-size: 0.7rem;
     margin: 0;
   }
 }
+
+/* 💻 1300px – 1439px (Mid laptop) */
+@media (min-width: 1300px) and (max-width: 1439px) {
+  .filter-title {
+    font-size: 0.95rem;
+    font-weight: bold;
+  }
+  .no-city {
+    font-size: 0.7rem;
+  }
+  .btn-ride {
+    font-size: 0.75rem;
+    padding: 0.45rem 0.9rem;
+  }
+  .selected-city-img {
+    width: 100%;
+    height: 95px;
+    border-radius: 8px;
+    margin-bottom: 0.35rem;
+  }
+  .city-name {
+    font-size: 0.75rem;
+    margin-bottom: 0.2rem;
+  }
+  .city-description {
+    font-size: 0.65rem;
+  }
+}
+
+/* 💻 1200px – 1299px (Small laptop) */
+@media (min-width: 1200px) and (max-width: 1299px) {
+  .filter-title {
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+  .no-city {
+    font-size: 0.68rem;
+  }
+  .btn-ride {
+    font-size: 0.7rem;
+    padding: 0.4rem 0.8rem;
+  }
+  .selected-city-img {
+    height: 90px;
+    margin-bottom: 0.35rem;
+  }
+  .city-name {
+    font-size: 0.7rem;
+  }
+  .city-description {
+    font-size: 0.6rem;
+  }
+}
+
+/* 💻 992px – 1199px (Tablet landscape / small MacBook Air) */
+@media (min-width: 992px) and (max-width: 1199px) {
+  .filter-title {
+    font-size: 0.85rem;
+    font-weight: bold;
+  }
+  .no-city {
+    font-size: 0.65rem;
+  }
+  .btn-ride {
+    font-size: 0.65rem;
+    padding: 0.35rem 0.75rem;
+  }
+  .selected-city-img {
+    height: 85px;
+    border-radius: 6px;
+  }
+  .city-name {
+    font-size: 0.68rem;
+  }
+  .city-description {
+    font-size: 0.55rem;
+  }
+}
+
 </style>

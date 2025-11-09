@@ -164,16 +164,74 @@ const formatDate = (date) => {
 .fade-leave-to {
   opacity: 0;
 }
+/* 🖥️ 1600px – 1920px (Large desktop / 27"–32") */
+@media (min-width: 1600px) and (max-width: 1920px) {
+  .filter-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+  :deep(.p-inputtext) {
+    border-radius: 12px !important;
+    padding: 0.45rem 0.75rem !important;
+    font-size: 0.9rem !important;
+    font-weight: 500;
+  }
+}
+
+/* 🖥️ 1440px – 1599px (Standard laptop / desktop) */
 @media (min-width: 1440px) and (max-width: 1599px) {
   .filter-title {
     font-size: 1.0rem;
     font-weight: bold;
   }
   :deep(.p-inputtext) {
-  border-radius: 12px !important;
-  padding: 0.4rem 0.6rem !important;
-  font-size: 0.8rem !important;
-  font-weight: 500;
+    border-radius: 12px !important;
+    padding: 0.4rem 0.6rem !important;
+    font-size: 0.8rem !important;
+    font-weight: 500;
+  }
 }
+
+/* 💻 1300px – 1439px (Mid laptop) */
+@media (min-width: 1300px) and (max-width: 1439px) {
+  .filter-title {
+    font-size: 0.95rem;
+    font-weight: bold;
+  }
+  :deep(.p-inputtext) {
+    border-radius: 10px !important;
+    padding: 0.35rem 0.55rem !important;
+    font-size: 0.75rem !important;
+    font-weight: 500;
+  }
 }
+
+/* 💻 1200px – 1299px (Small laptop) */
+@media (min-width: 1200px) and (max-width: 1299px) {
+  .filter-title {
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+  :deep(.p-inputtext) {
+    border-radius: 10px !important;
+    padding: 0.3rem 0.5rem !important;
+    font-size: 0.7rem !important;
+    font-weight: 500;
+  }
+}
+
+/* 💻 992px – 1199px (Tablet landscape / small MacBook Air) */
+@media (min-width: 992px) and (max-width: 1199px) {
+  .filter-title {
+    font-size: 0.85rem;
+    font-weight: bold;
+  }
+  :deep(.p-inputtext) {
+    border-radius: 8px !important;
+    padding: 0.25rem 0.45rem !important;
+    font-size: 0.65rem !important;
+    font-weight: 500;
+  }
+}
+
 </style>

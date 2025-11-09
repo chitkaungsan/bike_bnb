@@ -30,7 +30,7 @@
                 t("nav.browse_bikes")
               }}</router-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" v-if="!user">
               <router-link to="/register?role=owner" class="nav-link" href="#">{{
                 t("nav.become_owner")
               }}</router-link>
@@ -64,8 +64,6 @@ const store = useStore();
 const user = computed(() => store.state.auth.user);
 // Translation function
 const { t } = useI18n();
-
-
 </script>
 
 <style scoped>
