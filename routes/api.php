@@ -7,7 +7,9 @@ use App\Http\Controllers\Api\AuthController;
 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TestMail;
+use App\Http\Controllers\TestEventController;
 
+Route::get('/fire-event', [TestEventController::class, 'fire']);
 Route::get('/test-mail', function () {
     Mail::to('mlbb.com2024@gmail.com')->send(new TestMail());
     return response()->json(['message' => 'Mail sent!']);
