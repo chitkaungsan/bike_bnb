@@ -12,7 +12,7 @@ use App\Notifications\BookingConfirmed;
 use App\Notifications\BookingCancel;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
-
+use App\Events\BookingStatusChange;
 
 class BookingRepository implements BookingRepositoryInterface
 {
@@ -86,9 +86,10 @@ class BookingRepository implements BookingRepositoryInterface
         ->join('users', 'bikes.user_id', '=', 'users.id')
         ->join('stores', 'bikes.store_id', '=', 'stores.id')
         ->where('bikes.id', $data['bike_id'])
-        ->select('users.email', 'stores.name as store_name')
+        ->select('users.email', 'stores.name as store_name','users.id as owner_id')
         ->first();
 
+    event(new BookingStatusChange($booking, $ownerInfo->owner_id));
     // Send notification to owner (include store name)
     Notification::route('mail', $ownerInfo->email)
         ->notify(new \App\Notifications\BookingPending($booking, $ownerInfo->store_name));
@@ -267,6 +268,7 @@ class BookingRepository implements BookingRepositoryInterface
                 ->notify(new BookingConfirmed($booking));
 
         }
+        event(new BookingStatusChange($booking, null));
         return response()->json(['message' => 'Booking confirmed successfully'], 200);
     }
     public function cancelBooking($id)

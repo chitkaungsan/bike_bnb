@@ -12,9 +12,8 @@
     <Forbidden />
   </div>
 </template>
-
 <script setup>
-import { computed, onMounted, onBeforeUnmount, ref } from "vue";
+import { computed, onMounted, onBeforeUnmount, ref, watch } from "vue";
 import { useStore } from "vuex";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
@@ -22,7 +21,7 @@ import Forbidden from "@/components/Forbidden.vue";
 
 const store = useStore();
 const user = computed(() => store.state.auth.user);
-const message = ref(""); // For debugging or later UI feedback
+const message = ref("");
 
 defineProps({
   title: String,
@@ -30,25 +29,40 @@ defineProps({
 defineEmits(["toggle-sidebar"]);
 
 let channel = null;
+let channelName = "";
 
-onMounted(() => {
-  if (user.value && user.value.role === "owner") {
-    // ✅ Connect to Pusher channel when owner is logged in
-    channel = window.Echo.channel("test-channel");
+// 🔹 Watch for when user becomes available
+watch(user, (newUser) => {
+  if (newUser && newUser.role === "owner") {
+    // Leave old channel if any
+    if (channelName) {
+      window.Echo.leave(`private-${channelName}`);
+    }
 
-    channel.listen(".test-event", (data) => {
-      message.value = "TestEvent received at " + new Date().toLocaleTimeString();
-      console.log("✅ Received test-event:", data);
+    // Build channel name for this user
+    channelName = `owner-booking-status.${newUser.id}`;
+    console.log("🔗 Subscribing to channel:", channelName);
+
+    // Subscribe to private channel
+    channel = window.Echo.private(channelName);
+
+    // Listen for events
+    channel.listen(".BookingStatusChange", (data) => {
+      console.log("✅ Received booking update:", data);
+      message.value = `${data.message} (${new Date().toLocaleTimeString()})`;
     });
   }
-});
+}, { immediate: true }); // 👈 Run immediately on mount
 
+// 🔹 Clean up when component is destroyed
 onBeforeUnmount(() => {
-  if (channel) {
-    window.Echo.leave("test-channel");
+  if (channelName) {
+    console.log("👋 Leaving channel:", `private-${channelName}`);
+    window.Echo.leave(`private-${channelName}`);
   }
 });
 </script>
+
 
 <style scoped>
 .main-header {

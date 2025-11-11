@@ -30,7 +30,8 @@ import { useRoute } from "vue-router";
 import OwnerSidebar from "../../components/Owner/OwnerSidebar.vue";
 import OwnerHeader from "../../components/Owner/OwnerHeader.vue";
 
-const isSidebarCollapsed = ref(true);
+
+const isSidebarCollapsed = ref(false);
 const route = useRoute();
 
 watch(route, () => {
