@@ -79,14 +79,14 @@
             :class="[
               'px-3 py-1 rounded text-sm capitalize',
               slotProps.data.status === 'confirmed'
-                ? 'bg-green-500 text-white'
+                ? 'bg-green-500'
                 : slotProps.data.status === 'pending'
-                ? 'bg-yellow-500 text-black'
+                ? 'bg-yellow-500'
                 : slotProps.data.status === 'in_use'
-                ? 'bg-blue-500 text-white'
+                ? 'bg-blue-500'
                 : slotProps.data.status === 'completed'
-                ? 'bg-gray-500 text-white'
-                : 'bg-red-500 text-white' // cancelled
+                ? 'bg-gray-500'
+                : 'bg-red-500' // cancelled
             ]"
           >
             {{ slotProps.data.status.replace('_', ' ') }}

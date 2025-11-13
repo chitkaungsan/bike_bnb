@@ -10,7 +10,7 @@
 
       <!-- 🔔 Notification Component -->
       <div class="ms-auto d-flex align-items-center gap-3">
-        <NotificationDropdown @refreshed="handleRefreshed" />
+        <NotificationDropdown ref="notiRef" @refreshed="handleRefreshed" @click="markAllRead"/>
       </div>
     </div>
   </header>
@@ -21,7 +21,7 @@
 </template>
 
 <script setup>
-import { computed, watch, onBeforeUnmount } from "vue";
+import { computed,ref, watch, onBeforeUnmount } from "vue";
 import { useStore } from "vuex";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
@@ -30,6 +30,7 @@ import NotificationDropdown from "./NotificationDropdown.vue";
 
 const store = useStore();
 const user = computed(() => store.state.auth.user);
+const notiRef = ref(null);
 
 defineProps({
   title: String,
@@ -43,7 +44,12 @@ let channelName = "";
 const handleRefreshed = (notifications) => {
   console.log("🔔 Notifications refreshed in header:", notifications.length);
 };
-
+const markAllRead = () => {
+  if (notiRef.value) {
+    notiRef.value.markAllRead();
+  }
+  console.log("Mark all notifications as read from header");
+}
 // Watch user and subscribe to Echo
 watch(
   user,

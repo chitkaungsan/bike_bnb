@@ -14,21 +14,11 @@
       </div>
 
       <ul class="list-unstyled m-0 p-0">
-        <li
-          v-for="(noti, index) in notifications"
-          :key="index"
-          class="dropdown-item py-2"
-          :class="{ 'bg-unread': !noti.is_read }"
-        >
-        {{ noti }}
-          <!-- <div class="fw-semibold">{{ noti.title || "Booking Update" }}</div>
-          <div class="small text-muted">{{ noti.message }}</div>
-          <div class="small text-secondary">
-            {{ formatDate(noti.created_at) }}
-          </div> -->
+        <li v-for="(noti, index) in notifications" :key="index" class="dropdown-item"
+          :class="{ 'bg-unread': !noti.is_read }">
+          <RenterPending :data="noti" />
         </li>
       </ul>
-
       <div v-if="notifications.length === 0" class="empty-state">
         No notifications
       </div>
@@ -41,7 +31,7 @@ import { ref, onMounted, onBeforeUnmount } from "vue";
 import axios from "../../service/axios";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
-
+import RenterPending from "./components/NotificationDropdown/RenterPending.vue";
 const isOpen = ref(false);
 const notifications = ref([]);
 const unreadCount = ref(0);
@@ -57,9 +47,7 @@ const toggleDropdown = () => {
 // Fetch notifications
 const fetchNotifications = async () => {
   try {
-    const res = await axios.get("/owner/notifications", {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
+    const res = await axios.get("/owner/notifications");
     notifications.value = res.data;
     unreadCount.value = res.data.filter((n) => !n.is_read).length;
     emit("refreshed", notifications.value); //  tell parent we refreshed
@@ -70,15 +58,16 @@ const fetchNotifications = async () => {
 
 // Mark all as read
 const markAllRead = async () => {
-  const unread = notifications.value.filter((n) => !n.is_read);
-  await Promise.all(
-    unread.map((noti) =>
-      axios.post(`/owner/notifications/${noti.id}/read`, {}, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      })
-    )
-  );
-  await fetchNotifications();
+  console.log('Marking all notifications as read...');
+  setTimeout( async() => {
+    const unread = notifications.value.filter((n) => !n.is_read);
+    await Promise.all(
+      unread.map((noti) =>
+        axios.post(`/owner/notifications/${noti.id}/read`)
+      )
+    );
+    await fetchNotifications();
+  });
 };
 
 // Format time
@@ -102,12 +91,15 @@ const handleGlobalRefresh = () => {
 onMounted(() => {
   fetchNotifications();
   document.addEventListener("click", handleClickOutside);
-  window.addEventListener("refresh-notifications", handleGlobalRefresh); // ✅ FIXED
+  window.addEventListener("refresh-notifications", handleGlobalRefresh); //  FIXED
 });
 
 onBeforeUnmount(() => {
   document.removeEventListener("click", handleClickOutside);
   window.removeEventListener("refresh-notifications", handleGlobalRefresh);
+});
+defineExpose({
+  markAllRead,
 });
 </script>
 
