@@ -12,6 +12,7 @@ use App\Notifications\BookingConfirmed;
 use App\Notifications\BookingCancel;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
+use App\Models\Notification as NotificationModel;
 use App\Events\BookingStatusChange;
 
 class BookingRepository implements BookingRepositoryInterface
@@ -57,45 +58,54 @@ class BookingRepository implements BookingRepositoryInterface
     }
 
     public function createBooking($data)
-{
-    $user = User::find($data['user_id']);
+    {
+        $user = User::find($data['user_id']);
 
-    if ($user->phone == null) {
-        $user->phone = $data['user_phone'];
-        $user->save();
+        if ($user->phone == null) {
+            $user->phone = $data['user_phone'];
+            $user->save();
+        }
+
+        // Create the booking first
+        $booking = Booking::create([
+            'bike_id' => $data['bike_id'],
+            'rider_id' => $data['user_id'],
+            'name' => $data['user_name'],
+            'email' => $data['user_email'],
+            'phone' => $data['user_phone'],
+            'daily_rate' => $data['daily_rate'],
+            'days' => $data['days'],
+            'payment_type' => $data['payment_method'],
+            'total_price' => $data['totalPrice'],
+            'start_date' => $data['start_date'],
+            'end_date' => $data['end_date'],
+            'status' => 'pending',
+        ]);
+
+        // Get owner email + store name
+        $ownerInfo = DB::table('bikes')
+            ->join('users', 'bikes.user_id', '=', 'users.id')
+            ->join('stores', 'bikes.store_id', '=', 'stores.id')
+            ->where('bikes.id', $data['bike_id'])
+            ->select('users.email', 'stores.name as store_name', 'users.id as owner_id')
+            ->first();
+        //fire event to notify owner
+        event(new BookingStatusChange($booking, $ownerInfo->owner_id));
+        // Store notification in DB
+        NotificationModel::create([
+            'user_id' => $ownerInfo->owner_id,
+            'type' => 'booking_status',
+            'title' => 'New Booking Pending',
+            'message' => 'You have a new booking request.',
+            'data' => json_encode(['booking_id' => $booking->id, 'bike_id' => $data['bike_id'] ,'status' => 'pending','store_name' => $ownerInfo->store_name]),
+            'is_read' => false,
+        ]);
+        // Send notification to owner (include store name)
+        Notification::route('mail', $ownerInfo->email)
+            ->notify(new \App\Notifications\BookingPending($booking, $ownerInfo->store_name));
+
+        return $booking;
     }
-
-    // Create the booking first
-    $booking = Booking::create([
-        'bike_id' => $data['bike_id'],
-        'rider_id' => $data['user_id'],
-        'name' => $data['user_name'],
-        'email' => $data['user_email'],
-        'phone' => $data['user_phone'],
-        'daily_rate' => $data['daily_rate'],
-        'days' => $data['days'],
-        'payment_type' => $data['payment_method'],
-        'total_price' => $data['totalPrice'],
-        'start_date' => $data['start_date'],
-        'end_date' => $data['end_date'],
-        'status' => 'pending',
-    ]);
-
-    // Get owner email + store name
-    $ownerInfo = DB::table('bikes')
-        ->join('users', 'bikes.user_id', '=', 'users.id')
-        ->join('stores', 'bikes.store_id', '=', 'stores.id')
-        ->where('bikes.id', $data['bike_id'])
-        ->select('users.email', 'stores.name as store_name','users.id as owner_id')
-        ->first();
-
-    event(new BookingStatusChange($booking, $ownerInfo->owner_id));
-    // Send notification to owner (include store name)
-    Notification::route('mail', $ownerInfo->email)
-        ->notify(new \App\Notifications\BookingPending($booking, $ownerInfo->store_name));
-
-    return $booking;
-}
 
 
     public function isBikeAvailable($bikeId, $startDate, $endDate)
@@ -266,7 +276,6 @@ class BookingRepository implements BookingRepositoryInterface
 
             Notification::route('mail', $booking->email)
                 ->notify(new BookingConfirmed($booking));
-
         }
         event(new BookingStatusChange($booking, null));
         return response()->json(['message' => 'Booking confirmed successfully'], 200);
