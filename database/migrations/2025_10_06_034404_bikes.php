@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-
+use Illuminate\Support\Facades\DB;
 return new class extends Migration
 {
     /**
@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->decimal('price', 10, 2)->default(0);
-            $table->striCng('photo')->nullable();
+            $table->string('photo')->nullable();
             $table->string('license_image')->nullable();
             $table->string('model')->nullable();
             $table->smallInteger('year')->nullable();
@@ -36,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+       DB::statement('DROP TABLE IF EXISTS brands CASCADE;');
     }
 };
