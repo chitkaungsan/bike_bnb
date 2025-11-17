@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+  app:
+    build: .
+    container_name: laravel_app
+    volumes:
+      - .:/var/www
+    ports:
+      - "8000:80"
+    depends_on:
+      - db
+
+  vite:
+    image: node:20
+    working_dir: /var/www
+    container_name: vite_dev
+    volumes:
+      - .:/var/www
+    command: ["npm", "run", "dev"]
+    ports:
+      - "5173:5173"
+    depends_on:
+      - app
+
+  db:
+    image: postgres:16
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: laravel
+      POSTGRES_PASSWORD: laravel
+      POSTGRES_DB: bikebnb
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    ports:
+      - "5431:5432"
+
+volumes:
+  dbdata:
