@@ -27,9 +27,9 @@ services:
     image: postgres:16
     container_name: postgres_db
     environment:
-      POSTGRES_USER: laravel
-      POSTGRES_PASSWORD: laravel
-      POSTGRES_DB: bikebnb
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
     volumes:
       - dbdata:/var/lib/postgresql/data
     ports:
