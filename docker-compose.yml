@@ -4,7 +4,6 @@ services:
   app:
     build: .
     container_name: laravel_app
-    user: "${UID}:${GID}"
     volumes:
       - .:/var/www
     ports:
