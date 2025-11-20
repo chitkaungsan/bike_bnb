@@ -1,29 +1,39 @@
+name: Docker CI/CD Deploy
+
+on:
+  push:
+    branches:
+      - main
+
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Copy files to server
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          source: "."
-          target: "/var/www/bike_bnb"
+      # Login to GHCR
+      - name: Login to GitHub Container Registry
+        run: echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} --password-stdin
 
-      - name: SSH and deploy
+      # Build Docker image
+      - name: Build image
+        run: docker build -t ghcr.io/${{ secrets.GHCR_USERNAME }}/bike_bnb:latest .
+
+      # Push image
+      - name: Push image to GHCR
+        run: docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/bike_bnb:latest
+
+      # Deploy via SSH
+      - name: Deploy to Server
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            # Login to GHCR if pulling images
-            echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} --password-stdin
-            cd /var/www/bike_bnb
-            docker compose down
-            docker compose up -d --build
+            docker pull ghcr.io/${{ secrets.GHCR_USERNAME }}/bike_bnb:latest
+            docker stop bike_bnb || true
+            docker rm bike_bnb || true
+            docker run -d -p 80:80 --name bike_bnb ghcr.io/${{ secrets.GHCR_USERNAME }}/bike_bnb:latest
