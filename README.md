@@ -43,7 +43,9 @@ Vuex (State Management)
 
 Bootstrap 5.4
 
-Realtime & Storage
+-----------------
+
+**Realtime & Storage**
 
 Pusher (Realtime Notifications)
 
@@ -56,3 +58,18 @@ Amazon S3 (Image & Video Storage)
 Docker Compose
 
 Designed for zero-downtime deployment
+
+---------------------------
+**Notes**
+
+This is a demo project for learning and portfolio purposes.
+
+Can be extended with:
+
+Booking system
+
+Pricing logic
+
+Bike availability tracking
+
+Admin management features
