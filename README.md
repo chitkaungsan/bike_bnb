@@ -1,4 +1,4 @@
-##Bike BnB — Bike Rental Platform
+## Bike BnB — Bike Rental Platform
 
 Bike BnB is a simple and lightweight bike rental service designed for guests who want to explore the area easily and freely.
 It is ideal for short-term stays, tourists, and remote workers who prefer flexible and eco-friendly transportation.
@@ -6,7 +6,7 @@ It is ideal for short-term stays, tourists, and remote workers who prefer flexib
 This project is built as a demo concept for hospitality and rental platforms.
 
 --
-## Purpose
+### Purpose
 
 Provide convenient bike rentals for guests
 
@@ -15,7 +15,7 @@ Support local travel and eco-friendly transportation
 Enhance the overall guest experience around the property
 
 --
-## Core Features
+### Core Features
 
 Bike rental management
 
@@ -26,7 +26,7 @@ Realtime notifications for rental events
 Scalable structure for future features
 ------------------------------
 
-##**Tech Stack**
+###**Tech Stack**
 
 **Backend**
 
@@ -35,7 +35,7 @@ Laravel
 OAuth2 (Laravel Passport)
 
 -----------------------------
-**Frontend**
+###**Frontend**
 
 Vue.js
 
@@ -45,7 +45,7 @@ Bootstrap 5.4
 
 -----------------
 
-**Realtime & Storage**
+###**Realtime & Storage**
 
 Pusher (Realtime Notifications)
 
@@ -53,14 +53,14 @@ Amazon S3 (Image & Video Storage)
 
 ------------------------------
 
-**Infrastructure**
+###**Infrastructure**
 
 Docker Compose
 
 Designed for zero-downtime deployment
 
 ---------------------------
-**Notes**
+###**Notes**
 
 This is a demo project for learning and portfolio purposes.
 
