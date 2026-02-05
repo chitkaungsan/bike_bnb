@@ -26,7 +26,7 @@ Realtime notifications for rental events
 Scalable structure for future features
 ------------------------------
 
-###**Tech Stack**
+### **Tech Stack**
 
 **Backend**
 
@@ -35,7 +35,7 @@ Laravel
 OAuth2 (Laravel Passport)
 
 -----------------------------
-###**Frontend**
+### **Frontend**
 
 Vue.js
 
@@ -45,7 +45,7 @@ Bootstrap 5.4
 
 -----------------
 
-###**Realtime & Storage**
+### **Realtime & Storage**
 
 Pusher (Realtime Notifications)
 
@@ -53,14 +53,14 @@ Amazon S3 (Image & Video Storage)
 
 ------------------------------
 
-###**Infrastructure**
+### **Infrastructure**
 
 Docker Compose
 
 Designed for zero-downtime deployment
 
 ---------------------------
-###**Notes**
+### **Notes**
 
 This is a demo project for learning and portfolio purposes.
 
