@@ -49,6 +49,7 @@ const actions = {
     const response = await axios.post('/register', userData);
     commit('SET_TOKEN', response.data.token);
     await dispatch('fetchUser');
+    return response.data;
   },
   async setUserRole({ commit }, data) {
     try {

@@ -1,27 +1,24 @@
 <template>
   <div
-    class="container d-flex justify-content-center align-items-center min-vh-100 my-container"
+    class="container d-flex justify-content-center align-items-center min-vh-100 py-5"
   >
-    <div class="col-md-4 col-lg-4 col-xl-4">
+    <div class="col-12 col-sm-10 col-md-8 col-lg-5 col-xl-5 col-xxl-5">
       <div class="custom-card text-center">
-        <!-- Logo -->
         <div class="mb-4">
           <div
             class="logo-icon-wrapper d-inline-flex align-items-center justify-content-center mb-2"
           >
-            <font-awesome-icon icon="bicycle" class="text-white fa-2x" />
+            <font-awesome-icon icon="bicycle" class="logo-icon text-white" />
           </div>
           <div class="app-name fw-bold">{{ t("app_name") }}</div>
         </div>
 
         <h2 class="login-title mb-4">{{ t("login_title") }}</h2>
 
-        <!-- Error Message -->
         <div v-if="errors" class="alert alert-danger text-start">
           {{ errors }}
         </div>
 
-        <!-- Login Form -->
         <form @submit.prevent="handleLogin">
           <div class="mb-3 text-start">
             <input
@@ -46,7 +43,7 @@
             </span>
           </div>
 
-          <div class="mb-4 d-flex justify-content-between align-items-center">
+          <div class="mb-4 d-flex justify-content-between align-items-center flex-wrap">
             <div class="form-check">
               <input
                 class="form-check-input"
@@ -58,7 +55,7 @@
                 {{ t("remember_me") }}
               </label>
             </div>
-            <a href="#" class="text-primary">{{ t("forgot_password") }}</a>
+            <a href="#" class="text-primary mt-0 mt-sm-0">{{ t("forgot_password") }}</a>
           </div>
 
           <button type="submit" class="btn btn-primary w-100" :disabled="loading">
@@ -74,18 +71,17 @@
           </button>
         </form>
 
-        <!-- Social Login -->
         <div class="social-login-divider my-4">{{ t("or_continue_with") }}</div>
         <div class="d-flex justify-content-center gap-3">
-          <button class="btn btn-outline-primary" @click="handleGoogleLogin">
+          <button class="btn btn-outline-primary social-btn" @click="handleGoogleLogin">
             <font-awesome-icon :icon="['fab', 'google']" />
           </button>
-          <button class="btn btn-outline-primary">
+          <button class="btn btn-outline-primary social-btn">
             <font-awesome-icon :icon="['fab', 'facebook-f']" />
           </button>
         </div>
 
-        <div class="mt-4">
+        <div class="mt-4 text-muted">
           {{ t("no_account") }}
           <router-link to="/register" class="fw-bold text-primary">{{
             t("create_account")
@@ -97,7 +93,6 @@
     </div>
   </div>
 </template>
-
 <script setup>
 import { ref } from "vue";
 import { useStore } from "vuex";
@@ -156,43 +151,101 @@ const handleLogin = async () => {
   }
 };
 </script>
-
 <style scoped>
 .custom-card {
   background-color: var(--section-bg-color);
   color: var(--text-color);
   border-radius: var(--border-radius-lg);
-  padding: 2rem;
+  /* Responsive Padding: Less on mobile, more on desktop */
+  padding: 1.5rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   border: 1px solid var(--border-color);
   transition: background-color 0.3s, color 0.3s;
 }
 
-.position-relative {
-  position: relative;
-}
-
-.password-toggle {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  color: var(--light-text-color);
-  font-size: 1.1rem;
-}
-.password-toggle:hover {
-  color: var(--primary-color);
+/* Tablet and up: Increase padding */
+@media (min-width: 768px) {
+  .custom-card {
+    padding: 2.5rem;
+  }
 }
 
 .logo-icon-wrapper {
-  width: 80px;
-  height: 80px;
+  /* Smaller logo on mobile */
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   background-color: var(--primary-color);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+/* Larger logo on tablet/desktop */
+@media (min-width: 768px) {
+  .logo-icon-wrapper {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+/* Adjust Font Awesome size manually if needed, or rely on wrapper flex */
+.logo-icon {
+  font-size: 1.5rem;
+}
+@media (min-width: 768px) {
+  .logo-icon {
+    font-size: 2rem; /* fa-2x equivalent */
+  }
+}
+
+.app-name {
+  font-size: 1.25rem;
+}
+
+.login-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+/* Inputs */
+.form-control {
+  padding: 0.75rem 1rem; /* Comfortable touch target */
+}
+
+/* Password Toggle */
+.position-relative {
+  position: relative;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: var(--light-text-color);
+  font-size: 1.1rem;
+  z-index: 10; /* Ensure it's above input */
+}
+.password-toggle:hover {
+  color: var(--primary-color);
+}
+
+/* Social Buttons */
+.social-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+.social-btn:hover {
+  transform: translateY(-3px);
 }
 </style>
