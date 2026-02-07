@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 class Bike extends Model
 {
         use HasFactory;
@@ -24,4 +25,8 @@ class Bike extends Model
         'status',
         'user_id'
     ];
+
+    public function images(): HasMany{
+        return $this->hasMany(BikeImages::class);
+    }
 }
