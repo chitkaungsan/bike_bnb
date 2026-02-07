@@ -1,6 +1,7 @@
 <template>
   <div class="container-fluid" v-if="!loading">
     <HomeNav />
+
     <Images :mainImage="mainImage" :images="images" class="mt-2" />
     <ListingPage v-if="!loading" :mainImage="mainImage" :images="images" />
   </div>

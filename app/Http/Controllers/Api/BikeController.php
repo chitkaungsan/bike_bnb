@@ -115,36 +115,13 @@ class BikeController extends Controller
     }
     public function getBikeWithId($id)
     {
-        $bike = DB::table('bikes')
-            ->join('stores', 'bikes.store_id', '=', 'stores.id')
-            ->join('brands', 'bikes.brand_id', '=', 'brands.id')
-            ->join('categories', 'bikes.cat_id', '=', 'categories.id')
-            ->join('users as u', 'bikes.user_id', '=', 'u.id')
-            ->where('bikes.id', $id)
-            ->select(
-                'bikes.*',
-                'stores.name as store_name',
-                'stores.address as store_address',
-                'stores.id as store_id',
-                'stores.logo as store_logo',
-                'brands.name as brand_name',
-                'brands.logo as brand_logo',
-                'categories.name as category_name',
-                'u.name as user_name',
-            )
-            ->first(); // get single bike
+        // Eager load all related data
+        $bike = Bike::with(['store', 'brand', 'category', 'user', 'images'])
+            ->find($id);
 
         if (!$bike) {
             return response()->json(['message' => 'Bike not found'], 404);
         }
-
-        // get all images separately
-        $images = DB::table('bike_images')
-            ->where('bike_id', $id)
-            ->pluck('photo'); 
-
-        // attach images as array
-        $bike->images = $images;
 
         return response()->json($bike);
     }
@@ -168,9 +145,9 @@ class BikeController extends Controller
             ->paginate(10);
         return response()->json($bikes);
     }
-    public function getAllCategories(){
+    public function getAllCategories()
+    {
         $categories = DB::table('categories')->select('id', 'name')->get();
         return response()->json($categories);
     }
-
 }

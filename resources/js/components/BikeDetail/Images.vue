@@ -30,7 +30,7 @@
           @click="openModal"
           title="Show all photos"
         >
-          <img :src="image" :alt="`Gallery view ${index + 2}`" />
+          <img :src="image.photo" :alt="`Gallery view ${index + 2}`" />
         </div>
         <button @click="openModal" class="show-all-btn btn btn-light fw-semibold">
           <i class="bi bi-grid-3x3-gap-fill me-2"></i>Show all photos
@@ -73,13 +73,13 @@
       <div class="container-fluid h-100">
         <div class="row g-2 h-100 overflow-auto">
           <div
-            v-for="(img, i) in galleryImages"
+            v-for="(img, i) in galleryImages.slice(1)"
             :key="i"
             class="col-12 col-md-6 col-lg-4"
           >
             <div class="modal-image-wrapper">
               <Image
-                :src="img"
+                :src="img.photo"
                 class="img-fluid"
                 alt="Photo"
                 width="100%"

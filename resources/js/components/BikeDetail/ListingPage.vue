@@ -20,11 +20,11 @@
             <!-- Brand logo -->
             <div
               class="bike-logo ms-auto text-center"
-              v-tooltip.top="bike_detail.brand_name"
+              v-tooltip.top="bike_detail.brand?.name"
             >
               <img
-                v-if="bike_detail.brand_logo"
-                :src="bike_detail.brand_logo"
+                v-if="bike_detail.brand?.logo"
+                :src="bike_detail.brand?.logo"
                 alt="logo"
                 class="brand-image"
               />
@@ -35,10 +35,10 @@
           <!-- Store Review -->
           <div class="d-flex align-items-start justify-content-between">
             <StoreReview
-              :store_id="bike_detail.store_id"
-              :store_logo="bike_detail.store_logo"
-              :store_name="bike_detail.store_name"
-              :address="bike_detail.store_address"
+              :store_id="bike_detail.store?.id"
+              :store_logo="bike_detail.store?.logo"
+              :store_name="bike_detail.store?.name"
+              :address="bike_detail.store?.address"
             />
           </div>
 

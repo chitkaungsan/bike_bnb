@@ -27,4 +27,14 @@ class Store extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function bikes(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Bike::class);
+    }
+
+    public function bikeImages(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(BikeImage::class);
+    }
 }
