@@ -1,15 +1,23 @@
 <template>
   <div class="bike-list-page-wrapper">
+
     <IslandBackground :max-icons="5" />
+
     <div class="bike-list-page">
-      <div class="container-fluid content-layer" >
+      <div class="container-fluid content-layer">
         <header class="page-header text-center mb-4">
           <HomeNav />
         </header>
+
         <div class="layout-wrapper">
           <FilterSidebar />
-          <BikeList :bikes="bikes" :loading="loading" />
+          <BikeList
+            :bikes="bikes"
+            :loading="loading"
+            @update:bikes="bikes = $event"
+          />
         </div>
+
         <footer class="page-footer mt-2">
           <HomeFooter />
         </footer>
@@ -20,21 +28,27 @@
 
 <script setup>
 import { ref, onMounted, watch } from "vue";
+import { useRoute } from "vue-router";
+import { useStore } from "vuex";
+
 import FilterSidebar from "../../components/Bikes/FilterSidebar.vue";
 import BikeList from "../../components/Bikes/BikeList.vue";
 import HomeNav from "../../components/Layout/HomeNav.vue";
 import IslandBackground from "../../components/islandBackground.vue";
 import HomeFooter from "../../components/Layout/HomeFooter.vue";
-import { useRoute } from 'vue-router';
-import { useStore } from "vuex";
 
 const route = useRoute();
 const store = useStore();
-const bikes = ref([]); // bikes data for child component
+
+const bikes = ref({
+  data: [],
+});
+
 const loading = ref(true);
 
-//  fetch filtered bikes if params exist
-const fetchFilterBikes = async () => {
+const fetchBikes = async () => {
+  loading.value = true;
+
   const params = {
     location: route.query.location,
     location_id: route.query.location_id,
@@ -49,84 +63,41 @@ const fetchFilterBikes = async () => {
     params.end_date ||
     (params.category_id && params.category_id !== "all");
 
-  let res;
-  if (hasFilter) {
-    // If filters exist, call filter API
-    res = await store.dispatch("homeFilter/fetchFilterBikes", params);
-  } else {
-    // Otherwise fetch all
-    res = await store.dispatch("bikes/fetchAllBikes");
-  }
+  const res = hasFilter
+    ? await store.dispatch("homeFilter/fetchFilterBikes", params)
+    : await store.dispatch("bikes/fetchAllBikes");
 
-  bikes.value = res.data || [];
+  bikes.value = res.data;
   loading.value = false;
 };
 
-//  Load when page opens
-onMounted(fetchFilterBikes);
+onMounted(fetchBikes);
 
-// Re-fetch when query changes (ex: user selects new filter)
 watch(
   () => route.query,
-  async () => {
-    loading.value = true;
-    await fetchFilterBikes();
-  },
+  fetchBikes,
   { deep: true }
 );
 </script>
-
 
 <style scoped>
 .bike-list-page-wrapper {
   position: relative;
 }
 
-.island-background {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  opacity: 0.5;
-  pointer-events: none;
-}
-.island-background { border: 1px solid red; }
-
 .bike-list-page {
   position: relative;
   z-index: 2;
-}
-
-/* Foreground content */
-.content-layer {
-  position: relative;
-  z-index: 2;
-}
-
-/* Existing styles */
-.page-header {
-  text-align: center;
-  margin-bottom: 2rem;
 }
 
 .layout-wrapper {
   display: grid;
   grid-template-columns: 250px 1fr;
 }
+
 @media (max-width: 991px) {
   .layout-wrapper {
     grid-template-columns: 1fr;
-  }
-}
-
-@media (min-width: 992px) and (max-width: 1300px) {
-  .layout-wrapper {
-    grid-template-columns: 190px 1fr;
-  }
-}
-
-@media (min-width: 1301px) and (max-width: 1600px) {
-  .layout-wrapper {
-    grid-template-columns: 220px 1fr;
   }
 }
 </style>

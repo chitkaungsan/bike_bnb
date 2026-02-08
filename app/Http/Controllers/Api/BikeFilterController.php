@@ -28,6 +28,7 @@ class BikeFilterController extends Controller
             'category_id' => $request->input('category_id'),
             'start_date'  => $request->input('start_date'),
             'end_date'    => $request->input('end_date'),
+            'price'       => $request->input('price'),
         ];
 
         // Call repository logic (DB::table style inside repository)
@@ -42,6 +43,7 @@ class BikeFilterController extends Controller
             'category_id' => $request->input('category_id'),
             'start_date'  => $request->input('start_date'),
             'end_date'    => $request->input('end_date'),
+            'price'       => $request->input('price'),
         ];
         $bikes = $this->bikeFilterRepository->searchBikesFilter($params);
         return response()->json($bikes);

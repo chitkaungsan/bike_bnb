@@ -37,4 +37,8 @@ class Store extends Model
     {
         return $this->hasMany(BikeImage::class);
     }
+    public function City(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(City::class);
+    }
 }

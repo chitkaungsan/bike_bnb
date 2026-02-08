@@ -42,5 +42,9 @@ class Bike extends Model
     public function user(): BelongsTo {
         return $this->belongsTo(User::class);
     }
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(Booking::class);
+    }
 
 }

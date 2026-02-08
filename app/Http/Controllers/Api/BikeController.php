@@ -101,16 +101,7 @@ class BikeController extends Controller
     public function getBikes(Request $request)
     {
 
-        $bikes = DB::table('bikes')
-            ->join('stores', 'bikes.store_id', '=', 'stores.id')
-            ->select(
-                'bikes.*',
-                'stores.name as store_name',
-                'stores.address as store_address',
-                'stores.id as store_id',
-                'stores.logo as store_logo',
-            )
-            ->paginate($request->per_page ?? 10);
+        $bikes = Bike::with('store')->latest()->paginate($request->per_page ?? 10);
         return response()->json($bikes);
     }
     public function getBikeWithId($id)

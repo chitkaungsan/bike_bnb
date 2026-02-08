@@ -55,17 +55,15 @@ const closeSidebar = () => {
   document.body.style.overflow = "";
 };
 const searchBikes = async () => {
-  console.log("Search Bikes");
   await store.dispatch("homeFilter/searchBikesFilter",router);
 }
 const reset = async () => {
-  console.log("Reset");
   await store.dispatch("homeFilter/resetFilter");
 }
 </script>
 
 <style scoped>
-/* 🌴 General wrapper */
+/* General wrapper */
 .filter-sidebar-wrapper {
   position: relative;
   z-index: 10;
