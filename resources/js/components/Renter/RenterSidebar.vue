@@ -1,61 +1,68 @@
 <template>
-  <aside class="sidebar">
+  <aside
+    v-if="user && user.role === 'renter'"
+    :class="['sidebar', { 'sidebar-collapsed': collapsed }]"
+  >
+    <!-- Header -->
     <div class="sidebar-header">
-      <a href="/" class="brand-logo text-decoration-none text-dark" >
-      <font-awesome-icon :icon="faBicycle" class="logo-icon" />
-      <h2 class="brand-name">BikeDash</h2>
-      <span>Renter Panel</span>
+      <a href="/" class="brand-logo">
+        <font-awesome-icon :icon="faBicycle" class="logo-icon" />
+        <h2 class="brand-name" v-if="!collapsed">BikeDash</h2>
       </a>
+      <small>Renter Panel</small>
     </div>
 
+    <!-- Navigation -->
     <nav class="sidebar-nav">
-      <router-link 
-        to="/owner/dashboard"
-        class="nav-link"
-        :class="{ active: $route.name === 'owner.dashboard' }">
+      <router-link to="/renter/dashboard" class="nav-link">
         <font-awesome-icon :icon="faChartLine" />
-        <span>Overview</span>
+        <span v-if="!collapsed">Overview</span>
       </router-link>
 
-      <router-link 
-        to="/owner/bikes"
-        class="nav-link"
-        :class="{ active: $route.name === 'owner.bikes' }">
+      <router-link to="/renter/bikes" class="nav-link">
         <font-awesome-icon :icon="faBicycle" />
-        <span>Bikes</span>
+        <span v-if="!collapsed">Bikes</span>
       </router-link>
 
-      <router-link 
-        to="/owner/bookings"
-        class="nav-link"
-        :class="{ active: $route.name === 'owner.bookings' }">
+      <router-link to="/renter/bookings" class="nav-link">
         <font-awesome-icon :icon="faCalendarCheck" />
-        <span>Bookings</span>
-      </router-link>
-
-      <router-link 
-        to="/owner/payouts"
-        class="nav-link"
-        :class="{ active: $route.name === 'owner.payouts' }">
-        <font-awesome-icon :icon="faWallet" />
-        <span>Payouts</span>
+        <span v-if="!collapsed">Bookings</span>
       </router-link>
     </nav>
 
+    <!-- Footer -->
     <div class="sidebar-footer">
-      <a href="#">
-        <logout-button />
-      </a>
+      <div class="nav-link collapse-toggle" @click="emit('toggle')">
+        <font-awesome-icon :icon="collapsed ? faChevronRight : faChevronLeft" />
+        <span v-if="!collapsed">Collapse</span>
+      </div>
+
+      <LogoutButton :collapsed="collapsed" />
     </div>
   </aside>
 </template>
 
 <script setup>
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { 
-  faChartLine, faBicycle, faCalendarCheck, faWallet 
-} from '@fortawesome/free-solid-svg-icons';
-import LogoutButton from '../LogoutButton.vue';
+import { computed } from "vue";
+import { useStore } from "vuex";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import {
+  faChartLine,
+  faBicycle,
+  faCalendarCheck,
+  faChevronLeft,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
+import LogoutButton from "../LogoutButton.vue";
+
+defineProps({
+  collapsed: Boolean,
+});
+
+const emit = defineEmits(["toggle"]);
+
+const store = useStore();
+const user = computed(() => store.state.auth.user);
 </script>
 
 <style scoped>
@@ -65,59 +72,95 @@ import LogoutButton from '../LogoutButton.vue';
   border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
-  padding: 1.5rem;
-  transition: background-color 0.3s, border-color 0.3s;
+  padding: 1.5rem 1rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  transition: transform 0.3s ease;
+  z-index: 1000;
 }
 
+.sidebar-collapsed {
+  transform: translateX(-100%);
+}
+
+/* Header */
 .sidebar-header {
-  text-align: center;
   margin-bottom: 2rem;
-}
-.sidebar-header .logo-icon {
-  font-size: 2.5rem;
-  color: var(--primary-color);
-}
-.sidebar-header .brand-name {
-  font-weight: 700;
-  margin: 0.5rem 0 0.2rem;
-}
-.sidebar-header span {
-  font-size: 0.8rem;
-  color: var(--light-text-color);
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  text-align: center;
 }
 
-.sidebar-nav .nav-link {
+.brand-logo {
   display: flex;
   align-items: center;
-  padding: 0.9rem 1rem;
-  border-radius: var(--border-radius-md);
-  color: var(--light-text-color);
-  font-weight: 500;
-  margin-bottom: 0.5rem;
+  justify-content: center;
+  gap: 0.75rem;
+  color: var(--text-color);
   text-decoration: none;
-  transition: background-color 0.2s, color 0.2s;
 }
 
-.sidebar-nav .nav-link:hover {
+.logo-icon {
+  font-size: 1.8rem;
+  color: var(--primary-color);
+}
+
+.brand-name {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+/* Nav */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 0.9rem 1.2rem;
+  border-radius: var(--border-radius-md);
+  color: var(--light-text-color);
+  text-decoration: none;
+  margin-bottom: 0.5rem;
+}
+
+.nav-link:hover {
   background-color: var(--background-color);
   color: var(--text-color);
 }
 
-.sidebar-nav .nav-link.active {
+.router-link-active.nav-link {
   background-color: var(--primary-color);
   color: white;
-  box-shadow: 0 4px 10px rgba(99, 193, 162, 0.3);
 }
 
-.sidebar-nav .nav-link svg {
+.nav-link svg {
   margin-right: 1rem;
-  width: 20px;
-  text-align: center;
 }
 
+/* Footer */
 .sidebar-footer {
   margin-top: auto;
+}
+
+.collapse-toggle {
+  cursor: pointer;
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar:not(.sidebar-collapsed) {
+    transform: translateX(0);
+  }
+
+  .collapse-toggle {
+    display: none;
+  }
 }
 </style>

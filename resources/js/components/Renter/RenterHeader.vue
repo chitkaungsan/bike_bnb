@@ -1,33 +1,54 @@
 <template>
-  <header class="main-header">
-    <h1>{{ title }}</h1>
-    <div class="header-actions">
-      <button class="btn btn-primary">
-        <font-awesome-icon :icon="faPlus" /> Add New Bike
+  <header class="main-header" v-if="user && user.role === 'renter'">
+    <div class="header-content">
+      <button class="sidebar-toggle-btn" @click="$emit('toggle-sidebar')">
+        <font-awesome-icon :icon="faBars" />
       </button>
+      <h5 class="header-title">{{ title }}</h5>
     </div>
   </header>
+
+  <div v-else>
+    <Forbidden />
+  </div>
 </template>
 
 <script setup>
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { computed } from "vue";
+import { useStore } from "vuex";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
+import Forbidden from "@/components/Forbidden.vue";
 
 defineProps({
-  title: String
+  title: String,
 });
+defineEmits(["toggle-sidebar"]);
+
+const store = useStore();
+const user = computed(() => store.state.auth.user);
 </script>
 
 <style scoped>
 .main-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
   border-bottom: 1px solid var(--border-color);
   padding-bottom: 1rem;
+  position: relative;
+  z-index: 999;
 }
-.main-header h1 {
-  font-weight: 700;
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.sidebar-toggle-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
 }
 </style>

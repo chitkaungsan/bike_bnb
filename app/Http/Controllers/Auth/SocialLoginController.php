@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
+
 use Illuminate\Support\Facades\Hash;
 
 class SocialLoginController extends Controller
@@ -15,7 +17,7 @@ class SocialLoginController extends Controller
         try {
             return Socialite::driver($provider)->stateless()->redirect();
         } catch (\Throwable $th) {
-            \Log::error('Social login failed: ' . $th->getMessage());
+            // \Log::error('Social login failed: ' . $th->getMessage());
             return response()->json(['error' => $th->getMessage()], 500);
         }
     }
@@ -23,7 +25,7 @@ class SocialLoginController extends Controller
     public function callback($provider)
    {
         $frontendUrl = env('VITE_WEB_URL');
-        
+
         try {
            $googleUser = Socialite::driver('google')->stateless()->user();
         } catch (\Throwable $th) {

@@ -5,15 +5,21 @@ export default [
   {
     path: '/renter',
     component: RenterLayout,
+    redirect: { name: 'renter.dashboard' },
     children: [
-      { path: '', name: 'renter.dashboard', component: Dashboard },
+              {
+        path: 'dashboard',
+        name: 'renter.dashboard',
+        component: () => import('../Pages/Renter/Dashboard.vue'),
+        meta: { title: 'Bike Management' },
+      },
       {
         path: 'bikes',
         name: 'renter.bikes',
         component: () => import('../Pages/Renter/Bikes.vue'),
         meta: { title: 'Bike Management' },
       },
-     
+
     ],
     meta: { role: 'renter', requiresAuth: true },
   },
